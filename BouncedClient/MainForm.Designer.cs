@@ -1,0 +1,846 @@
+﻿namespace BouncedClient
+{
+    partial class MainForm
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            this.StatusPanel = new System.Windows.Forms.Panel();
+            this.ficedDownloadLabel = new System.Windows.Forms.Label();
+            this.downloadStatusLabel = new System.Windows.Forms.Label();
+            this.fixedStatusLabel = new System.Windows.Forms.Label();
+            this.statusLabel = new System.Windows.Forms.Label();
+            this.MainTabControl = new System.Windows.Forms.TabControl();
+            this.SearchTabPage = new System.Windows.Forms.TabPage();
+            this.searchBoxPanel = new System.Windows.Forms.Panel();
+            this.searchGoButton = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.searchHelpText = new System.Windows.Forms.Label();
+            this.searchBox = new System.Windows.Forms.TextBox();
+            this.searchGridView = new System.Windows.Forms.DataGridView();
+            this.fileType = new System.Windows.Forms.DataGridViewImageColumn();
+            this.FileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FileSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Peer = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Action = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.Mac = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Hash = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FileSizeBytes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TransfersTabPage = new System.Windows.Forms.TabPage();
+            this.downloadGridView = new System.Windows.Forms.DataGridView();
+            this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Progress = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ETA = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewButtonColumn1 = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BouncesTabPage = new System.Windows.Forms.TabPage();
+            this.settingsTabPage = new System.Windows.Forms.TabPage();
+            this.actionButton = new System.Windows.Forms.Button();
+            this.forceRescanButton = new System.Windows.Forms.Button();
+            this.deleteSelectedButton = new System.Windows.Forms.Button();
+            this.addFolderButton = new System.Windows.Forms.Button();
+            this.sharedFolders = new System.Windows.Forms.CheckedListBox();
+            this.helpText3 = new System.Windows.Forms.Label();
+            this.downloadFolder = new System.Windows.Forms.LinkLabel();
+            this.fixedDownloadLocationLabel = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.helpText5 = new System.Windows.Forms.Label();
+            this.fixedAboutLabel = new System.Windows.Forms.Label();
+            this.helpText2 = new System.Windows.Forms.Label();
+            this.serverTextBox = new System.Windows.Forms.TextBox();
+            this.fixedServerLabel = new System.Windows.Forms.Label();
+            this.helpText1 = new System.Windows.Forms.Label();
+            this.usernameTextBox = new System.Windows.Forms.TextBox();
+            this.fixedUsernameLabel = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.registerWorker = new System.ComponentModel.BackgroundWorker();
+            this.pollPendingTimer = new System.Windows.Forms.Timer(this.components);
+            this.pollPendingWorker = new System.ComponentModel.BackgroundWorker();
+            this.loadConfigWorker = new System.ComponentModel.BackgroundWorker();
+            this.folderBrowser = new System.Windows.Forms.FolderBrowserDialog();
+            this.indexWorker = new System.ComponentModel.BackgroundWorker();
+            this.syncWorker = new System.ComponentModel.BackgroundWorker();
+            this.loadIndexWorker = new System.ComponentModel.BackgroundWorker();
+            this.searchWorker = new System.ComponentModel.BackgroundWorker();
+            this.serverWorker = new System.ComponentModel.BackgroundWorker();
+            this.StatusPanel.SuspendLayout();
+            this.MainTabControl.SuspendLayout();
+            this.SearchTabPage.SuspendLayout();
+            this.searchBoxPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.searchGridView)).BeginInit();
+            this.TransfersTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.downloadGridView)).BeginInit();
+            this.settingsTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // StatusPanel
+            // 
+            this.StatusPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(239)))));
+            this.StatusPanel.Controls.Add(this.ficedDownloadLabel);
+            this.StatusPanel.Controls.Add(this.downloadStatusLabel);
+            this.StatusPanel.Controls.Add(this.fixedStatusLabel);
+            this.StatusPanel.Controls.Add(this.statusLabel);
+            this.StatusPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.StatusPanel.Location = new System.Drawing.Point(0, 478);
+            this.StatusPanel.Name = "StatusPanel";
+            this.StatusPanel.Size = new System.Drawing.Size(784, 63);
+            this.StatusPanel.TabIndex = 0;
+            // 
+            // ficedDownloadLabel
+            // 
+            this.ficedDownloadLabel.AutoSize = true;
+            this.ficedDownloadLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ficedDownloadLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.ficedDownloadLabel.Location = new System.Drawing.Point(270, 22);
+            this.ficedDownloadLabel.Name = "ficedDownloadLabel";
+            this.ficedDownloadLabel.Size = new System.Drawing.Size(79, 13);
+            this.ficedDownloadLabel.TabIndex = 3;
+            this.ficedDownloadLabel.Text = "DOWNLOADS";
+            // 
+            // downloadStatusLabel
+            // 
+            this.downloadStatusLabel.AutoSize = true;
+            this.downloadStatusLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.downloadStatusLabel.Location = new System.Drawing.Point(355, 21);
+            this.downloadStatusLabel.Name = "downloadStatusLabel";
+            this.downloadStatusLabel.Size = new System.Drawing.Size(84, 15);
+            this.downloadStatusLabel.TabIndex = 2;
+            this.downloadStatusLabel.Text = "No downloads";
+            // 
+            // fixedStatusLabel
+            // 
+            this.fixedStatusLabel.AutoSize = true;
+            this.fixedStatusLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fixedStatusLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.fixedStatusLabel.Location = new System.Drawing.Point(18, 23);
+            this.fixedStatusLabel.Name = "fixedStatusLabel";
+            this.fixedStatusLabel.Size = new System.Drawing.Size(45, 13);
+            this.fixedStatusLabel.TabIndex = 1;
+            this.fixedStatusLabel.Text = "STATUS";
+            // 
+            // statusLabel
+            // 
+            this.statusLabel.AutoSize = true;
+            this.statusLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.statusLabel.Location = new System.Drawing.Point(68, 22);
+            this.statusLabel.Name = "statusLabel";
+            this.statusLabel.Size = new System.Drawing.Size(131, 15);
+            this.statusLabel.TabIndex = 0;
+            this.statusLabel.Text = "Loading configuration..";
+            // 
+            // MainTabControl
+            // 
+            this.MainTabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.MainTabControl.Controls.Add(this.SearchTabPage);
+            this.MainTabControl.Controls.Add(this.TransfersTabPage);
+            this.MainTabControl.Controls.Add(this.BouncesTabPage);
+            this.MainTabControl.Controls.Add(this.settingsTabPage);
+            this.MainTabControl.ItemSize = new System.Drawing.Size(200, 40);
+            this.MainTabControl.Location = new System.Drawing.Point(0, 12);
+            this.MainTabControl.Name = "MainTabControl";
+            this.MainTabControl.Padding = new System.Drawing.Point(10, 3);
+            this.MainTabControl.SelectedIndex = 0;
+            this.MainTabControl.Size = new System.Drawing.Size(784, 466);
+            this.MainTabControl.TabIndex = 1;
+            // 
+            // SearchTabPage
+            // 
+            this.SearchTabPage.Controls.Add(this.searchBoxPanel);
+            this.SearchTabPage.Controls.Add(this.searchGridView);
+            this.SearchTabPage.Location = new System.Drawing.Point(4, 44);
+            this.SearchTabPage.Name = "SearchTabPage";
+            this.SearchTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.SearchTabPage.Size = new System.Drawing.Size(776, 418);
+            this.SearchTabPage.TabIndex = 0;
+            this.SearchTabPage.Text = "Search";
+            this.SearchTabPage.UseVisualStyleBackColor = true;
+            // 
+            // searchBoxPanel
+            // 
+            this.searchBoxPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.searchBoxPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.searchBoxPanel.Controls.Add(this.searchGoButton);
+            this.searchBoxPanel.Controls.Add(this.label1);
+            this.searchBoxPanel.Controls.Add(this.searchHelpText);
+            this.searchBoxPanel.Controls.Add(this.searchBox);
+            this.searchBoxPanel.Location = new System.Drawing.Point(8, 6);
+            this.searchBoxPanel.Name = "searchBoxPanel";
+            this.searchBoxPanel.Size = new System.Drawing.Size(762, 34);
+            this.searchBoxPanel.TabIndex = 5;
+            // 
+            // searchGoButton
+            // 
+            this.searchGoButton.Location = new System.Drawing.Point(450, 3);
+            this.searchGoButton.Name = "searchGoButton";
+            this.searchGoButton.Size = new System.Drawing.Size(56, 28);
+            this.searchGoButton.TabIndex = 5;
+            this.searchGoButton.Text = "Go";
+            this.searchGoButton.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label1.Location = new System.Drawing.Point(509, 10);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(249, 13);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "SEARCH BY KEYWORDS, FILE NAME, FILE TYPE";
+            // 
+            // searchHelpText
+            // 
+            this.searchHelpText.AutoSize = true;
+            this.searchHelpText.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.searchHelpText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.searchHelpText.ForeColor = System.Drawing.Color.Gray;
+            this.searchHelpText.Location = new System.Drawing.Point(43, 7);
+            this.searchHelpText.Name = "searchHelpText";
+            this.searchHelpText.Size = new System.Drawing.Size(367, 20);
+            this.searchHelpText.TabIndex = 4;
+            this.searchHelpText.Text = "type in keywords and press enter to search...";
+            this.searchHelpText.Click += new System.EventHandler(this.searchHelpText_Click);
+            // 
+            // searchBox
+            // 
+            this.searchBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.searchBox.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.searchBox.Location = new System.Drawing.Point(4, 4);
+            this.searchBox.Name = "searchBox";
+            this.searchBox.Size = new System.Drawing.Size(443, 26);
+            this.searchBox.TabIndex = 1;
+            this.searchBox.TextChanged += new System.EventHandler(this.searchBox_TextChanged);
+            this.searchBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.searchBox_KeyPress);
+            // 
+            // searchGridView
+            // 
+            this.searchGridView.AllowUserToAddRows = false;
+            this.searchGridView.AllowUserToDeleteRows = false;
+            this.searchGridView.AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.searchGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            this.searchGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.searchGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.searchGridView.BackgroundColor = System.Drawing.Color.White;
+            this.searchGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.searchGridView.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
+            this.searchGridView.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.searchGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.searchGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.fileType,
+            this.FileName,
+            this.FileSize,
+            this.Peer,
+            this.Action,
+            this.Mac,
+            this.Hash,
+            this.FileSizeBytes});
+            this.searchGridView.Location = new System.Drawing.Point(8, 45);
+            this.searchGridView.MultiSelect = false;
+            this.searchGridView.Name = "searchGridView";
+            this.searchGridView.ReadOnly = true;
+            this.searchGridView.RowHeadersVisible = false;
+            this.searchGridView.RowTemplate.Height = 35;
+            this.searchGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.searchGridView.Size = new System.Drawing.Size(761, 367);
+            this.searchGridView.TabIndex = 0;
+            this.searchGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.searchGridView_CellClick);
+            // 
+            // fileType
+            // 
+            this.fileType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.fileType.FillWeight = 40.60914F;
+            this.fileType.HeaderText = "";
+            this.fileType.Name = "fileType";
+            this.fileType.ReadOnly = true;
+            this.fileType.Width = 25;
+            // 
+            // FileName
+            // 
+            this.FileName.FillWeight = 119.797F;
+            this.FileName.HeaderText = "File Name";
+            this.FileName.Name = "FileName";
+            this.FileName.ReadOnly = true;
+            this.FileName.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.FileName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // FileSize
+            // 
+            this.FileSize.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.FileSize.FillWeight = 119.797F;
+            this.FileSize.HeaderText = "File Size";
+            this.FileSize.Name = "FileSize";
+            this.FileSize.ReadOnly = true;
+            this.FileSize.Width = 80;
+            // 
+            // Peer
+            // 
+            this.Peer.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.Peer.HeaderText = "Peer";
+            this.Peer.Name = "Peer";
+            this.Peer.ReadOnly = true;
+            this.Peer.Width = 55;
+            // 
+            // Action
+            // 
+            this.Action.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Action.FillWeight = 119.797F;
+            this.Action.HeaderText = "Action";
+            this.Action.Name = "Action";
+            this.Action.ReadOnly = true;
+            this.Action.Width = 150;
+            // 
+            // Mac
+            // 
+            this.Mac.HeaderText = "Mac";
+            this.Mac.Name = "Mac";
+            this.Mac.ReadOnly = true;
+            this.Mac.Visible = false;
+            // 
+            // Hash
+            // 
+            this.Hash.HeaderText = "Hash";
+            this.Hash.Name = "Hash";
+            this.Hash.ReadOnly = true;
+            this.Hash.Visible = false;
+            // 
+            // FileSizeBytes
+            // 
+            this.FileSizeBytes.HeaderText = "File Size (Bytes)";
+            this.FileSizeBytes.Name = "FileSizeBytes";
+            this.FileSizeBytes.ReadOnly = true;
+            this.FileSizeBytes.Visible = false;
+            // 
+            // TransfersTabPage
+            // 
+            this.TransfersTabPage.Controls.Add(this.downloadGridView);
+            this.TransfersTabPage.Location = new System.Drawing.Point(4, 44);
+            this.TransfersTabPage.Name = "TransfersTabPage";
+            this.TransfersTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.TransfersTabPage.Size = new System.Drawing.Size(776, 418);
+            this.TransfersTabPage.TabIndex = 1;
+            this.TransfersTabPage.Text = "Transfers";
+            this.TransfersTabPage.UseVisualStyleBackColor = true;
+            // 
+            // downloadGridView
+            // 
+            this.downloadGridView.AllowUserToAddRows = false;
+            this.downloadGridView.AllowUserToDeleteRows = false;
+            this.downloadGridView.AllowUserToResizeRows = false;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.downloadGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
+            this.downloadGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.downloadGridView.BackgroundColor = System.Drawing.Color.White;
+            this.downloadGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.downloadGridView.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
+            this.downloadGridView.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.downloadGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.downloadGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewImageColumn1,
+            this.dataGridViewTextBoxColumn1,
+            this.Status,
+            this.Progress,
+            this.ETA,
+            this.dataGridViewTextBoxColumn2,
+            this.dataGridViewTextBoxColumn3,
+            this.dataGridViewButtonColumn1,
+            this.dataGridViewTextBoxColumn4,
+            this.dataGridViewTextBoxColumn5,
+            this.dataGridViewTextBoxColumn6});
+            this.downloadGridView.Location = new System.Drawing.Point(7, 6);
+            this.downloadGridView.MultiSelect = false;
+            this.downloadGridView.Name = "downloadGridView";
+            this.downloadGridView.ReadOnly = true;
+            this.downloadGridView.RowHeadersVisible = false;
+            this.downloadGridView.RowTemplate.Height = 35;
+            this.downloadGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.downloadGridView.Size = new System.Drawing.Size(761, 406);
+            this.downloadGridView.TabIndex = 1;
+            // 
+            // dataGridViewImageColumn1
+            // 
+            this.dataGridViewImageColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dataGridViewImageColumn1.FillWeight = 40.60914F;
+            this.dataGridViewImageColumn1.HeaderText = "";
+            this.dataGridViewImageColumn1.Name = "dataGridViewImageColumn1";
+            this.dataGridViewImageColumn1.ReadOnly = true;
+            this.dataGridViewImageColumn1.Width = 25;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.FillWeight = 119.797F;
+            this.dataGridViewTextBoxColumn1.HeaderText = "File Name";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            this.dataGridViewTextBoxColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // Status
+            // 
+            this.Status.HeaderText = "Status";
+            this.Status.Name = "Status";
+            this.Status.ReadOnly = true;
+            // 
+            // Progress
+            // 
+            this.Progress.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Progress.HeaderText = "Progress";
+            this.Progress.Name = "Progress";
+            this.Progress.ReadOnly = true;
+            // 
+            // ETA
+            // 
+            this.ETA.HeaderText = "ETA";
+            this.ETA.Name = "ETA";
+            this.ETA.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dataGridViewTextBoxColumn2.FillWeight = 119.797F;
+            this.dataGridViewTextBoxColumn2.HeaderText = "File Size";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.ReadOnly = true;
+            this.dataGridViewTextBoxColumn2.Width = 80;
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.dataGridViewTextBoxColumn3.HeaderText = "Peer";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.ReadOnly = true;
+            this.dataGridViewTextBoxColumn3.Width = 55;
+            // 
+            // dataGridViewButtonColumn1
+            // 
+            this.dataGridViewButtonColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dataGridViewButtonColumn1.FillWeight = 119.797F;
+            this.dataGridViewButtonColumn1.HeaderText = "Action";
+            this.dataGridViewButtonColumn1.Name = "dataGridViewButtonColumn1";
+            this.dataGridViewButtonColumn1.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            this.dataGridViewTextBoxColumn4.HeaderText = "Mac";
+            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            this.dataGridViewTextBoxColumn4.ReadOnly = true;
+            this.dataGridViewTextBoxColumn4.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn5
+            // 
+            this.dataGridViewTextBoxColumn5.HeaderText = "Hash";
+            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            this.dataGridViewTextBoxColumn5.ReadOnly = true;
+            this.dataGridViewTextBoxColumn5.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn6
+            // 
+            this.dataGridViewTextBoxColumn6.HeaderText = "File Size (Bytes)";
+            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            this.dataGridViewTextBoxColumn6.ReadOnly = true;
+            this.dataGridViewTextBoxColumn6.Visible = false;
+            // 
+            // BouncesTabPage
+            // 
+            this.BouncesTabPage.Location = new System.Drawing.Point(4, 44);
+            this.BouncesTabPage.Name = "BouncesTabPage";
+            this.BouncesTabPage.Size = new System.Drawing.Size(776, 418);
+            this.BouncesTabPage.TabIndex = 2;
+            this.BouncesTabPage.Text = "Bounces";
+            this.BouncesTabPage.UseVisualStyleBackColor = true;
+            // 
+            // settingsTabPage
+            // 
+            this.settingsTabPage.Controls.Add(this.actionButton);
+            this.settingsTabPage.Controls.Add(this.forceRescanButton);
+            this.settingsTabPage.Controls.Add(this.deleteSelectedButton);
+            this.settingsTabPage.Controls.Add(this.addFolderButton);
+            this.settingsTabPage.Controls.Add(this.sharedFolders);
+            this.settingsTabPage.Controls.Add(this.helpText3);
+            this.settingsTabPage.Controls.Add(this.downloadFolder);
+            this.settingsTabPage.Controls.Add(this.fixedDownloadLocationLabel);
+            this.settingsTabPage.Controls.Add(this.label2);
+            this.settingsTabPage.Controls.Add(this.helpText5);
+            this.settingsTabPage.Controls.Add(this.fixedAboutLabel);
+            this.settingsTabPage.Controls.Add(this.helpText2);
+            this.settingsTabPage.Controls.Add(this.serverTextBox);
+            this.settingsTabPage.Controls.Add(this.fixedServerLabel);
+            this.settingsTabPage.Controls.Add(this.helpText1);
+            this.settingsTabPage.Controls.Add(this.usernameTextBox);
+            this.settingsTabPage.Controls.Add(this.fixedUsernameLabel);
+            this.settingsTabPage.Location = new System.Drawing.Point(4, 44);
+            this.settingsTabPage.Name = "settingsTabPage";
+            this.settingsTabPage.Size = new System.Drawing.Size(776, 418);
+            this.settingsTabPage.TabIndex = 3;
+            this.settingsTabPage.Text = "Settings";
+            this.settingsTabPage.UseVisualStyleBackColor = true;
+            // 
+            // actionButton
+            // 
+            this.actionButton.Enabled = false;
+            this.actionButton.Location = new System.Drawing.Point(619, 85);
+            this.actionButton.Name = "actionButton";
+            this.actionButton.Size = new System.Drawing.Size(138, 27);
+            this.actionButton.TabIndex = 2;
+            this.actionButton.Text = "Reconnect";
+            this.actionButton.UseVisualStyleBackColor = true;
+            this.actionButton.Click += new System.EventHandler(this.actionButton_Click);
+            // 
+            // forceRescanButton
+            // 
+            this.forceRescanButton.Location = new System.Drawing.Point(619, 283);
+            this.forceRescanButton.Name = "forceRescanButton";
+            this.forceRescanButton.Size = new System.Drawing.Size(138, 28);
+            this.forceRescanButton.TabIndex = 17;
+            this.forceRescanButton.Text = "Force Rescan";
+            this.forceRescanButton.UseVisualStyleBackColor = true;
+            this.forceRescanButton.Click += new System.EventHandler(this.forceRescanButton_Click);
+            // 
+            // deleteSelectedButton
+            // 
+            this.deleteSelectedButton.Location = new System.Drawing.Point(619, 250);
+            this.deleteSelectedButton.Name = "deleteSelectedButton";
+            this.deleteSelectedButton.Size = new System.Drawing.Size(138, 28);
+            this.deleteSelectedButton.TabIndex = 16;
+            this.deleteSelectedButton.Text = "Delete Selected";
+            this.deleteSelectedButton.UseVisualStyleBackColor = true;
+            this.deleteSelectedButton.Click += new System.EventHandler(this.deleteSelectedButton_Click);
+            // 
+            // addFolderButton
+            // 
+            this.addFolderButton.Location = new System.Drawing.Point(619, 217);
+            this.addFolderButton.Name = "addFolderButton";
+            this.addFolderButton.Size = new System.Drawing.Size(138, 28);
+            this.addFolderButton.TabIndex = 15;
+            this.addFolderButton.Text = "Add Folder";
+            this.addFolderButton.UseVisualStyleBackColor = true;
+            this.addFolderButton.Click += new System.EventHandler(this.addFolderButton_Click);
+            // 
+            // sharedFolders
+            // 
+            this.sharedFolders.FormattingEnabled = true;
+            this.sharedFolders.Location = new System.Drawing.Point(17, 218);
+            this.sharedFolders.Name = "sharedFolders";
+            this.sharedFolders.Size = new System.Drawing.Size(596, 94);
+            this.sharedFolders.TabIndex = 14;
+            // 
+            // helpText3
+            // 
+            this.helpText3.AutoSize = true;
+            this.helpText3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.helpText3.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.helpText3.Location = new System.Drawing.Point(14, 167);
+            this.helpText3.Name = "helpText3";
+            this.helpText3.Size = new System.Drawing.Size(312, 13);
+            this.helpText3.TabIndex = 13;
+            this.helpText3.Text = "This is the location your downloaded files will be placed in.";
+            // 
+            // downloadFolder
+            // 
+            this.downloadFolder.AutoSize = true;
+            this.downloadFolder.Location = new System.Drawing.Point(14, 148);
+            this.downloadFolder.Name = "downloadFolder";
+            this.downloadFolder.Size = new System.Drawing.Size(243, 15);
+            this.downloadFolder.TabIndex = 12;
+            this.downloadFolder.TabStop = true;
+            this.downloadFolder.Text = "C:\\Users\\Raghav Sethi\\Bounced Downloads\\";
+            this.downloadFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.downloadFolder_LinkClicked);
+            // 
+            // fixedDownloadLocationLabel
+            // 
+            this.fixedDownloadLocationLabel.AutoSize = true;
+            this.fixedDownloadLocationLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fixedDownloadLocationLabel.ForeColor = System.Drawing.Color.Black;
+            this.fixedDownloadLocationLabel.Location = new System.Drawing.Point(14, 128);
+            this.fixedDownloadLocationLabel.Name = "fixedDownloadLocationLabel";
+            this.fixedDownloadLocationLabel.Size = new System.Drawing.Size(123, 13);
+            this.fixedDownloadLocationLabel.TabIndex = 11;
+            this.fixedDownloadLocationLabel.Text = "DOWNLOADS FOLDER";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.Black;
+            this.label2.Location = new System.Drawing.Point(14, 198);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(100, 13);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "SHARED FOLDERS";
+            // 
+            // helpText5
+            // 
+            this.helpText5.AutoSize = true;
+            this.helpText5.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.helpText5.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.helpText5.Location = new System.Drawing.Point(14, 348);
+            this.helpText5.Name = "helpText5";
+            this.helpText5.Size = new System.Drawing.Size(519, 13);
+            this.helpText5.TabIndex = 9;
+            this.helpText5.Text = "Bounced Client v0.2. Developed with love at IIIT-D by Raghav Sethi, Mayank Pundir" +
+    " and Naved Alam.";
+            // 
+            // fixedAboutLabel
+            // 
+            this.fixedAboutLabel.AutoSize = true;
+            this.fixedAboutLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fixedAboutLabel.ForeColor = System.Drawing.Color.Black;
+            this.fixedAboutLabel.Location = new System.Drawing.Point(14, 329);
+            this.fixedAboutLabel.Name = "fixedAboutLabel";
+            this.fixedAboutLabel.Size = new System.Drawing.Size(44, 13);
+            this.fixedAboutLabel.TabIndex = 8;
+            this.fixedAboutLabel.Text = "ABOUT";
+            // 
+            // helpText2
+            // 
+            this.helpText2.AutoSize = true;
+            this.helpText2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.helpText2.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.helpText2.Location = new System.Drawing.Point(187, 92);
+            this.helpText2.Name = "helpText2";
+            this.helpText2.Size = new System.Drawing.Size(288, 13);
+            this.helpText2.TabIndex = 7;
+            this.helpText2.Text = "Only modify this field if you\'re sure what you\'re doing.";
+            // 
+            // serverTextBox
+            // 
+            this.serverTextBox.Location = new System.Drawing.Point(17, 88);
+            this.serverTextBox.Name = "serverTextBox";
+            this.serverTextBox.Size = new System.Drawing.Size(164, 23);
+            this.serverTextBox.TabIndex = 6;
+            this.serverTextBox.Text = "localhost:3000";
+            // 
+            // fixedServerLabel
+            // 
+            this.fixedServerLabel.AutoSize = true;
+            this.fixedServerLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fixedServerLabel.ForeColor = System.Drawing.Color.Black;
+            this.fixedServerLabel.Location = new System.Drawing.Point(14, 72);
+            this.fixedServerLabel.Name = "fixedServerLabel";
+            this.fixedServerLabel.Size = new System.Drawing.Size(46, 13);
+            this.fixedServerLabel.TabIndex = 5;
+            this.fixedServerLabel.Text = "SERVER";
+            // 
+            // helpText1
+            // 
+            this.helpText1.AutoSize = true;
+            this.helpText1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.helpText1.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.helpText1.Location = new System.Drawing.Point(187, 39);
+            this.helpText1.Name = "helpText1";
+            this.helpText1.Size = new System.Drawing.Size(570, 13);
+            this.helpText1.TabIndex = 4;
+            this.helpText1.Text = "Usernames are guaranteed to be unique. No one else will be able to use your usern" +
+    "ame unless you change it.";
+            // 
+            // usernameTextBox
+            // 
+            this.usernameTextBox.Location = new System.Drawing.Point(17, 35);
+            this.usernameTextBox.Name = "usernameTextBox";
+            this.usernameTextBox.Size = new System.Drawing.Size(164, 23);
+            this.usernameTextBox.TabIndex = 3;
+            this.usernameTextBox.Leave += new System.EventHandler(this.usernameTextBox_Leave);
+            // 
+            // fixedUsernameLabel
+            // 
+            this.fixedUsernameLabel.AutoSize = true;
+            this.fixedUsernameLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fixedUsernameLabel.ForeColor = System.Drawing.Color.Black;
+            this.fixedUsernameLabel.Location = new System.Drawing.Point(14, 18);
+            this.fixedUsernameLabel.Name = "fixedUsernameLabel";
+            this.fixedUsernameLabel.Size = new System.Drawing.Size(68, 13);
+            this.fixedUsernameLabel.TabIndex = 2;
+            this.fixedUsernameLabel.Text = "USERNAME";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(672, 7);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(101, 39);
+            this.pictureBox1.TabIndex = 3;
+            this.pictureBox1.TabStop = false;
+            // 
+            // registerWorker
+            // 
+            this.registerWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.registerWorker_DoWork);
+            this.registerWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.registerWorker_RunWorkerCompleted);
+            // 
+            // pollPendingTimer
+            // 
+            this.pollPendingTimer.Interval = 3000;
+            this.pollPendingTimer.Tick += new System.EventHandler(this.pollPendingTimer_Tick);
+            // 
+            // pollPendingWorker
+            // 
+            this.pollPendingWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.pollPendingWorker_DoWork);
+            this.pollPendingWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.pollPendingWorker_RunWorkerCompleted);
+            // 
+            // loadConfigWorker
+            // 
+            this.loadConfigWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.loadConfigWorker_DoWork);
+            this.loadConfigWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.loadConfigWorker_RunWorkerCompleted);
+            // 
+            // indexWorker
+            // 
+            this.indexWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.indexWorker_DoWork);
+            this.indexWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.indexWorker_RunWorkerCompleted);
+            // 
+            // syncWorker
+            // 
+            this.syncWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.syncWorker_DoWork);
+            this.syncWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.syncWorker_RunWorkerCompleted);
+            // 
+            // loadIndexWorker
+            // 
+            this.loadIndexWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.loadIndexWorker_DoWork);
+            this.loadIndexWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.loadIndexWorker_RunWorkerCompleted);
+            // 
+            // searchWorker
+            // 
+            this.searchWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.searchWorker_DoWork);
+            this.searchWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.searchWorker_RunWorkerCompleted);
+            // 
+            // MainForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
+            this.ClientSize = new System.Drawing.Size(784, 541);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.MainTabControl);
+            this.Controls.Add(this.StatusPanel);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MinimumSize = new System.Drawing.Size(800, 580);
+            this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Bounced";
+            this.Load += new System.EventHandler(this.MainForm_Load);
+            this.StatusPanel.ResumeLayout(false);
+            this.StatusPanel.PerformLayout();
+            this.MainTabControl.ResumeLayout(false);
+            this.SearchTabPage.ResumeLayout(false);
+            this.searchBoxPanel.ResumeLayout(false);
+            this.searchBoxPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.searchGridView)).EndInit();
+            this.TransfersTabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.downloadGridView)).EndInit();
+            this.settingsTabPage.ResumeLayout(false);
+            this.settingsTabPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Panel StatusPanel;
+        private System.Windows.Forms.TabControl MainTabControl;
+        private System.Windows.Forms.TabPage SearchTabPage;
+        private System.Windows.Forms.TabPage TransfersTabPage;
+        private System.Windows.Forms.TabPage BouncesTabPage;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.TabPage settingsTabPage;
+        private System.Windows.Forms.DataGridView searchGridView;
+        private System.Windows.Forms.Label statusLabel;
+        private System.ComponentModel.BackgroundWorker registerWorker;
+        private System.Windows.Forms.Label fixedStatusLabel;
+        private System.Windows.Forms.Timer pollPendingTimer;
+        private System.ComponentModel.BackgroundWorker pollPendingWorker;
+        private System.Windows.Forms.Label searchHelpText;
+        private System.Windows.Forms.TextBox searchBox;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel searchBoxPanel;
+        private System.Windows.Forms.Button searchGoButton;
+        private System.Windows.Forms.TextBox usernameTextBox;
+        private System.Windows.Forms.Label fixedUsernameLabel;
+        private System.Windows.Forms.Label helpText1;
+        private System.Windows.Forms.Label helpText2;
+        private System.Windows.Forms.TextBox serverTextBox;
+        private System.Windows.Forms.Label fixedServerLabel;
+        private System.Windows.Forms.Label helpText5;
+        private System.Windows.Forms.Label fixedAboutLabel;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label fixedDownloadLocationLabel;
+        private System.Windows.Forms.LinkLabel downloadFolder;
+        private System.Windows.Forms.Label helpText3;
+        private System.Windows.Forms.Button forceRescanButton;
+        private System.Windows.Forms.Button deleteSelectedButton;
+        private System.Windows.Forms.Button addFolderButton;
+        private System.Windows.Forms.CheckedListBox sharedFolders;
+        private System.ComponentModel.BackgroundWorker loadConfigWorker;
+        private System.Windows.Forms.Button actionButton;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowser;
+        private System.ComponentModel.BackgroundWorker indexWorker;
+        private System.ComponentModel.BackgroundWorker syncWorker;
+        private System.ComponentModel.BackgroundWorker loadIndexWorker;
+        private System.ComponentModel.BackgroundWorker searchWorker;
+        private System.Windows.Forms.Label ficedDownloadLabel;
+        private System.Windows.Forms.Label downloadStatusLabel;
+        private System.Windows.Forms.DataGridViewImageColumn fileType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FileName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FileSize;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Peer;
+        private System.Windows.Forms.DataGridViewButtonColumn Action;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Mac;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Hash;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FileSizeBytes;
+        private System.Windows.Forms.DataGridView downloadGridView;
+        private System.Windows.Forms.DataGridViewImageColumn dataGridViewImageColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Progress;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ETA;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.DataGridViewButtonColumn dataGridViewButtonColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
+        private System.ComponentModel.BackgroundWorker serverWorker;
+    }
+}
+
