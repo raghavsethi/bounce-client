@@ -19,17 +19,16 @@ namespace BouncedClient
     public partial class MainForm : Form
     {
         List<SearchResult> currentlyDisplayedSearchResults;
-        List<DownloadRequest> outstandingDownloadRequests;
-        List<DownloadRequest> currentDownloads;
+        
 
-        ConcurrentDictionary<PendingResponse, DownloadProgress> pendingToDownload;
+        //Makes sure in-progress transfers are not re-added
         
         public MainForm()
         {
             InitializeComponent();
-            outstandingDownloadRequests = new List<DownloadRequest>();
-            currentDownloads = new List<DownloadRequest>();
-            pendingToDownload = new ConcurrentDictionary<PendingResponse, DownloadProgress>();
+            Transfers.outstandingDownloadRequests = new List<DownloadRequest>();
+            Transfers.currentDownloads = new List<DownloadProgress>();
+            Transfers.pendingToDownload = new ConcurrentDictionary<PendingResponse, DownloadProgress>(new PendingResponse.EqualityComparer());
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -66,8 +65,11 @@ namespace BouncedClient
             }
 
             statusLabel.Text = sr.text;
-            if(sr.status.Equals("OK"))
-                pollPendingTimer.Enabled=true;
+            if (sr.status.Equals("OK"))
+            {
+                pollPendingTimer.Enabled = true;
+                
+            }
         }
 
         private void pollPendingTimer_Tick(object sender, EventArgs e)
@@ -92,15 +94,76 @@ namespace BouncedClient
             List<PendingResponse> latestPending = (List<PendingResponse>)e.Result;
 
             //TODO: Handle latestpending=null
+            if (latestPending == null)
+            {
+                statusLabel.Text = "Lost connection to server";
+                pollPendingTimer.Enabled = false;
+                reconnectTimer.Enabled = true;
+                return;
+            }
 
             foreach (PendingResponse pr in latestPending)
             {
-                if (!pendingToDownload.ContainsKey(pr))
+                if (!Transfers.pendingToDownload.ContainsKey(pr))
                 {
-                    DownloadProgress dip = new DownloadProgress();
+                    Utils.writeLog("Added " + pr.fileName + " to download queue");
+                    DownloadProgress dip = new DownloadProgress(pr);
+                    Transfers.pendingToDownload[pr] = dip;
 
+                    BackgroundWorker downloadWorker = new BackgroundWorker();
+                    downloadWorker.WorkerReportsProgress = true;
+                    downloadWorker.WorkerSupportsCancellation = true;
+                    downloadWorker.DoWork += downloadWorker_DoWork;
+                    downloadWorker.ProgressChanged += downloadWorker_ProgressChanged;
+                    
+                    //This is what is sent to the backgroundworker
+                    Tuple<PendingResponse, DownloadProgress> downloadArgs = 
+                        new Tuple<PendingResponse, DownloadProgress>(pr, dip);
+
+                    downloadWorker.RunWorkerAsync(downloadArgs);
                 }
             }
+        }
+
+        void downloadWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            DownloadProgress dp = e.UserState as DownloadProgress;
+
+            updateDownloadStatus();
+
+            int row = -1;
+            
+            //Identify which row contains the download whose progress is being reported
+            for (int i = 0; i < downloadGridView.RowCount; i++)
+            {
+                if ((((String)(downloadGridView["HashColumn", i].Value)).Equals(dp.hash))
+                    && (((String)(downloadGridView["MacColumn", i].Value)).Equals(dp.mac)))
+                {
+                    row = i;
+                    break;
+                }
+            }
+
+            if(row == -1)
+            {
+                String type = dp.fileName.Substring(dp.fileName.LastIndexOf('.') + 1);
+                Icon zipIcon = Icons.IconFromExtension(type);
+
+                downloadGridView.Rows.Add(new object[] { zipIcon, dp.fileName, dp.status, e.ProgressPercentage + "%", 
+            0, Utils.getHumanSize(dp.fileSize), dp.uploaderIP, "Cancel", dp.mac, dp.hash, dp.fileSize });
+                return;
+            }
+
+            downloadGridView["StatusColumn", row].Value = dp.status;
+            downloadGridView["ProgressColumn", row].Value = e.ProgressPercentage + "%";
+            downloadGridView["ETAColumn", row].Value = "Unknown";
+        }
+
+        void downloadWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker currentWorker = sender as BackgroundWorker;
+            Tuple<PendingResponse, DownloadProgress> downloadArgs = e.Argument as Tuple<PendingResponse, DownloadProgress>;
+            Transfers.download(currentWorker, downloadArgs.Item1, downloadArgs.Item2);
         }
 
         private void loadConfigWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -131,7 +194,6 @@ namespace BouncedClient
                 Configuration.sharedFolders = new List<string>();
                 Configuration.sharedFolders.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyMusic));
                 Configuration.saveConfiguration();
-
             }
             else
             {
@@ -242,6 +304,7 @@ namespace BouncedClient
 
             statusLabel.Text = sr.text;
 
+            //TODO: This should probably only happen if the sync was successful
             //Clear change tables
             if (sr.status.Equals("OK"))
             {
@@ -260,7 +323,8 @@ namespace BouncedClient
         private void loadIndexWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             Utils.writeLog("loadIndexWorker_RunWorkerCompleted: loadIndex completed");
-
+            serverWorker.RunWorkerAsync();
+            Utils.writeLog("loadIndexWorker_RunWorkerCompleted: Kicking off index job");
             indexWorker.RunWorkerAsync();
         }
 
@@ -318,7 +382,7 @@ namespace BouncedClient
 
             foreach (SearchResult sr in currentlyDisplayedSearchResults)
             {
-                Utils.writeLog(sr.ToString());
+                //Utils.writeLog(sr.ToString());
                 Icon zipIcon = Icons.IconFromExtension(sr.type);
 
                 String buttonText = "Bounce";
@@ -353,7 +417,7 @@ namespace BouncedClient
 
                 Utils.writeLog("searchGridView_CellClick: Sending download request for file : " + dr.fileName);
 
-                outstandingDownloadRequests.Add(dr);
+                Transfers.outstandingDownloadRequests.Add(dr);
                 updateDownloadStatus();
                 downloadRequestWorker.RunWorkerAsync(dr);
             }
@@ -362,8 +426,8 @@ namespace BouncedClient
 
         private void updateDownloadStatus()
         {
-            downloadStatusLabel.Text = outstandingDownloadRequests.Count + 
-                " downloads pending, " + currentDownloads.Count + " in progress.";
+            downloadStatusLabel.Text = Transfers.outstandingDownloadRequests.Count + 
+                " downloads pending, " + Transfers.currentDownloads.Count + " in progress.";
         }
 
         private void downloadRequestWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -388,6 +452,69 @@ namespace BouncedClient
             Utils.writeLog("downloadRequestWorker_DoWork: Download request returned : " + sr.ToString());
         }
 
+        private void serverWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            Server.serverWorker_DoWork(sender, e);
+        }
 
+        private void reconnectTimer_Tick(object sender, EventArgs e)
+        {
+            if (!registerWorker.IsBusy)
+                registerWorker.RunWorkerAsync();
+        }
+
+        private void downloadGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView dgv = sender as DataGridView;
+            if (dgv != null && e.ColumnIndex==7 && e.RowIndex>-1)
+            {
+                DataGridViewButtonCell buttonCell = dgv.Rows[e.RowIndex].Cells["ActionColumn"] as DataGridViewButtonCell;
+
+                String action = (String)buttonCell.Value;
+
+                if (action == "Clear")
+                {
+                    dgv.Rows.RemoveAt(e.RowIndex);
+                    return;
+                }
+
+                Utils.writeLog("downloadGridView_CellClick: Canceling download");
+
+                DataGridViewTextBoxCell macCell = dgv.Rows[e.RowIndex].Cells["MacColumn"] as DataGridViewTextBoxCell;
+                DataGridViewTextBoxCell hashCell = dgv.Rows[e.RowIndex].Cells["HashColumn"] as DataGridViewTextBoxCell;
+
+                String canceledMac = (String)macCell.Value;
+                String canceledHash = (String)hashCell.Value;
+
+                buttonCell.Value = "Clear";
+
+                foreach (PendingResponse pr in Transfers.pendingToDownload.Keys)
+                {
+                    if (pr.uploader == canceledMac && pr.fileHash == canceledHash)
+                    {
+                        //TODO: Update cancellation here
+                        Transfers.pendingToDownload[pr] = null;
+                        break;
+                    }
+                }
+            }
+
+        }
+
+        private void updateWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+
+
+            RestClient client = new RestClient("http://" + Configuration.server);
+            RestRequest request = new RestRequest("update", Method.POST);
+
+            request.AddParameter("transferID", ); //TODO: Change this
+            request.AddParameter("status", "raghav");
+            request.AddParameter("newHash", "123");
+
+            RestResponse<StatusResponse> response = (RestResponse<StatusResponse>)client.Execute<StatusResponse>(request);
+
+            e.Result = response.Data;
+        }
     }
 }

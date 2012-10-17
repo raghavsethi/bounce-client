@@ -31,7 +31,7 @@ namespace BouncedClient
         public String fileName { get; set; }
         public String symKey { get; set; }
         public String type { get; set; }
-
+        public long fileSize { get; set; }
         public String uploaderIP { get; set; }
 
         public class EqualityComparer : IEqualityComparer<PendingResponse>
@@ -118,9 +118,54 @@ namespace BouncedClient
         public string type;
         public long fileSize;
         public long completed;
-        public string downloaderIp;
+        public string uploaderIP;
         public string symKey;
         public string status;
+        public long transferID;
+        public bool visible; //True for files that I have requested, false otherwise
+        public double transferRate;
+
+        public DownloadProgress()
+        { }
+
+        public DownloadProgress(PendingResponse pr)
+        {
+            transferID = pr.transferID;
+            mac = pr.uploader;
+            hash = pr.fileHash;
+            fileName = pr.fileName;
+            symKey = pr.symKey;
+            fileSize = pr.fileSize;
+            type = pr.type;
+
+            if (pr.type == "secondleg" || pr.type == "direct")
+                visible = true;
+            else
+                visible = false;
+
+            completed = 0;
+            status = "Starting..";
+        }
+
+        public DownloadProgress(PendingResponse pr)
+        {
+            transferID = pr.transferID;
+            mac = pr.uploader;
+            hash = pr.fileHash;
+            fileName = pr.fileName;
+            symKey = pr.symKey;
+            fileSize = pr.fileSize;
+            type = pr.type;
+
+            if (pr.type == "secondleg" || pr.type == "direct")
+                visible = true;
+            else
+                visible = false;
+
+            completed = 0;
+            status = "Starting..";
+        }
+
     }
 
 }

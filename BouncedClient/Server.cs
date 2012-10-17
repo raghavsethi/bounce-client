@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BouncedClient
@@ -17,9 +18,21 @@ namespace BouncedClient
 
         public static void serverWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            Utils.writeLog("serverWorker_DoWork: Started");
+
             //Handles uploads to peers.
-            tcpListener = new TcpListener(IPAddress.Any, 8002);
-            tcpListener.Start();
+            try
+            {
+                tcpListener = new TcpListener(IPAddress.Any, 8002);
+                tcpListener.Start();
+            }
+            catch (Exception ex)
+            {
+                Utils.writeLog("serverWorker_DoWork: " + ex);
+                return;
+            }
+
+            Utils.writeLog("serverWorker_DoWork: Listening for peers..");
 
             while (true)
             {
@@ -76,6 +89,8 @@ namespace BouncedClient
             //If code gets here, message was successfully received.
             String uploadParameters = encoder.GetString(message, 0, bytesRead);
 
+            //Format: fileHash | transfer ID | transfer-type
+
             //TODO: Add part which gets key and actually encrypts the transfer
             char[] sep = { '|' };
             String[] temp = uploadParameters.Split(sep);
@@ -125,7 +140,7 @@ namespace BouncedClient
                 //Send the file.
                 while ((bytesSize = fileLocalStream.Read(byteSend, 0, byteSend.Length)) > 0)
                 {
-
+                    Thread.Sleep(50);
                     bytesUploaded = bytesUploaded + bytesSize;
                     fileUploadStream.Write(byteSend, 0, bytesSize);
 
