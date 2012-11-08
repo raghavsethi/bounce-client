@@ -21,76 +21,33 @@ namespace BouncedClient
         public static Hashtable addedFiles;
         //TODO: Add a hashtable containing file paths and last modified times to improve perf
 
-        public static void serializeHashTable()
+        public static void serializeHashTables()
         {
-            Stream s = File.Open("files.dat", FileMode.Create, FileAccess.ReadWrite);
-            BinaryFormatter b = new BinaryFormatter();
-            b.Serialize(s, fileIndex);
-            s.Close();
-
-            s = File.Open("modified.dat", FileMode.Create, FileAccess.ReadWrite);
-            b = new BinaryFormatter();
-            b.Serialize(s, modifiedIndex);
-            s.Close();
-
-            s = File.Open("hashes.dat", FileMode.Create, FileAccess.ReadWrite);
-            b = new BinaryFormatter();
-            b.Serialize(s, hashIndex);
-            s.Close();   
+            serializeFile(fileIndex, "files.dat");
+            serializeFile(modifiedIndex, "modified.dat");
+            serializeFile(hashIndex, "hashes.dat");
+            serializeFile(addedFiles, "added.dat");
+            serializeFile(removedFiles, "removed.dat");
         }
 
-        public static void deserializeHashTable()
+        public static void deserializeHashTables()
         {
-            try
-            {
-                Stream s = File.Open("files.dat", FileMode.Open, FileAccess.Read);
-                BinaryFormatter b = new BinaryFormatter();
-                fileIndex = (Hashtable)b.Deserialize(s);
-                s.Close();
-            }
-            catch (Exception e)
-            {
-                Utils.writeLog("deserializeHashTable: Error reading fileIndex : " + e);
-                fileIndex = new Hashtable();
-            }
-
-            try
-            {
-                Stream s = File.Open("modified.dat", FileMode.Open, FileAccess.Read);
-                BinaryFormatter b = new BinaryFormatter();
-                modifiedIndex = (Hashtable)b.Deserialize(s);
-                s.Close();
-            }
-            catch (Exception e)
-            {
-                Utils.writeLog("deserializeHashTable: Error reading modifiedIndex : " + e);
-                modifiedIndex = new Hashtable();
-            }
-
-            try
-            {
-                Stream s = File.Open("hashes.dat", FileMode.Open, FileAccess.Read);
-                BinaryFormatter b = new BinaryFormatter();
-                hashIndex = (Hashtable)b.Deserialize(s);
-                s.Close();
-            }
-            catch (Exception e)
-            {
-                Utils.writeLog("deserializeHashTable: Error reading hashIndex : " + e);
-                hashIndex = new Hashtable();
-            }
-
+            fileIndex = deserializeFile("files.dat");
+            modifiedIndex = deserializeFile("modified.dat");
+            hashIndex = deserializeFile("hashes.dat");
+            
             Utils.writeLog("deserializeIndex: Loaded " + fileIndex.Keys.Count + " files from disk");
             Boolean consistent = false;
             if (fileIndex.Keys.Count == hashIndex.Keys.Count && hashIndex.Keys.Count==modifiedIndex.Keys.Count)
                 consistent = true;
 
             Utils.writeLog("deserializeIndex: Consistency is " + consistent);
-
         }
 
         public static void buildIndex(CheckedListBox.ObjectCollection sharedFoldersList)
         {
+            #region initvars
+
             //TODO: Optimize Hashtable constructor for efficiency.
             if (fileIndex == null)
                 fileIndex = new Hashtable();
@@ -110,12 +67,36 @@ namespace BouncedClient
 
             int numFoldersIndexed = 0;
 
+            DateTime timeOfLastSave = DateTime.Now; //Keeps track of when to persist stuff in the middle of indexing
+
+            #endregion
+
             List<string> folders = new List<string>();
             foreach (string sharedFolderPath in sharedFoldersList)
                 folders.Add(sharedFolderPath);
 
+            /* INDEXING
+             * --------
+             * 
+             * The idea is to maintain add/remove lists accurately until a successful sync
+             * occurs. At this point we will nullify add/remove list and update fileIndex.
+             * 
+             * How this will be done:
+             * It turns out that determining removed files is super-fast, because there is
+             * no hash computation involved. The most accurate time to get the list of
+             * removed files is after the computationally-expensive add list is computed.
+             * 
+            */
+
             while (folders.Count > 0)
             {
+                // We want to persist data from time to time so that we can eventually index very large sets
+                if ((DateTime.Now - timeOfLastSave).TotalMinutes > 5)
+                {
+                    Utils.writeLog("buildIndex : Time exceeded 5 minutes, writing indices to disk..");
+                    serializeHashTables();
+                }
+
                 DirectoryInfo di = new DirectoryInfo(folders[0]);
                 FileInfo[] fileInfoArr = null;
                 DirectoryInfo[] directoryInfoArr = null;
@@ -139,12 +120,11 @@ namespace BouncedClient
 
                 if (fileInfoArr != null)
                 {
-
                     foreach (FileInfo fi in fileInfoArr)
                     {
                         if (modifiedIndex.ContainsKey(fi.FullName))
                         {
-                            //If file has not been modified, copy old data and remove from old table
+                            // If file has not been modified, copy old data and remove from old table
                             if ((DateTime)modifiedIndex[fi.FullName] == fi.LastWriteTime)
                             {
 
@@ -156,8 +136,8 @@ namespace BouncedClient
                                 continue;
                             }
                             Utils.writeLog("buildIndex: Old file modified :" + fi.FullName);
-                            //If it has been modified, it will be in both fileIndex and updatedFileIndex
-                            //All files in fileIndex will be removed.
+                            // If it has been modified, it will be in both fileIndex and updatedFileIndex
+                            // All files in fileIndex will be removed.
                         }
 
                         LocalFile currentFile = getFileInfo(fi.FullName);
@@ -187,10 +167,10 @@ namespace BouncedClient
             Utils.writeLog("buildIndex: " + removedFiles.Keys.Count + " files removed");
             Utils.writeLog("buildIndex: " + addedFiles.Keys.Count + " files added");
 
-            serializeHashTable();
+            serializeHashTables();
             Utils.writeLog("buildIndex: Completed indexing");
         }
-
+         
         public static LocalFile getFileInfo(string filePath)
         {
             LocalFile currentFile = new LocalFile();
@@ -299,6 +279,32 @@ namespace BouncedClient
         public static string getRemovedJson()
         {
             return JsonConvert.SerializeObject(removedFiles, Formatting.Indented);
+        }
+
+        public static Hashtable deserializeFile(String file)
+        {
+            Hashtable temp = null;
+            try
+            {
+                Stream s = File.Open(file, FileMode.Open, FileAccess.Read);
+                BinaryFormatter b = new BinaryFormatter();
+                temp = (Hashtable)b.Deserialize(s);
+                s.Close();
+            }
+            catch (Exception e)
+            {
+                Utils.writeLog("deserializeHashTable: Error reading "+file+" : " + e);
+                temp = new Hashtable();
+            }
+            return temp;
+        }
+
+        public static void serializeFile(Hashtable h, String file)
+        {
+            Stream s = File.Open(file, FileMode.Create, FileAccess.ReadWrite);
+            BinaryFormatter b = new BinaryFormatter();
+            b.Serialize(s, h);
+            s.Close();
         }
     }
 }

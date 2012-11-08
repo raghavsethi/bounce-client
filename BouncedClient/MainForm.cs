@@ -43,8 +43,10 @@ namespace BouncedClient
             RestClient client = new RestClient("http://"+Configuration.server);
             RestRequest request = new RestRequest("register", Method.POST);
 
-            request.AddParameter("mac", "raghav"); //TODO: Change this
-            request.AddParameter("nick", "raghav");
+            Utils.writeLog("registerWorker_DoWork: URL called : " + "http://" + Configuration.server);
+
+            request.AddParameter("mac", Utils.GetMACAddress()); //TODO: Change this
+            request.AddParameter("nick", Configuration.username);
             request.AddParameter("space_allocated", "123");
 
             RestResponse<StatusResponse> response = (RestResponse<StatusResponse>)client.Execute<StatusResponse>(request);
@@ -58,17 +60,28 @@ namespace BouncedClient
 
             if (sr == null)
             {
+                Utils.writeLog("registerWorker_RunWorkerCompleted: Error in registering");
                 //TODO: Put a timeout on retrying
                 statusLabel.Text = "Unable to connect";
                 actionButton.Enabled = true;
+                reconnectTimer.Enabled = true;
                 return;
             }
 
             statusLabel.Text = sr.text;
+
+            //Happens in both cases - if disconnected, will attempt to reconnect.
+            
             if (sr.status.Equals("OK"))
             {
+                Utils.writeLog("registerWorker_RunWorkerCompleted: Registered successfully");
                 pollPendingTimer.Enabled = true;
-                
+                reconnectTimer.Enabled = false;
+            }
+            else
+            {
+                Utils.writeLog("registerWorker_RunWorkerCompleted: Could not register..");
+                reconnectTimer.Enabled = true;
             }
         }
 
@@ -93,10 +106,9 @@ namespace BouncedClient
         {
             List<PendingResponse> latestPending = (List<PendingResponse>)e.Result;
 
-            //TODO: Handle latestpending=null
             if (latestPending == null)
             {
-                statusLabel.Text = "Lost connection to server";
+                statusLabel.Text = "No connection to server";
                 pollPendingTimer.Enabled = false;
                 reconnectTimer.Enabled = true;
                 return;
@@ -115,7 +127,7 @@ namespace BouncedClient
                     downloadWorker.WorkerSupportsCancellation = true;
                     downloadWorker.DoWork += downloadWorker_DoWork;
                     downloadWorker.ProgressChanged += downloadWorker_ProgressChanged;
-                    
+                    downloadWorker.RunWorkerCompleted += downloadWorker_RunWorkerCompleted;
                     //This is what is sent to the backgroundworker
                     Tuple<PendingResponse, DownloadProgress> downloadArgs = 
                         new Tuple<PendingResponse, DownloadProgress>(pr, dip);
@@ -123,6 +135,15 @@ namespace BouncedClient
                     downloadWorker.RunWorkerAsync(downloadArgs);
                 }
             }
+        }
+
+        void downloadWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker currentWorker = sender as BackgroundWorker;
+            Tuple<PendingResponse, DownloadProgress> downloadArgs = e.Argument as Tuple<PendingResponse, DownloadProgress>;
+            String fileHash = Transfers.download(currentWorker, downloadArgs.Item1, downloadArgs.Item2);
+
+            e.Result = new Tuple<string, long>(fileHash, downloadArgs.Item2.transferID);
         }
 
         void downloadWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -150,20 +171,66 @@ namespace BouncedClient
                 Icon zipIcon = Icons.IconFromExtension(type);
 
                 downloadGridView.Rows.Add(new object[] { zipIcon, dp.fileName, dp.status, e.ProgressPercentage + "%", 
-            0, Utils.getHumanSize(dp.fileSize), dp.uploaderIP, "Cancel", dp.mac, dp.hash, dp.fileSize });
+            0, Utils.getHumanSize(dp.fileSize), "Unknown", dp.uploaderIP, "Cancel", dp.mac, dp.hash, dp.fileSize });
                 return;
             }
 
+            downloadGridView["SpeedColumn", row].Value = dp.transferRate + " KB/s";
             downloadGridView["StatusColumn", row].Value = dp.status;
             downloadGridView["ProgressColumn", row].Value = e.ProgressPercentage + "%";
             downloadGridView["ETAColumn", row].Value = "Unknown";
         }
 
-        void downloadWorker_DoWork(object sender, DoWorkEventArgs e)
+        void downloadWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            BackgroundWorker currentWorker = sender as BackgroundWorker;
-            Tuple<PendingResponse, DownloadProgress> downloadArgs = e.Argument as Tuple<PendingResponse, DownloadProgress>;
-            Transfers.download(currentWorker, downloadArgs.Item1, downloadArgs.Item2);
+            Utils.writeLog("downloadWorker_RunWorkerCompleted: Performing post-download ops");
+            Tuple<string, long> resultArgs = e.Result as Tuple<string, long>;
+            BackgroundWorker updateWorker = new BackgroundWorker();
+            updateWorker.DoWork += updateWorker_DoWork;
+            updateWorker.RunWorkerCompleted += updateWorker_RunWorkerCompleted;
+            UpdateRequest ur = new UpdateRequest();
+
+            if (e.Error == null)
+            {
+                ur.newHash = resultArgs.Item1;
+                ur.transferID = resultArgs.Item2;
+                ur.status = "Done";
+
+                if (e.Cancelled)
+                {
+                    ur.status = "Canceled";
+                }
+
+                updateWorker.RunWorkerAsync(ur);
+            }
+            else
+            {
+                Utils.writeLog("downloadWorker_RunWorkerCompleted: Error : " + e.Error);
+            }
+
+        }
+
+        private void updateWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            UpdateRequest ur = e.Argument as UpdateRequest;
+
+            RestClient client = new RestClient("http://" + Configuration.server);
+            RestRequest request = new RestRequest("update", Method.POST);
+
+            request.AddParameter("transferID", ur.transferID);
+            request.AddParameter("status", ur.status);
+            request.AddParameter("newHash", ur.newHash);
+
+            RestResponse<StatusResponse> response = (RestResponse<StatusResponse>)client.Execute<StatusResponse>(request);
+
+            e.Result = response.Data;
+        }
+
+        private void updateWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            StatusResponse sr = e.Result as StatusResponse;
+            Utils.writeLog("updateWorker_RunWorkerCompleted: " + sr.ToString());
+            //TODO: Check for failed update requests.
         }
 
         private void loadConfigWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -202,6 +269,7 @@ namespace BouncedClient
 
                 usernameTextBox.Text = Configuration.username;
                 downloadFolder.Text = Configuration.downloadFolder;
+                serverTextBox.Text = Configuration.server;
                 foreach (string sharedFolder in Configuration.sharedFolders)
                 {
                     sharedFolders.Items.Add(sharedFolder);
@@ -317,7 +385,7 @@ namespace BouncedClient
 
         private void loadIndexWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            Indexer.deserializeHashTable();
+            Indexer.deserializeHashTables();
         }
 
         private void loadIndexWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -460,13 +528,15 @@ namespace BouncedClient
         private void reconnectTimer_Tick(object sender, EventArgs e)
         {
             if (!registerWorker.IsBusy)
+            {
                 registerWorker.RunWorkerAsync();
+            }
         }
 
         private void downloadGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             DataGridView dgv = sender as DataGridView;
-            if (dgv != null && e.ColumnIndex==7 && e.RowIndex>-1)
+            if (dgv != null && e.ColumnIndex==8 && e.RowIndex>-1)
             {
                 DataGridViewButtonCell buttonCell = dgv.Rows[e.RowIndex].Cells["ActionColumn"] as DataGridViewButtonCell;
 
@@ -501,20 +571,11 @@ namespace BouncedClient
 
         }
 
-        private void updateWorker_DoWork(object sender, DoWorkEventArgs e)
+        private void serverTextBox_Leave(object sender, EventArgs e)
         {
-
-
-            RestClient client = new RestClient("http://" + Configuration.server);
-            RestRequest request = new RestRequest("update", Method.POST);
-
-            request.AddParameter("transferID", ); //TODO: Change this
-            request.AddParameter("status", "raghav");
-            request.AddParameter("newHash", "123");
-
-            RestResponse<StatusResponse> response = (RestResponse<StatusResponse>)client.Execute<StatusResponse>(request);
-
-            e.Result = response.Data;
+            Configuration.server = serverTextBox.Text;
+            Configuration.saveConfiguration();
         }
+
     }
 }

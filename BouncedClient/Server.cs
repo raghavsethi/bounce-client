@@ -38,6 +38,7 @@ namespace BouncedClient
             {
                 //Waits until a client has connected to the server.
                 TcpClient client = tcpListener.AcceptTcpClient();
+                //client.NoDelay = true;
                 Utils.writeLog("serverWorker_DoWork: New peer connected");
                 
                 //Creates a thread to handle the client.
@@ -106,7 +107,7 @@ namespace BouncedClient
             Utils.writeLog("upload: Started");
 
             bool successfulTransfer = false;
-            byte[] byteSend = new byte[8096];
+            byte[] byteSend = new byte[4096];
 
             string filePath = "";
             string fileName = "";
@@ -140,10 +141,9 @@ namespace BouncedClient
                 //Send the file.
                 while ((bytesSize = fileLocalStream.Read(byteSend, 0, byteSend.Length)) > 0)
                 {
-                    Thread.Sleep(50);
+                    Thread.Sleep(100);
                     bytesUploaded = bytesUploaded + bytesSize;
                     fileUploadStream.Write(byteSend, 0, bytesSize);
-
                 }
 
                 Utils.writeLog("upload : Sent file : " + fileName);

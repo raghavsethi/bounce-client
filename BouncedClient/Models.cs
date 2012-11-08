@@ -123,7 +123,8 @@ namespace BouncedClient
         public string status;
         public long transferID;
         public bool visible; //True for files that I have requested, false otherwise
-        public double transferRate;
+        public int transferRate;
+        public string downloadedFilePath;
 
         public DownloadProgress()
         { }
@@ -137,6 +138,7 @@ namespace BouncedClient
             symKey = pr.symKey;
             fileSize = pr.fileSize;
             type = pr.type;
+            downloadedFilePath = Configuration.downloadFolder + "\\" + pr.fileName;
 
             if (pr.type == "secondleg" || pr.type == "direct")
                 visible = true;
@@ -146,26 +148,13 @@ namespace BouncedClient
             completed = 0;
             status = "Starting..";
         }
+    }
 
-        public DownloadProgress(PendingResponse pr)
-        {
-            transferID = pr.transferID;
-            mac = pr.uploader;
-            hash = pr.fileHash;
-            fileName = pr.fileName;
-            symKey = pr.symKey;
-            fileSize = pr.fileSize;
-            type = pr.type;
-
-            if (pr.type == "secondleg" || pr.type == "direct")
-                visible = true;
-            else
-                visible = false;
-
-            completed = 0;
-            status = "Starting..";
-        }
-
+    public class UpdateRequest
+    {
+        public long transferID;
+        public String status;
+        public String newHash;
     }
 
 }

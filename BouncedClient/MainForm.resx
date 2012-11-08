@@ -156,6 +156,9 @@
   <metadata name="ETAColumn.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="SpeedColumn.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <metadata name="FileSizeTextColumn.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -178,7 +181,7 @@
   <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAGQAAAAlCAYAAAC05kydAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wAAADsABataJCQAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTAw9HKhAAAHHUlEQVRoQ+2Y
+        vQAADr0BR/uQrQAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTAw9HKhAAAHHUlEQVRoQ+2Y
         eWxVRRTGWWSRUguUTSqBiGhUNgsURWxaJSx2L4tlESFsAZsStiY1AQTbgoAmiKJAjPuGVFEEgmDENahB
         WQRFRBRBqyhEhFaE9vh9w5lyX9974quXpH/Ml/xy555zZu57c2bmztw6Tk5OTk5Ol0KpqaldwP1gmpqc
         aij04fVgHshTU+RC5Rwg4Ds1OdVQ6MNs7cuDaopcqOwS4pPQhy4htUnoQ5eQ2iT0oUtIbRL60CWkNgl9
@@ -244,9 +247,6 @@
   </metadata>
   <metadata name="reconnectTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>412, 42</value>
-  </metadata>
-  <metadata name="updateWorker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>548, 42</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>64</value>

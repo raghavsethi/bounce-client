@@ -60,6 +60,7 @@
             this.StatusColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ProgressColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ETAColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SpeedColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FileSizeTextColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PeerColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ActionColumn = new System.Windows.Forms.DataGridViewButtonColumn();
@@ -97,7 +98,6 @@
             this.searchWorker = new System.ComponentModel.BackgroundWorker();
             this.serverWorker = new System.ComponentModel.BackgroundWorker();
             this.reconnectTimer = new System.Windows.Forms.Timer(this.components);
-            this.updateWorker = new System.ComponentModel.BackgroundWorker();
             this.StatusPanel.SuspendLayout();
             this.MainTabControl.SuspendLayout();
             this.SearchTabPage.SuspendLayout();
@@ -385,6 +385,7 @@
             this.StatusColumn,
             this.ProgressColumn,
             this.ETAColumn,
+            this.SpeedColumn,
             this.FileSizeTextColumn,
             this.PeerColumn,
             this.ActionColumn,
@@ -438,6 +439,12 @@
             this.ETAColumn.HeaderText = "ETA";
             this.ETAColumn.Name = "ETAColumn";
             this.ETAColumn.ReadOnly = true;
+            // 
+            // SpeedColumn
+            // 
+            this.SpeedColumn.HeaderText = "Speed";
+            this.SpeedColumn.Name = "SpeedColumn";
+            this.SpeedColumn.ReadOnly = true;
             // 
             // FileSizeTextColumn
             // 
@@ -563,6 +570,7 @@
             // 
             // sharedFolders
             // 
+            this.sharedFolders.CheckOnClick = true;
             this.sharedFolders.FormattingEnabled = true;
             this.sharedFolders.Location = new System.Drawing.Point(17, 218);
             this.sharedFolders.Name = "sharedFolders";
@@ -654,6 +662,7 @@
             this.serverTextBox.Size = new System.Drawing.Size(164, 23);
             this.serverTextBox.TabIndex = 6;
             this.serverTextBox.Text = "localhost:3000";
+            this.serverTextBox.Leave += new System.EventHandler(this.serverTextBox_Leave);
             // 
             // fixedServerLabel
             // 
@@ -756,10 +765,6 @@
             this.reconnectTimer.Interval = 3000;
             this.reconnectTimer.Tick += new System.EventHandler(this.reconnectTimer_Tick);
             // 
-            // updateWorker
-            // 
-            this.updateWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateWorker_DoWork);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -847,19 +852,19 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn FileSizeBytes;
         private System.Windows.Forms.DataGridView downloadGridView;
         private System.ComponentModel.BackgroundWorker serverWorker;
+        private System.Windows.Forms.Timer reconnectTimer;
         private System.Windows.Forms.DataGridViewImageColumn IconColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileNameColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn StatusColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn ProgressColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn ETAColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SpeedColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileSizeTextColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn PeerColumn;
         private System.Windows.Forms.DataGridViewButtonColumn ActionColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn MacColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn HashColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileSizeColumn;
-        private System.Windows.Forms.Timer reconnectTimer;
-        private System.ComponentModel.BackgroundWorker updateWorker;
     }
 }
 
