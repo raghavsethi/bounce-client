@@ -25,4 +25,9 @@ http://stackoverflow.com/questions/1434282/how-do-i-create-5-buttons-and-assign-
 Maintaining Accurate Sync
 -------------------------
 
-Also persist added and removed databases, then update them. Delete them on successful sync.
+
+
+File gotchas
+------------
+
+Bounced will not sync files <750KB

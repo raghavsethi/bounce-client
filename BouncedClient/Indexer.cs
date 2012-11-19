@@ -14,62 +14,58 @@ namespace BouncedClient
 {
     class Indexer
     {
-        public static Hashtable fileIndex;
-        public static Hashtable modifiedIndex;
-        public static Hashtable hashIndex;
-        public static Hashtable removedFiles;
-        public static Hashtable addedFiles;
-        //TODO: Add a hashtable containing file paths and last modified times to improve perf
+        // These are what the server thinks the client has
+        public static Hashtable fileIndex;      //File hash to LocalFile
+
+        // This always remains up-to-date. If the values in this have not changed
+        // then the file is guaranteed to be in either fileIndex or updatedIndex
+
+        public static Hashtable modifiedIndex;  //File name to DateTime
+
+        public static Hashtable hashIndex;      //File name to file hash
+
+        // These are the latest indices which have not been synced
+        public static Hashtable updatedIndex;   //File hash to LocalFile
+        public static Hashtable removedFiles;   //File hash to LocalFile
+        public static Hashtable addedFiles;     //File hash to LocalFile
 
         public static void serializeHashTables()
         {
-            serializeFile(fileIndex, "files.dat");
-            serializeFile(modifiedIndex, "modified.dat");
-            serializeFile(hashIndex, "hashes.dat");
-            serializeFile(addedFiles, "added.dat");
-            serializeFile(removedFiles, "removed.dat");
+            serializeFile(fileIndex, "_files.dat");
+            serializeFile(modifiedIndex, "_modified.dat");
+            serializeFile(hashIndex, "_hashes.dat");
+
+            serializeFile(updatedIndex, "_updated.dat");
+            serializeFile(addedFiles, "_added.dat");
+            serializeFile(removedFiles, "_removed.dat");
         }
 
         public static void deserializeHashTables()
         {
-            fileIndex = deserializeFile("files.dat");
-            modifiedIndex = deserializeFile("modified.dat");
-            hashIndex = deserializeFile("hashes.dat");
-            
-            Utils.writeLog("deserializeIndex: Loaded " + fileIndex.Keys.Count + " files from disk");
-            Boolean consistent = false;
-            if (fileIndex.Keys.Count == hashIndex.Keys.Count && hashIndex.Keys.Count==modifiedIndex.Keys.Count)
-                consistent = true;
+            fileIndex = deserializeFile("_files.dat");
+            modifiedIndex = deserializeFile("_modified.dat");
+            hashIndex = deserializeFile("_hashes.dat");
 
-            Utils.writeLog("deserializeIndex: Consistency is " + consistent);
+            updatedIndex = deserializeFile("_updated.dat");
+            addedFiles = deserializeFile("_added.dat");
+            removedFiles = deserializeFile("_removed.dat");
+        }
+
+        public static void successfulSync()
+        {
+            fileIndex = (Hashtable)updatedIndex.Clone();
+            removedFiles = new Hashtable();
+            addedFiles = new Hashtable();
+            serializeHashTables();
         }
 
         public static void buildIndex(CheckedListBox.ObjectCollection sharedFoldersList)
         {
-            #region initvars
-
-            //TODO: Optimize Hashtable constructor for efficiency.
-            if (fileIndex == null)
-                fileIndex = new Hashtable();
-
-            if (modifiedIndex == null)
-                modifiedIndex = new Hashtable();
-
-            if (hashIndex == null)
-                hashIndex = new Hashtable();
-
-            if (addedFiles == null)
-                addedFiles = new Hashtable();
-
-            Hashtable updatedFileIndex = new Hashtable();
-
             Utils.writeLog("buildIndex: Started indexing...");
 
             int numFoldersIndexed = 0;
 
             DateTime timeOfLastSave = DateTime.Now; //Keeps track of when to persist stuff in the middle of indexing
-
-            #endregion
 
             List<string> folders = new List<string>();
             foreach (string sharedFolderPath in sharedFoldersList)
@@ -81,20 +77,32 @@ namespace BouncedClient
              * The idea is to maintain add/remove lists accurately until a successful sync
              * occurs. At this point we will nullify add/remove list and update fileIndex.
              * 
-             * How this will be done:
+             * Add/remove lists:
              * It turns out that determining removed files is super-fast, because there is
              * no hash computation involved. The most accurate time to get the list of
              * removed files is after the computationally-expensive add list is computed.
+             * 
+             * So what we do is:
+             * 1. Compare against updatedIndex to determine added files - if new, add to
+             *    updatedIndex and addedFiles. If old, do nothing.
+             * 2. After all adds we have an updatedIndex with some removed files as well
+             * 3. Every so often, write everything to disk so that we can pick up where we
+             *    left off.
+             * 4. So then we compute removed files by checking against updatedIndex. If
+             *    removed, remove from updatedIndex and add to removedFiles
+             * 5. Attempt to sync, if successful nullify add/remove and fileIndex=updated
+             *    FileIndex
              * 
             */
 
             while (folders.Count > 0)
             {
-                // We want to persist data from time to time so that we can eventually index very large sets
-                if ((DateTime.Now - timeOfLastSave).TotalMinutes > 5)
+                // Persist data from time to time so that we can eventually index very large sets
+                if ((DateTime.Now - timeOfLastSave).TotalMinutes > 3)
                 {
-                    Utils.writeLog("buildIndex : Time exceeded 5 minutes, writing indices to disk..");
+                    Utils.writeLog("buildIndex : Time exceeded 3 minutes, writing indices to disk..");
                     serializeHashTables();
+                    timeOfLastSave = DateTime.Now;
                 }
 
                 DirectoryInfo di = new DirectoryInfo(folders[0]);
@@ -107,9 +115,11 @@ namespace BouncedClient
                 }
                 catch (UnauthorizedAccessException u)
                 {
-                    Utils.writeLog("ERROR! buildIndex: UnauthorizedAccessException while indexing: " + di.FullName);
+                    Utils.writeLog("ERROR! buildIndex: UnauthorizedAccessException while indexing " + di.FullName);
+                    continue;
                 }
 
+                // Add all the sub folders to the processing queue
                 if (directoryInfoArr != null)
                 {
                     foreach (DirectoryInfo currentDirectory in directoryInfoArr)
@@ -124,59 +134,124 @@ namespace BouncedClient
                     {
                         if (modifiedIndex.ContainsKey(fi.FullName))
                         {
-                            // If file has not been modified, copy old data and remove from old table
+                            // If file has not been modified, it's already in updatedIndex
                             if ((DateTime)modifiedIndex[fi.FullName] == fi.LastWriteTime)
                             {
-
-                                //Utils.writeLog("buildIndex: Old file not modified :" + fi.FullName);
-
-                                string hash = (string)hashIndex[fi.FullName];
-                                updatedFileIndex[hash] = fileIndex[hash];
-                                fileIndex.Remove(hash);
+                                //Utils.writeLog("buildIndex: Old file not modified : " + fi.FullName);
                                 continue;
                             }
-                            Utils.writeLog("buildIndex: Old file modified :" + fi.FullName);
-                            // If it has been modified, it will be in both fileIndex and updatedFileIndex
-                            // All files in fileIndex will be removed.
+                            else
+                            {
+                                Utils.writeLog("buildIndex: Old file modified : " + fi.FullName);
+                            }
+                        }
+                        else
+                        {
+                            Utils.writeLog("buildIndex: New file seen : " + fi.FullName);
                         }
 
+                        // Get file details, including hash and keywords
                         LocalFile currentFile = getFileInfo(fi.FullName);
 
                         if (currentFile == null)
                         {
-                            Utils.writeLog("buildIndex: Could not get hash for file :" + fi.FullName);
+                            Utils.writeLog("buildIndex: Didn't process file :" + fi.FullName);
                             continue;
                         }
 
                         hashIndex[fi.FullName] = currentFile.hash;
                         modifiedIndex[fi.FullName] = fi.LastWriteTime;
-                        addedFiles[currentFile.hash] = currentFile;
-                        updatedFileIndex[currentFile.hash] = currentFile;
 
+                        addedFiles[currentFile.hash] = currentFile;
+                        updatedIndex[currentFile.hash] = currentFile;
                     }
 
                     folders.Remove(folders[0]);
                     numFoldersIndexed++;
                 }
-
             }
 
-            removedFiles = fileIndex;
-            fileIndex = updatedFileIndex;
+            // Addition is complete, now check for removed files..
+            Utils.writeLog("buildIndex: File addition complete..");
+
+            removedFiles = (Hashtable)fileIndex.Clone();
+            
+            foreach (string sharedFolderPath in sharedFoldersList)
+                folders.Add(sharedFolderPath);
+
+            while (folders.Count > 0)
+            {
+                DirectoryInfo di = new DirectoryInfo(folders[0]);
+                FileInfo[] fileInfoArr = null;
+                DirectoryInfo[] directoryInfoArr = null;
+                try
+                {
+                    fileInfoArr = di.GetFiles();
+                    directoryInfoArr = di.GetDirectories();
+                }
+                catch (UnauthorizedAccessException u)
+                {
+                    Utils.writeLog("ERROR! buildIndex: UnauthorizedAccessException while indexing " + di.FullName);
+                    continue;
+                }
+
+                // Add all the sub folders to the processing queue
+                if (directoryInfoArr != null)
+                {
+                    foreach (DirectoryInfo currentDirectory in directoryInfoArr)
+                    {
+                        folders.Add(currentDirectory.FullName);
+                    }
+                }
+
+                if (fileInfoArr != null)
+                {
+                    foreach (FileInfo fi in fileInfoArr)
+                    {
+                        // If file hash was found in hashIndex, remove from removedFiles
+                        if (hashIndex.ContainsKey(fi.FullName) && updatedIndex.ContainsKey(hashIndex[fi.FullName]))
+                        {
+                            removedFiles.Remove(hashIndex[fi.FullName]);
+                        }
+                    }
+                    folders.Remove(folders[0]);
+                }
+            }
+
+            // At this point removedFiles contains list of files in the index that don't
+            // correspond to any files on disk..
+
+            // Make sure removed files are gone from the appropriate places
+            foreach(String key in removedFiles.Keys)
+            {
+                String path = ((LocalFile)removedFiles[key]).location;
+                Utils.writeLog("buildIndex: Removed file : " + path);
+                
+                if (addedFiles.ContainsKey(key))
+                    addedFiles.Remove(key);
+
+                if (updatedIndex.ContainsKey(key))
+                {
+                    Utils.writeLog("buildIndex: Found out-of-date key in updatedIndex");
+                    updatedIndex.Remove(key);
+                }
+
+                if (modifiedIndex.ContainsKey(path))
+                {
+                    modifiedIndex.Remove(path);
+                }
+            }
 
             Utils.writeLog("buildIndex: " + removedFiles.Keys.Count + " files removed");
             Utils.writeLog("buildIndex: " + addedFiles.Keys.Count + " files added");
 
             serializeHashTables();
-            Utils.writeLog("buildIndex: Completed indexing");
+            Utils.writeLog("buildIndex: Completed indexing of " + numFoldersIndexed + " folders.");
         }
          
         public static LocalFile getFileInfo(string filePath)
         {
             LocalFile currentFile = new LocalFile();
-
-            if ((currentFile.hash = GenerateHash(filePath)) == null)
-                return null;
 
             try
             {
@@ -213,6 +288,17 @@ namespace BouncedClient
             }
 
             currentFile.location = filePath;
+
+            if (currentFile.name.ToLower().Contains("thumbs.db") ||
+                currentFile.name.ToLower().Contains("albumart") ||
+                currentFile.name.ToLower().Contains("desktop.ini") || 
+                currentFile.name.ToLower().Contains("folder.jpg"))
+            {
+                return null;
+            }
+
+            if ((currentFile.hash = GenerateHash(filePath)) == null)
+                return null;
 
             /*
             List<string> propertyHeaders = new List<string>();

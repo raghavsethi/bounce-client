@@ -5,11 +5,13 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -43,7 +45,7 @@ namespace BouncedClient
             RestClient client = new RestClient("http://"+Configuration.server);
             RestRequest request = new RestRequest("register", Method.POST);
 
-            Utils.writeLog("registerWorker_DoWork: URL called : " + "http://" + Configuration.server);
+            //Utils.writeLog("registerWorker_DoWork: URL called : " + "http://" + Configuration.server);
 
             request.AddParameter("mac", Utils.GetMACAddress()); //TODO: Change this
             request.AddParameter("nick", Configuration.username);
@@ -312,7 +314,8 @@ namespace BouncedClient
         {
             forceRescanButton.Enabled = false;
             forceRescanButton.Text = "Indexing..";
-            indexWorker.RunWorkerAsync();
+            if(!indexWorker.IsBusy)
+                indexWorker.RunWorkerAsync();
         }
 
         private void indexWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -355,13 +358,25 @@ namespace BouncedClient
             request.AddParameter("removed", Indexer.getRemovedJson());
 
             RestResponse<StatusResponse> response = (RestResponse<StatusResponse>)client.Execute<StatusResponse>(request);
-
             e.Result = response.Data;
+            
+            /*
+            MessageBox.Show("Done1!" +  response.Content);
+            using (var wb = new WebClient())
+            {
+                var data = new NameValueCollection();
+                data["added"] = Indexer.getAddedJson();
+                data["removed"] = Indexer.getRemovedJson();
+
+                var resp = wb.UploadValues("http://" + Configuration.server + "/sync", "POST", data);
+                MessageBox.Show("Done2!");
+            }
+            */
         }
 
         private void syncWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            StatusResponse sr = (StatusResponse)e.Result;
+            StatusResponse sr = e.Result as StatusResponse;
 
             if (sr == null || sr.status==null)
             {
@@ -372,12 +387,9 @@ namespace BouncedClient
 
             statusLabel.Text = sr.text;
 
-            //TODO: This should probably only happen if the sync was successful
-            //Clear change tables
             if (sr.status.Equals("OK"))
             {
-                Indexer.addedFiles = new Hashtable();
-                Indexer.removedFiles = new Hashtable();
+                Indexer.successfulSync();
                 Utils.writeLog("syncWorker_RunWorkerCompleted: Sync complete");
             }
             
