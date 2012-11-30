@@ -72,5 +72,24 @@ namespace BouncedClient
             }
             return human;
         }
+
+        public static string getHumanTime(double seconds)
+        {
+            if (seconds < 60)
+            {
+                return seconds.ToString("F0") + "s";
+            }
+            if (seconds < 3600)
+            {
+                return (seconds / 60).ToString("F0") + "m " + (seconds % 60).ToString("F0") + "s";
+            }
+            if (seconds < 24 * 3600)
+            {
+                return (seconds / 3600).ToString("F0") + "hrs " + (seconds % 3600).ToString("F0") + "m";
+            }
+
+            return "Unknown";
+        }
+
     }
 }

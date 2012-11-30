@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace BouncedClient
 {
@@ -63,9 +64,33 @@ namespace BouncedClient
             DateTime refresh = DateTime.Now;    //To track time since last refresh
 
             byte[] downBuffer = new byte[4096];
-            strLocal = new FileStream(dp.downloadedFilePath, 
-                FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
-            
+
+            try
+            {
+                strLocal = new FileStream(dp.downloadedFilePath,
+                    FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+            }
+            catch (Exception e)
+            {
+                Utils.writeLog("download: Error creating file : " + e);
+                // Attempt to recover from error
+                String filePath = dp.downloadedFilePath;
+                String folderPath = filePath.Substring(0, filePath.LastIndexOf("\\"));
+                try
+                {
+                    System.IO.Directory.CreateDirectory(folderPath);
+                    strLocal = new FileStream(dp.downloadedFilePath,
+                        FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+                }
+                catch (Exception e2)
+                {
+                    Utils.writeLog("download: Unrecoverable error while creating folder to hold file");
+                    MessageBox.Show("Could not download file as the download folder could not be found or created",
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
+            }
+
             #endregion
 
             try
@@ -92,11 +117,17 @@ namespace BouncedClient
                     double msElapsedSinceRefresh = (DateTime.Now - refresh).TotalMilliseconds;
                     if (msElapsedSinceRefresh > 1000) // Determines how fast UI is updated
                     {
-                        tempTransferRate = (int)((bytesSize / 1024) / (DateTime.Now - refresh).TotalSeconds);
-                        
+                        tempTransferRate = (int)((downloadedInCycle / 1024.0) / (DateTime.Now - refresh).TotalSeconds);
                         dp.completed = bytesDownloaded;
                         dp.status = "Downloading";
+                        
+                        // Compute download speed with smoothing factor
+                        if (dp.averageTransferRate == 0)
+                            dp.averageTransferRate = dp.transferRate;
+                        
                         dp.transferRate = tempTransferRate;
+                        dp.averageTransferRate = (0.01) * tempTransferRate + (0.99) * dp.averageTransferRate;
+                        
                         int percentComplete = (int) (100 * bytesDownloaded / pr.fileSize);
 
                         worker.ReportProgress(percentComplete, dp);
@@ -149,7 +180,7 @@ namespace BouncedClient
                     }
                     catch (Exception e)
                     {
-                        // Do nothing. We only want to try and do this.
+                        // Do nothing. We only want to try and delete the file.
                     }
 
                     return null;

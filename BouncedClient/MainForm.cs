@@ -22,7 +22,6 @@ namespace BouncedClient
     {
         List<SearchResult> currentlyDisplayedSearchResults;
         
-
         //Makes sure in-progress transfers are not re-added
         
         public MainForm()
@@ -60,7 +59,7 @@ namespace BouncedClient
         {
             StatusResponse sr = (StatusResponse)e.Result;
 
-            if (sr == null)
+            if (sr == null || sr.status==null)
             {
                 Utils.writeLog("registerWorker_RunWorkerCompleted: Error in registering");
                 //TODO: Put a timeout on retrying
@@ -180,7 +179,9 @@ namespace BouncedClient
             downloadGridView["SpeedColumn", row].Value = dp.transferRate + " KB/s";
             downloadGridView["StatusColumn", row].Value = dp.status;
             downloadGridView["ProgressColumn", row].Value = e.ProgressPercentage + "%";
-            downloadGridView["ETAColumn", row].Value = "Unknown";
+            double secondsToComplete = ((dp.fileSize - dp.completed) / 1024.0) / dp.averageTransferRate;
+            downloadGridView["ETAColumn", row].Value = Utils.getHumanTime(secondsToComplete);
+            downloadGridView["PeerColumn", row].Value = dp.nick;
         }
 
         void downloadWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -246,8 +247,7 @@ namespace BouncedClient
             {
                 MainTabControl.SelectedIndex = 3;
                 actionButton.Enabled = true;
-                statusLabel.Text = "Select a valid username, and check that at least " +
-                    "one shared folder is present before reconnecting";
+                statusLabel.Text = "Invalid username";
                 MessageBox.Show("Select a valid username, and check that at least " +
                     "one shared folder is present. When you're ready, press 'Reconnect'", "Can't connect to server");
 
@@ -343,35 +343,54 @@ namespace BouncedClient
         {
             folderBrowser.ShowDialog();
             Configuration.downloadFolder = folderBrowser.SelectedPath;
-            downloadFolder.Text = folderBrowser.SelectedPath;
-            Configuration.saveConfiguration();
+            if (folderBrowser.SelectedPath != "")
+            {
+                downloadFolder.Text = folderBrowser.SelectedPath;
+                Configuration.saveConfiguration();
+            }
         }
 
         private void syncWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             Utils.writeLog("syncWorker_DoWork: Started sync..");
 
-            RestClient client = new RestClient("http://"+Configuration.server);
-            RestRequest request = new RestRequest("sync", Method.POST);
+            // This should work, but doesn't
+
+            /*
+            RestClient client = new RestClient("http://" + Configuration.server);
+            RestRequest request = new RestRequest("xbsnrixb", Method.POST);
 
             request.AddParameter("added", Indexer.getAddedJson());
             request.AddParameter("removed", Indexer.getRemovedJson());
 
             RestResponse<StatusResponse> response = (RestResponse<StatusResponse>)client.Execute<StatusResponse>(request);
             e.Result = response.Data;
+            */
             
-            /*
-            MessageBox.Show("Done1!" +  response.Content);
             using (var wb = new WebClient())
             {
                 var data = new NameValueCollection();
                 data["added"] = Indexer.getAddedJson();
                 data["removed"] = Indexer.getRemovedJson();
 
-                var resp = wb.UploadValues("http://" + Configuration.server + "/sync", "POST", data);
-                MessageBox.Show("Done2!");
+                String response = null;
+
+                try
+                {
+                    response = Encoding.ASCII.GetString(wb.UploadValues("http://" + Configuration.server + "/sync", "POST", data));
+                    //MessageBox.Show(response);
+                }
+                catch (Exception we)
+                {
+                    Utils.writeLog("syncWorker_DoWork: " + we);
+                    response = "";
+                }
+                StatusResponse sr = new StatusResponse();
+                sr.status = (response.Contains("OK")) ? "OK" : "Error";
+                sr.text = (response.Contains("OK")) ? "Synced successfully" : "Failed to sync";
+                e.Result = sr;
             }
-            */
+            
         }
 
         private void syncWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

@@ -33,6 +33,7 @@ namespace BouncedClient
         public String type { get; set; }
         public long fileSize { get; set; }
         public String uploaderIP { get; set; }
+        public String nick { get; set; }
 
         public class EqualityComparer : IEqualityComparer<PendingResponse>
         {
@@ -125,6 +126,8 @@ namespace BouncedClient
         public bool visible; //True for files that I have requested, false otherwise
         public int transferRate;
         public string downloadedFilePath;
+        public string nick;
+        public double averageTransferRate;
 
         public DownloadProgress()
         { }
@@ -138,6 +141,9 @@ namespace BouncedClient
             symKey = pr.symKey;
             fileSize = pr.fileSize;
             type = pr.type;
+            nick = pr.nick;
+            averageTransferRate = 0;
+
             downloadedFilePath = Configuration.downloadFolder + "\\" + pr.fileName;
 
             if (pr.type == "secondleg" || pr.type == "direct")

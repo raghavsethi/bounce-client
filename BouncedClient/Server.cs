@@ -141,7 +141,7 @@ namespace BouncedClient
                 //Send the file.
                 while ((bytesSize = fileLocalStream.Read(byteSend, 0, byteSend.Length)) > 0)
                 {
-                    Thread.Sleep(100);
+                    //Thread.Sleep(100);
                     bytesUploaded = bytesUploaded + bytesSize;
                     fileUploadStream.Write(byteSend, 0, bytesSize);
                 }
