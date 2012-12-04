@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RestSharp;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -140,6 +141,7 @@ namespace BouncedClient
                 dp.completed = bytesDownloaded;
                 dp.transferRate = tempTransferRate;
                 dp.status = "Checking file..";
+                
                 worker.ReportProgress(100, dp);
                 strLocal.Close();
             }
@@ -159,12 +161,23 @@ namespace BouncedClient
             Utils.writeLog("download: Successfully downloaded " + pr.fileName + 
                 "(" + dp.fileSize + ") Type:" + dp.type );
 
-            String hash = Indexer.GenerateHash(dp.downloadedFilePath);
+            String newHash = Indexer.GenerateHash(dp.downloadedFilePath);
+
+            // Tell the server we have downloaded the file
+            BackgroundWorker updateWorker = new BackgroundWorker();
+            updateWorker.DoWork += Transfers.updateWorker_DoWork;
+            updateWorker.RunWorkerCompleted += Transfers.updateWorker_RunWorkerCompleted;
+            UpdateRequest ur = new UpdateRequest();
+            ur.newHash = newHash;
+            ur.transferID = dp.transferID;
+            ur.status = "Done";
+
             if (dp.type == "secondleg" || dp.type == "direct")
             {
-                if (hash == dp.hash)
+                if (newHash == dp.hash)
                 {
                     Utils.writeLog("download: Hash verified");
+                    dp.isComplete = true;
                     dp.status = "Completed";
                     worker.ReportProgress(100, dp);
                 }
@@ -172,6 +185,7 @@ namespace BouncedClient
                 {
                     Utils.writeLog("download: Hash verification failed");
                     dp.status = "Failed integrity check";
+                    ur.status = "Integrity check failed";
                     worker.ReportProgress(100, dp);
 
                     try
@@ -183,16 +197,62 @@ namespace BouncedClient
                         // Do nothing. We only want to try and delete the file.
                     }
 
-                    return null;
+                    newHash = null;
                 }
             }
             else
             {
+                // Rename the file to the new hash
+
+                String newPath = dp.downloadedFilePath.Substring(0, dp.downloadedFilePath.LastIndexOf(@"\"));
+                newPath = newPath + "\\" + newHash + ".bounced";
+
+                try
+                {
+                    File.Move(dp.downloadedFilePath, newPath);
+                }
+                catch (Exception e)
+                {
+                    Utils.writeLog("download: Critical. Unable to rename file to the new hash.");
+                }
+
                 dp.status = "Completed";
+                dp.isComplete = true;
                 worker.ReportProgress(100, dp);
             }
 
-            return hash;
+            updateWorker.RunWorkerAsync(ur);
+
+            return newHash;
         }
+
+        public static void updateWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            UpdateRequest ur = e.Argument as UpdateRequest;
+
+            RestClient client = new RestClient("http://" + Configuration.server);
+            RestRequest request = new RestRequest("update", Method.POST);
+
+            request.AddParameter("transferID", ur.transferID);
+            request.AddParameter("status", ur.status);
+            request.AddParameter("newHash", ur.newHash);
+
+            Utils.writeLog("updateWorker_DoWork: Sending update request for transferID " + ur.transferID);
+
+            RestResponse<StatusResponse> response = (RestResponse<StatusResponse>)client.Execute<StatusResponse>(request);
+
+            e.Result = response.Data;
+        }
+
+        public static void updateWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            StatusResponse sr = e.Result as StatusResponse;
+            if (sr != null)
+                Utils.writeLog("updateWorker_RunWorkerCompleted: " + sr.ToString());
+            else
+                Utils.writeLog("updateWorker_RunWorkerCompleted: Status returned was null");
+            //TODO: Check for failed update requests.
+        }
+
     }
 }

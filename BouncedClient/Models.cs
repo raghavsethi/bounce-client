@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace BouncedClient
 {
@@ -123,11 +124,12 @@ namespace BouncedClient
         public string symKey;
         public string status;
         public long transferID;
-        public bool visible; //True for files that I have requested, false otherwise
+        public bool visible; // True for files that I have requested, false otherwise
         public int transferRate;
         public string downloadedFilePath;
         public string nick;
         public double averageTransferRate;
+        public bool isComplete;
 
         public DownloadProgress()
         { }
@@ -143,14 +145,19 @@ namespace BouncedClient
             type = pr.type;
             nick = pr.nick;
             averageTransferRate = 0;
-
-            downloadedFilePath = Configuration.downloadFolder + "\\" + pr.fileName;
+            isComplete = false;
 
             if (pr.type == "secondleg" || pr.type == "direct")
+            {
+                downloadedFilePath = Configuration.downloadFolder + "\\" + pr.fileName;
                 visible = true;
+            }
             else
+            {
+                downloadedFilePath = Application.StartupPath + "\\Bounces" + "\\" + pr.fileHash +
+                    ".bounce";
                 visible = false;
-
+            }
             completed = 0;
             status = "Starting..";
         }

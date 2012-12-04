@@ -8,6 +8,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace BouncedClient
 {
@@ -99,10 +100,11 @@ namespace BouncedClient
             String transferId = temp[1];
             String transferType = temp[2]; //direct, firstleg, secondleg
 
-            upload(fileHash, clientStream);
+            upload(fileHash, clientStream, transferType);
+            clientStream.Close();
         }
 
-        public static bool upload(string fileHash, NetworkStream fileUploadStream)
+        public static bool upload(string fileHash, NetworkStream fileUploadStream, String transferType)
         {
             Utils.writeLog("upload: Started");
 
@@ -113,7 +115,16 @@ namespace BouncedClient
             string fileName = "";
 
             //Get file path from hash.
-            filePath = ((LocalFile)Indexer.fileIndex[fileHash]).location;
+            if (transferType == "direct" || transferType == "firstleg")
+            {
+                filePath = ((LocalFile)Indexer.fileIndex[fileHash]).location;
+            }
+            else
+            {
+                filePath = Application.StartupPath + "\\Bounces" + "\\" + fileHash +
+                    ".bounced";
+            }
+
             FileStream fileLocalStream;
 
             try
@@ -156,7 +167,6 @@ namespace BouncedClient
             }
             finally
             {
-                fileUploadStream.Close();
                 fileLocalStream.Close();
             }
             return successfulTransfer;

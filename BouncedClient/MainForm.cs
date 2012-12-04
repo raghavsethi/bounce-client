@@ -44,9 +44,7 @@ namespace BouncedClient
             RestClient client = new RestClient("http://"+Configuration.server);
             RestRequest request = new RestRequest("register", Method.POST);
 
-            //Utils.writeLog("registerWorker_DoWork: URL called : " + "http://" + Configuration.server);
-
-            request.AddParameter("mac", Utils.GetMACAddress()); //TODO: Change this
+            request.AddParameter("mac", Utils.GetMACAddress());
             request.AddParameter("nick", Configuration.username);
             request.AddParameter("space_allocated", "123");
 
@@ -62,7 +60,7 @@ namespace BouncedClient
             if (sr == null || sr.status==null)
             {
                 Utils.writeLog("registerWorker_RunWorkerCompleted: Error in registering");
-                //TODO: Put a timeout on retrying
+                //TODO: Put a timeout to start retry
                 statusLabel.Text = "Unable to connect";
                 actionButton.Enabled = true;
                 reconnectTimer.Enabled = true;
@@ -155,7 +153,7 @@ namespace BouncedClient
 
             int row = -1;
             
-            //Identify which row contains the download whose progress is being reported
+            // Identify which row contains the download whose progress is being reported
             for (int i = 0; i < downloadGridView.RowCount; i++)
             {
                 if ((((String)(downloadGridView["HashColumn", i].Value)).Equals(dp.hash))
@@ -166,74 +164,43 @@ namespace BouncedClient
                 }
             }
 
+            // This download is not yet shown in the UI
             if(row == -1)
             {
                 String type = dp.fileName.Substring(dp.fileName.LastIndexOf('.') + 1);
                 Icon zipIcon = Icons.IconFromExtension(type);
 
                 downloadGridView.Rows.Add(new object[] { zipIcon, dp.fileName, dp.status, e.ProgressPercentage + "%", 
-            0, Utils.getHumanSize(dp.fileSize), "Unknown", dp.uploaderIP, "Cancel", dp.mac, dp.hash, dp.fileSize });
+            0, "Unknown", Utils.getHumanSize(dp.fileSize), dp.uploaderIP, "Cancel", dp.mac, dp.hash, dp.fileSize, dp.downloadedFilePath });
                 return;
             }
 
             downloadGridView["SpeedColumn", row].Value = dp.transferRate + " KB/s";
             downloadGridView["StatusColumn", row].Value = dp.status;
             downloadGridView["ProgressColumn", row].Value = e.ProgressPercentage + "%";
-            double secondsToComplete = ((dp.fileSize - dp.completed) / 1024.0) / dp.averageTransferRate;
-            downloadGridView["ETAColumn", row].Value = Utils.getHumanTime(secondsToComplete);
             downloadGridView["PeerColumn", row].Value = dp.nick;
+
+            if (dp.isComplete)
+            {
+                downloadGridView["ActionColumn", row].Value = "Open folder";
+            }
+
+            double secondsToComplete = ((dp.fileSize - dp.completed) / 1024.0) / dp.averageTransferRate;
+            if (secondsToComplete > 0)
+                downloadGridView["ETAColumn", row].Value = Utils.getHumanTime(secondsToComplete);
+            else
+                downloadGridView["ETAColumn", row].Value = "";
         }
 
         void downloadWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Utils.writeLog("downloadWorker_RunWorkerCompleted: Performing post-download ops");
-            Tuple<string, long> resultArgs = e.Result as Tuple<string, long>;
-            BackgroundWorker updateWorker = new BackgroundWorker();
-            updateWorker.DoWork += updateWorker_DoWork;
-            updateWorker.RunWorkerCompleted += updateWorker_RunWorkerCompleted;
-            UpdateRequest ur = new UpdateRequest();
-
-            if (e.Error == null)
-            {
-                ur.newHash = resultArgs.Item1;
-                ur.transferID = resultArgs.Item2;
-                ur.status = "Done";
-
-                if (e.Cancelled)
-                {
-                    ur.status = "Canceled";
-                }
-
-                updateWorker.RunWorkerAsync(ur);
-            }
-            else
+            Utils.writeLog("downloadWorker_RunWorkerCompleted: Download completed.");
+            
+            if (e.Error !=null)
             {
                 Utils.writeLog("downloadWorker_RunWorkerCompleted: Error : " + e.Error);
             }
 
-        }
-
-        private void updateWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            UpdateRequest ur = e.Argument as UpdateRequest;
-
-            RestClient client = new RestClient("http://" + Configuration.server);
-            RestRequest request = new RestRequest("update", Method.POST);
-
-            request.AddParameter("transferID", ur.transferID);
-            request.AddParameter("status", ur.status);
-            request.AddParameter("newHash", ur.newHash);
-
-            RestResponse<StatusResponse> response = (RestResponse<StatusResponse>)client.Execute<StatusResponse>(request);
-
-            e.Result = response.Data;
-        }
-
-        private void updateWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            StatusResponse sr = e.Result as StatusResponse;
-            Utils.writeLog("updateWorker_RunWorkerCompleted: " + sr.ToString());
-            //TODO: Check for failed update requests.
         }
 
         private void loadConfigWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -467,6 +434,12 @@ namespace BouncedClient
                (RestResponse<List<SearchResult>>)client.Execute<List<SearchResult>>(request);
 
             currentlyDisplayedSearchResults = (List<SearchResult>)response.Data;
+
+            if (currentlyDisplayedSearchResults.Count == 0)
+            {
+                MessageBox.Show("We were unable to find any results for your search query. Please rephrase and try again.",
+                    "No results found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
         
         private void searchWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -548,7 +521,10 @@ namespace BouncedClient
 
             StatusResponse sr = response.Data as StatusResponse;
 
-            Utils.writeLog("downloadRequestWorker_DoWork: Download request returned : " + sr.ToString());
+            if(sr!=null)
+                Utils.writeLog("downloadRequestWorker_DoWork: Download request returned : " + sr.ToString());
+            else
+                Utils.writeLog("downloadRequestWorker_DoWork: Download request returned null");
         }
 
         private void serverWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -579,6 +555,14 @@ namespace BouncedClient
                     return;
                 }
 
+                // Open explorer and highlight downloaded file
+                if (action == "Open folder")
+                {
+                    string argument = "/select, \"" + dgv.Rows[e.RowIndex].Cells["FilePathColumn"].Value + "\"";
+                    System.Diagnostics.Process.Start("explorer.exe", argument);
+                    return;
+                }
+
                 Utils.writeLog("downloadGridView_CellClick: Canceling download");
 
                 DataGridViewTextBoxCell macCell = dgv.Rows[e.RowIndex].Cells["MacColumn"] as DataGridViewTextBoxCell;
@@ -587,14 +571,13 @@ namespace BouncedClient
                 String canceledMac = (String)macCell.Value;
                 String canceledHash = (String)hashCell.Value;
 
-                buttonCell.Value = "Clear";
-
                 foreach (PendingResponse pr in Transfers.pendingToDownload.Keys)
                 {
                     if (pr.uploader == canceledMac && pr.fileHash == canceledHash)
                     {
                         //TODO: Update cancellation here
                         Transfers.pendingToDownload[pr] = null;
+                        buttonCell.Value = "Clear";
                         break;
                     }
                 }
