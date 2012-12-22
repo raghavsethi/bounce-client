@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -115,7 +116,45 @@ namespace BouncedClient
 
             foreach (PendingResponse pr in latestPending)
             {
+                if (pr.type.Equals("delete"))
+                {
+                    String filePath = Application.StartupPath + "\\Bounces" + "\\" + pr.fileHash +
+                    ".bounced";
+                    try
+                    {
+                        File.Delete(filePath);
+                    }
+                    catch (Exception e2)
+                    {
+                        continue;
+                    }
+
+                    // Tell the server we have deleted the file
+                    BackgroundWorker updateWorker = new BackgroundWorker();
+                    updateWorker.DoWork += Transfers.updateWorker_DoWork;
+                    updateWorker.RunWorkerCompleted += Transfers.updateWorker_RunWorkerCompleted;
+
+                    // Set update parameters and kick off update
+                    UpdateRequest ur = new UpdateRequest();
+                    ur.transferID = pr.transferID;
+                    ur.status = "done";
+                    updateWorker.RunWorkerAsync(ur);
+                }
+                
+                bool performPending = false;
+
+                // Checking if the same file is already being downloaded by the client
                 if (!Transfers.pendingToDownload.ContainsKey(pr))
+                {
+                    foreach(PendingResponse existingPending in Transfers.pendingToDownload.Keys)
+                    {
+                        if (existingPending.fileHash.Equals(pr.fileHash))
+                            return;
+                    }
+                    performPending = true;
+                }
+
+                if (performPending)
                 {
                     Utils.writeLog("Added " + pr.fileName + " to download queue");
                     DownloadProgress dip = new DownloadProgress(pr);
@@ -127,7 +166,8 @@ namespace BouncedClient
                     downloadWorker.DoWork += downloadWorker_DoWork;
                     downloadWorker.ProgressChanged += downloadWorker_ProgressChanged;
                     downloadWorker.RunWorkerCompleted += downloadWorker_RunWorkerCompleted;
-                    //This is what is sent to the backgroundworker
+                    
+                    // This is what is sent to the backgroundworker
                     Tuple<PendingResponse, DownloadProgress> downloadArgs = 
                         new Tuple<PendingResponse, DownloadProgress>(pr, dip);
 
@@ -483,7 +523,7 @@ namespace BouncedClient
                 DownloadRequest dr = new DownloadRequest();
                 dr.mac = (String)macCell.Value;
                 dr.hash = (String)hashCell.Value;
-                dr.type = ((String)buttonCell.Value).Equals("Download") ? "direct":"firstleg";
+                dr.type = ((String)buttonCell.Value).Equals("Download") ? "direct":"bounced";
                 dr.fileName = (String)fileNameCell.Value;
                 dr.fileSize = (long)sizeCell.Value;
 

@@ -85,7 +85,7 @@ namespace BouncedClient
             }
             if (seconds < 24 * 3600)
             {
-                return (seconds / 3600).ToString("F0") + "hrs " + (seconds % 3600).ToString("F0") + "m";
+                return (seconds / 3600).ToString("F0") + "hrs " + ((seconds % 3600)/60).ToString("F0") + "m";
             }
 
             return "Unknown";

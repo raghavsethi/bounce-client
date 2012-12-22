@@ -168,6 +168,7 @@ namespace BouncedClient
         public long transferID;
         public String status;
         public String newHash;
+        public String uploader;
     }
 
 }

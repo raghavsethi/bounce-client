@@ -129,7 +129,9 @@ namespace BouncedClient
                         dp.transferRate = tempTransferRate;
                         dp.averageTransferRate = (0.01) * tempTransferRate + (0.99) * dp.averageTransferRate;
                         
-                        int percentComplete = (int) (100 * bytesDownloaded / pr.fileSize);
+                        int percentComplete = 0;
+                        if(pr.fileSize != 0)
+                            percentComplete = (int) (100 * bytesDownloaded / pr.fileSize);
 
                         worker.ReportProgress(percentComplete, dp);
 
@@ -167,10 +169,13 @@ namespace BouncedClient
             BackgroundWorker updateWorker = new BackgroundWorker();
             updateWorker.DoWork += Transfers.updateWorker_DoWork;
             updateWorker.RunWorkerCompleted += Transfers.updateWorker_RunWorkerCompleted;
+            
+            // Set update parameters
             UpdateRequest ur = new UpdateRequest();
             ur.newHash = newHash;
             ur.transferID = dp.transferID;
-            ur.status = "Done";
+            ur.status = "done";
+            ur.uploader = dp.mac;
 
             if (dp.type == "secondleg" || dp.type == "direct")
             {
@@ -185,7 +190,7 @@ namespace BouncedClient
                 {
                     Utils.writeLog("download: Hash verification failed");
                     dp.status = "Failed integrity check";
-                    ur.status = "Integrity check failed";
+                    ur.status = "hash_mismatch";
                     worker.ReportProgress(100, dp);
 
                     try
@@ -236,6 +241,7 @@ namespace BouncedClient
             request.AddParameter("transferID", ur.transferID);
             request.AddParameter("status", ur.status);
             request.AddParameter("newHash", ur.newHash);
+            request.AddParameter("uploader", ur.uploader);
 
             Utils.writeLog("updateWorker_DoWork: Sending update request for transferID " + ur.transferID);
 
