@@ -38,6 +38,7 @@ namespace BouncedClient
             loadConfigWorker.RunWorkerAsync();
             loadIndexWorker.RunWorkerAsync();
             Utils.clearLog();
+            macAddrLabel.Text = "MAC: " + Utils.getMACAddress();
         }
 
         private void registerWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -45,7 +46,7 @@ namespace BouncedClient
             RestClient client = new RestClient("http://"+Configuration.server);
             RestRequest request = new RestRequest("register", Method.POST);
 
-            request.AddParameter("mac", Utils.GetMACAddress());
+            request.AddParameter("mac", Utils.getMACAddress());
             request.AddParameter("nick", Configuration.username);
             request.AddParameter("space_allocated", "123");
 
@@ -81,6 +82,7 @@ namespace BouncedClient
             else
             {
                 Utils.writeLog("registerWorker_RunWorkerCompleted: Could not register..");
+                actionButton.Enabled = true;
                 reconnectTimer.Enabled = true;
             }
         }
@@ -118,6 +120,7 @@ namespace BouncedClient
             {
                 if (pr.type.Equals("delete"))
                 {
+                    Utils.writeLog("pollPendingWorker_RunWorkerCompleted: Got delete request for " + pr.fileHash + " (" + pr.fileName + ") ");
                     String filePath = Application.StartupPath + "\\Bounces" + "\\" + pr.fileHash +
                     ".bounced";
                     try
@@ -126,7 +129,6 @@ namespace BouncedClient
                     }
                     catch (Exception e2)
                     {
-                        continue;
                     }
 
                     // Tell the server we have deleted the file
@@ -138,7 +140,10 @@ namespace BouncedClient
                     UpdateRequest ur = new UpdateRequest();
                     ur.transferID = pr.transferID;
                     ur.status = "done";
+                    ur.uploader = pr.uploader;
                     updateWorker.RunWorkerAsync(ur);
+
+                    continue;
                 }
                 
                 bool performPending = false;
@@ -538,8 +543,23 @@ namespace BouncedClient
 
         private void updateDownloadStatus()
         {
-            downloadStatusLabel.Text = Transfers.outstandingDownloadRequests.Count + 
-                " downloads pending, " + Transfers.currentDownloads.Count + " in progress.";
+
+            foreach(DownloadProgress dp in Transfers.currentDownloads)
+            {
+                int i = 0;
+                while (i < Transfers.outstandingDownloadRequests.Count)
+                {
+                    if (Transfers.outstandingDownloadRequests[i].hash.Equals(dp.hash))
+                    {
+                        Transfers.outstandingDownloadRequests.RemoveAt(i);
+                        continue;
+                    }
+                    i++;
+                }
+            }
+
+            downloadStatusLabel.Text = Transfers.currentDownloads.Count + " (" + Transfers.outstandingDownloadRequests.Count +
+                " pending)";
         }
 
         private void downloadRequestWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -630,6 +650,5 @@ namespace BouncedClient
             Configuration.server = serverTextBox.Text;
             Configuration.saveConfiguration();
         }
-
     }
 }

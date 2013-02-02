@@ -13,16 +13,29 @@ namespace BouncedClient
     {
         private static System.Object logLock = new System.Object();
 
-        public static string GetMACAddress()
+        public static string getMACAddress()
         {
             string macAddresses = "";
             foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
             {
+                /*
                 if (nic.OperationalStatus == OperationalStatus.Up)
                 {
                     macAddresses += nic.GetPhysicalAddress().ToString();
-                    //break;
+                    break;
                 }
+                */
+
+                // Made the change to get a fixed MAC address for each computer 
+                // regardless of current connection
+
+                if (!nic.NetworkInterfaceType.Equals(NetworkInterfaceType.Loopback))
+                {
+                    macAddresses = nic.GetPhysicalAddress().ToString();
+                    Utils.writeLog("GetMACAddress: MAC address is " + macAddresses);
+                    break;
+                }
+
             }
             return macAddresses;
         }

@@ -50,7 +50,7 @@ namespace BouncedClient
             FileStream strLocal = null;
 
             Transfers.currentDownloads.Add(dp);
-            
+
             // Add the download to the gridview
             worker.ReportProgress(0, dp);
 

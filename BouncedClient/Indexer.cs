@@ -294,12 +294,15 @@ namespace BouncedClient
                 currentFile.name.ToLower().Contains("desktop.ini") || 
                 currentFile.name.ToLower().Contains("folder.jpg"))
             {
+                Utils.writeLog("getFileInfo: Ignored file " + filePath);
                 return null;
             }
 
             if ((currentFile.hash = GenerateHash(filePath)) == null)
+            {
+                Utils.writeLog("getFileInfo: Unable to generate hash of file " + filePath);
                 return null;
-
+            }
             /*
             List<string> propertyHeaders = new List<string>();
             Dictionary<string, string> properties = new Dictionary<string, string>();
@@ -353,6 +356,7 @@ namespace BouncedClient
             }
             catch (ArgumentOutOfRangeException e)
             {
+                Utils.writeLog("GenerateHash: Output: " + output);
                 return null;
             }
         }
