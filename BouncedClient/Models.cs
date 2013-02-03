@@ -103,6 +103,16 @@ namespace BouncedClient
         }
     }
 
+    public class StatusResult
+    {
+        public string hash { get; set; }
+        public string fileName { get; set; }
+        public int sent { get; set; }
+        public int total { get; set; }
+        public long fileSize { get; set; }
+        public long transferID { get; set; }
+    }
+
     public class DownloadRequest
     {
         public string mac;

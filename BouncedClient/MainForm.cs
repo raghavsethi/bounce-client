@@ -1,4 +1,5 @@
-﻿using Bounced;
+﻿using BounceClient.Properties;
+using Bounced;
 using RestSharp;
 using RestSharp.Contrib;
 using System;
@@ -22,11 +23,11 @@ namespace BouncedClient
     public partial class MainForm : Form
     {
         List<SearchResult> currentlyDisplayedSearchResults;
-        
-        //Makes sure in-progress transfers are not re-added
+        bool textboxesInitialized; // Used to make sure textChanged events don't fire during initialization
         
         public MainForm()
         {
+            textboxesInitialized = false;
             InitializeComponent();
             Transfers.outstandingDownloadRequests = new List<DownloadRequest>();
             Transfers.currentDownloads = new List<DownloadProgress>();
@@ -38,17 +39,19 @@ namespace BouncedClient
             loadConfigWorker.RunWorkerAsync();
             loadIndexWorker.RunWorkerAsync();
             Utils.clearLog();
-            macAddrLabel.Text = "MAC: " + Utils.getMACAddress();
+            macAddrLabel.Text = "MAC Address: " + Utils.getMACAddress();
         }
 
         private void registerWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            statusPictureBox.Image = Resources.status_connecting;
+
             RestClient client = new RestClient("http://"+Configuration.server);
             RestRequest request = new RestRequest("register", Method.POST);
 
             request.AddParameter("mac", Utils.getMACAddress());
             request.AddParameter("nick", Configuration.username);
-            request.AddParameter("space_allocated", "123");
+            request.AddParameter("space_allocated", "123"); // TODO: Functionality to be added later.
 
             RestResponse<StatusResponse> response = (RestResponse<StatusResponse>)client.Execute<StatusResponse>(request);
 
@@ -63,24 +66,26 @@ namespace BouncedClient
             {
                 Utils.writeLog("registerWorker_RunWorkerCompleted: Error in registering");
                 //TODO: Put a timeout to start retry
-                statusLabel.Text = "Unable to connect";
+                statusPictureBox.Image = Resources.status_error;
                 actionButton.Enabled = true;
                 reconnectTimer.Enabled = true;
                 return;
             }
 
-            statusLabel.Text = sr.text;
-
             //Happens in both cases - if disconnected, will attempt to reconnect.
             
             if (sr.status.Equals("OK"))
             {
+                statusPictureBox.Image = Resources.status_ok;
+                statusLabel.Text = "Connected";
                 Utils.writeLog("registerWorker_RunWorkerCompleted: Registered successfully");
                 pollPendingTimer.Enabled = true;
                 reconnectTimer.Enabled = false;
             }
             else
             {
+                statusPictureBox.Image = Resources.status_error;
+                statusLabel.Text = sr.text;
                 Utils.writeLog("registerWorker_RunWorkerCompleted: Could not register..");
                 actionButton.Enabled = true;
                 reconnectTimer.Enabled = true;
@@ -110,7 +115,8 @@ namespace BouncedClient
 
             if (latestPending == null)
             {
-                statusLabel.Text = "No connection to server";
+                statusPictureBox.Image = Resources.status_error;
+                statusLabel.Text = "Lost connection to network";
                 pollPendingTimer.Enabled = false;
                 reconnectTimer.Enabled = true;
                 return;
@@ -129,6 +135,7 @@ namespace BouncedClient
                     }
                     catch (Exception e2)
                     {
+                        //TODO: Do nothing.
                     }
 
                     // Tell the server we have deleted the file
@@ -240,12 +247,24 @@ namespace BouncedClient
         void downloadWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             Utils.writeLog("downloadWorker_RunWorkerCompleted: Download completed.");
-            
+
+            Tuple<string, long> downloadResult = e.Result as Tuple<string, long>;
+
+            foreach (DownloadProgress dp in Transfers.currentDownloads)
+            {
+                if (dp.hash == downloadResult.Item1)
+                {
+                    Transfers.currentDownloads.Remove(dp);
+                    break;
+                }
+            }
+
             if (e.Error !=null)
             {
                 Utils.writeLog("downloadWorker_RunWorkerCompleted: Error : " + e.Error);
             }
 
+            updateDownloadStatus();
         }
 
         private void loadConfigWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -290,21 +309,18 @@ namespace BouncedClient
                 }
 
             }
-        }
-
-        private void actionButton_Click(object sender, EventArgs e)
-        {
-            statusLabel.Text = "Connecting..";
-            registerWorker.RunWorkerAsync();
-            actionButton.Enabled = false;
+            textboxesInitialized = true;
         }
 
         private void addFolderButton_Click(object sender, EventArgs e)
         {
             folderBrowser.ShowDialog();
-            sharedFolders.Items.Add(folderBrowser.SelectedPath);
-            Configuration.sharedFolders.Add(folderBrowser.SelectedPath);
-            Configuration.saveConfiguration();
+            if (folderBrowser.SelectedPath != "")
+            {
+                sharedFolders.Items.Add(folderBrowser.SelectedPath);
+                Configuration.sharedFolders.Add(folderBrowser.SelectedPath);
+                Configuration.saveConfiguration();
+            }
         }
         
         private void deleteSelectedButton_Click(object sender, EventArgs e)
@@ -480,6 +496,14 @@ namespace BouncedClient
 
             currentlyDisplayedSearchResults = (List<SearchResult>)response.Data;
 
+            if (currentlyDisplayedSearchResults == null)
+            {
+                MessageBox.Show("Unable to talk to the search service. Please try again later.",
+                    "No results found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                currentlyDisplayedSearchResults = new List<SearchResult>();
+                return;
+            }
+
             if (currentlyDisplayedSearchResults.Count == 0)
             {
                 MessageBox.Show("We were unable to find any results for your search query. Please rephrase and try again.",
@@ -650,5 +674,102 @@ namespace BouncedClient
             Configuration.server = serverTextBox.Text;
             Configuration.saveConfiguration();
         }
+
+
+        // In both the following cases, stop polling
+
+        private void usernameTextBox_TextChanged(object sender, EventArgs e)
+        {
+            serverTextBox_TextChanged(sender,e);
+        }
+
+        private void serverTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (!textboxesInitialized) // To ensure TextChanged was fired by a user
+                return;
+            statusPictureBox.Image = Resources.status_error;
+            actionButton.Enabled = true;
+            reconnectTimer.Enabled = false;
+            pollPendingTimer.Enabled = false;
+            actionButton.Font = new Font(actionButton.Font, FontStyle.Bold);
+        }
+
+        
+        private void actionButton_Click(object sender, EventArgs e)
+        {
+            statusPictureBox.Image = Resources.status_connecting;
+            actionButton.Font = new Font(actionButton.Font, FontStyle.Regular);
+            if (!registerWorker.IsBusy)
+            {
+                registerWorker.RunWorkerAsync();
+            }
+            actionButton.Enabled = false;
+        }
+
+        private void MainTabControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //Bounces tab is selected
+            if (MainTabControl.SelectedIndex == 2)
+            {
+                updateBounceStatus();
+                bounceStatusTimer.Enabled = true;
+            }
+            else
+            {
+                bounceStatusTimer.Enabled = false;
+            }
+        }
+
+        private void updateBounceStatus()
+        {
+            if (!pollStatusWorker.IsBusy)
+                pollStatusWorker.RunWorkerAsync();
+        }
+
+        private void pollStatusWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            RestClient client = new RestClient("http://" + Configuration.server);
+            RestRequest request = new RestRequest("status", Method.GET);
+
+            RestResponse<List<StatusResult>> response =
+                (RestResponse<List<StatusResult>>)client.Execute<List<StatusResult>>(request);
+
+            e.Result = response.Data;
+        }
+
+        private void pollStatusWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            List<StatusResult> bounceStatusResults = (List<StatusResult>)e.Result;
+
+            if (bounceStatusResults == null)
+            {
+                Utils.writeLog("Unable to get status of bounce requests");
+                bounceStatusTimer.Enabled = false;
+                MessageBox.Show("Sorry, we were unable to get the status of your bounce requests. You may be disconnected from the server, or " + 
+                "the server may have malfunctioned.", "Error getting bounce requests", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            bounceGridView.Rows.Clear();
+            String buttonText = "Cancel";
+            String type = "";
+            String status = "";
+            Icon zipIcon = null;
+
+            foreach (StatusResult sr in bounceStatusResults)
+            {
+                type = sr.fileName.Substring(sr.fileName.LastIndexOf('.') + 1);
+                zipIcon = Icons.IconFromExtension(type);
+                status = "Replicated to " + sr.sent + " of " + sr.total + " users";
+                bounceGridView.Rows.Add(new object[] { zipIcon, sr.fileName, Utils.getHumanSize(sr.fileSize), status, 
+            buttonText, sr.hash, sr.transferID});
+            }
+        }
+
+        private void bounceStatusTimer_Tick(object sender, EventArgs e)
+        {
+            updateBounceStatus();
+        }
+
     }
 }

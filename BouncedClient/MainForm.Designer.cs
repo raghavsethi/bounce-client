@@ -29,12 +29,16 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.StatusPanel = new System.Windows.Forms.Panel();
+            this.statusPictureBox = new System.Windows.Forms.PictureBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.ficedDownloadLabel = new System.Windows.Forms.Label();
+            this.fixedDownloadLabel = new System.Windows.Forms.Label();
             this.downloadStatusLabel = new System.Windows.Forms.Label();
             this.statusLabel = new System.Windows.Forms.Label();
             this.MainTabControl = new System.Windows.Forms.TabControl();
@@ -69,9 +73,12 @@
             this.FileSizeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FilePathColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BouncesTabPage = new System.Windows.Forms.TabPage();
+            this.bounceGridView = new System.Windows.Forms.DataGridView();
             this.settingsTabPage = new System.Windows.Forms.TabPage();
-            this.macAddrLabel = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.settingsHelpText = new System.Windows.Forms.Label();
             this.actionButton = new System.Windows.Forms.Button();
+            this.macAddrLabel = new System.Windows.Forms.Label();
             this.forceRescanButton = new System.Windows.Forms.Button();
             this.deleteSelectedButton = new System.Windows.Forms.Button();
             this.addFolderButton = new System.Windows.Forms.Button();
@@ -88,7 +95,7 @@
             this.helpText1 = new System.Windows.Forms.Label();
             this.usernameTextBox = new System.Windows.Forms.TextBox();
             this.fixedUsernameLabel = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.registerWorker = new System.ComponentModel.BackgroundWorker();
             this.pollPendingTimer = new System.Windows.Forms.Timer(this.components);
             this.pollPendingWorker = new System.ComponentModel.BackgroundWorker();
@@ -100,26 +107,38 @@
             this.searchWorker = new System.ComponentModel.BackgroundWorker();
             this.serverWorker = new System.ComponentModel.BackgroundWorker();
             this.reconnectTimer = new System.Windows.Forms.Timer(this.components);
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
+            this.bounceStatusTimer = new System.Windows.Forms.Timer(this.components);
+            this.pollStatusWorker = new System.ComponentModel.BackgroundWorker();
+            this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
+            this.BouncesFileNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BouncesFileSizeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BouncesStatusColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewButtonColumn1 = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.BouncesFileHashColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BouncesTransferIDColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.StatusPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.statusPictureBox)).BeginInit();
             this.MainTabControl.SuspendLayout();
             this.SearchTabPage.SuspendLayout();
             this.searchBoxPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.searchGridView)).BeginInit();
             this.TransfersTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.downloadGridView)).BeginInit();
+            this.BouncesTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bounceGridView)).BeginInit();
             this.settingsTabPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // StatusPanel
             // 
             this.StatusPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(239)))));
+            this.StatusPanel.Controls.Add(this.statusPictureBox);
             this.StatusPanel.Controls.Add(this.label6);
             this.StatusPanel.Controls.Add(this.label7);
             this.StatusPanel.Controls.Add(this.label3);
-            this.StatusPanel.Controls.Add(this.ficedDownloadLabel);
+            this.StatusPanel.Controls.Add(this.fixedDownloadLabel);
             this.StatusPanel.Controls.Add(this.downloadStatusLabel);
             this.StatusPanel.Controls.Add(this.statusLabel);
             this.StatusPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -128,35 +147,67 @@
             this.StatusPanel.Size = new System.Drawing.Size(784, 35);
             this.StatusPanel.TabIndex = 0;
             // 
+            // statusPictureBox
+            // 
+            this.statusPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("statusPictureBox.Image")));
+            this.statusPictureBox.Location = new System.Drawing.Point(9, 9);
+            this.statusPictureBox.Name = "statusPictureBox";
+            this.statusPictureBox.Size = new System.Drawing.Size(16, 16);
+            this.statusPictureBox.TabIndex = 4;
+            this.statusPictureBox.TabStop = false;
+            // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label6.Location = new System.Drawing.Point(694, 10);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(58, 13);
+            this.label6.TabIndex = 8;
+            this.label6.Text = "UPLOADS";
+            // 
+            // label7
+            // 
+            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label7.AutoSize = true;
+            this.label7.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label7.Location = new System.Drawing.Point(756, 9);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(13, 15);
+            this.label7.TabIndex = 7;
+            this.label7.Text = "0";
+            // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.Gray;
-            this.label3.Location = new System.Drawing.Point(6, 7);
+            this.label3.Location = new System.Drawing.Point(37, 10);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(54, 17);
+            this.label3.Size = new System.Drawing.Size(45, 13);
             this.label3.TabIndex = 4;
             this.label3.Text = "STATUS";
             // 
-            // ficedDownloadLabel
+            // fixedDownloadLabel
             // 
-            this.ficedDownloadLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ficedDownloadLabel.AutoSize = true;
-            this.ficedDownloadLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ficedDownloadLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.ficedDownloadLabel.Location = new System.Drawing.Point(487, 11);
-            this.ficedDownloadLabel.Name = "ficedDownloadLabel";
-            this.ficedDownloadLabel.Size = new System.Drawing.Size(79, 13);
-            this.ficedDownloadLabel.TabIndex = 3;
-            this.ficedDownloadLabel.Text = "DOWNLOADS";
+            this.fixedDownloadLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.fixedDownloadLabel.AutoSize = true;
+            this.fixedDownloadLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fixedDownloadLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.fixedDownloadLabel.Location = new System.Drawing.Point(487, 10);
+            this.fixedDownloadLabel.Name = "fixedDownloadLabel";
+            this.fixedDownloadLabel.Size = new System.Drawing.Size(79, 13);
+            this.fixedDownloadLabel.TabIndex = 3;
+            this.fixedDownloadLabel.Text = "DOWNLOADS";
             // 
             // downloadStatusLabel
             // 
             this.downloadStatusLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.downloadStatusLabel.AutoSize = true;
             this.downloadStatusLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.downloadStatusLabel.Location = new System.Drawing.Point(572, 9);
+            this.downloadStatusLabel.Location = new System.Drawing.Point(570, 9);
             this.downloadStatusLabel.Name = "downloadStatusLabel";
             this.downloadStatusLabel.Size = new System.Drawing.Size(13, 15);
             this.downloadStatusLabel.TabIndex = 2;
@@ -166,7 +217,7 @@
             // 
             this.statusLabel.AutoSize = true;
             this.statusLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.statusLabel.Location = new System.Drawing.Point(66, 9);
+            this.statusLabel.Location = new System.Drawing.Point(86, 9);
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(131, 15);
             this.statusLabel.TabIndex = 0;
@@ -188,6 +239,7 @@
             this.MainTabControl.SelectedIndex = 0;
             this.MainTabControl.Size = new System.Drawing.Size(784, 495);
             this.MainTabControl.TabIndex = 1;
+            this.MainTabControl.SelectedIndexChanged += new System.EventHandler(this.MainTabControl_SelectedIndexChanged);
             // 
             // SearchTabPage
             // 
@@ -264,8 +316,8 @@
             this.searchGridView.AllowUserToAddRows = false;
             this.searchGridView.AllowUserToDeleteRows = false;
             this.searchGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.searchGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.searchGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
             this.searchGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -376,8 +428,8 @@
             this.downloadGridView.AllowUserToAddRows = false;
             this.downloadGridView.AllowUserToDeleteRows = false;
             this.downloadGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.downloadGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.downloadGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             this.downloadGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -408,7 +460,7 @@
             this.downloadGridView.RowHeadersVisible = false;
             this.downloadGridView.RowTemplate.Height = 35;
             this.downloadGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.downloadGridView.Size = new System.Drawing.Size(761, 406);
+            this.downloadGridView.Size = new System.Drawing.Size(761, 435);
             this.downloadGridView.TabIndex = 1;
             this.downloadGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.downloadGridView_CellClick);
             // 
@@ -510,6 +562,7 @@
             // 
             // BouncesTabPage
             // 
+            this.BouncesTabPage.Controls.Add(this.bounceGridView);
             this.BouncesTabPage.Location = new System.Drawing.Point(4, 44);
             this.BouncesTabPage.Name = "BouncesTabPage";
             this.BouncesTabPage.Size = new System.Drawing.Size(776, 447);
@@ -517,10 +570,44 @@
             this.BouncesTabPage.Text = "Bounces";
             this.BouncesTabPage.UseVisualStyleBackColor = true;
             // 
+            // bounceGridView
+            // 
+            this.bounceGridView.AllowUserToAddRows = false;
+            this.bounceGridView.AllowUserToDeleteRows = false;
+            this.bounceGridView.AllowUserToResizeRows = false;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.bounceGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle6;
+            this.bounceGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.bounceGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.bounceGridView.BackgroundColor = System.Drawing.Color.White;
+            this.bounceGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.bounceGridView.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
+            this.bounceGridView.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.bounceGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.bounceGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewImageColumn1,
+            this.BouncesFileNameColumn,
+            this.BouncesFileSizeColumn,
+            this.BouncesStatusColumn,
+            this.dataGridViewButtonColumn1,
+            this.BouncesFileHashColumn,
+            this.BouncesTransferIDColumn});
+            this.bounceGridView.Location = new System.Drawing.Point(8, 6);
+            this.bounceGridView.MultiSelect = false;
+            this.bounceGridView.Name = "bounceGridView";
+            this.bounceGridView.ReadOnly = true;
+            this.bounceGridView.RowHeadersVisible = false;
+            this.bounceGridView.RowTemplate.Height = 35;
+            this.bounceGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.bounceGridView.Size = new System.Drawing.Size(761, 438);
+            this.bounceGridView.TabIndex = 1;
+            // 
             // settingsTabPage
             // 
+            this.settingsTabPage.Controls.Add(this.panel1);
             this.settingsTabPage.Controls.Add(this.macAddrLabel);
-            this.settingsTabPage.Controls.Add(this.actionButton);
             this.settingsTabPage.Controls.Add(this.forceRescanButton);
             this.settingsTabPage.Controls.Add(this.deleteSelectedButton);
             this.settingsTabPage.Controls.Add(this.addFolderButton);
@@ -544,21 +631,34 @@
             this.settingsTabPage.Text = "Settings";
             this.settingsTabPage.UseVisualStyleBackColor = true;
             // 
-            // macAddrLabel
+            // panel1
             // 
-            this.macAddrLabel.AutoSize = true;
-            this.macAddrLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.macAddrLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.macAddrLabel.Location = new System.Drawing.Point(14, 367);
-            this.macAddrLabel.Name = "macAddrLabel";
-            this.macAddrLabel.Size = new System.Drawing.Size(37, 13);
-            this.macAddrLabel.TabIndex = 18;
-            this.macAddrLabel.Text = "MAC: ";
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.panel1.Controls.Add(this.settingsHelpText);
+            this.panel1.Controls.Add(this.actionButton);
+            this.panel1.Location = new System.Drawing.Point(8, 6);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(762, 34);
+            this.panel1.TabIndex = 19;
+            // 
+            // settingsHelpText
+            // 
+            this.settingsHelpText.AutoSize = true;
+            this.settingsHelpText.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.settingsHelpText.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.settingsHelpText.Location = new System.Drawing.Point(11, 10);
+            this.settingsHelpText.Name = "settingsHelpText";
+            this.settingsHelpText.Size = new System.Drawing.Size(578, 13);
+            this.settingsHelpText.TabIndex = 2;
+            this.settingsHelpText.Text = "Changing the username or server will disconnect you from the network. Reconnect w" +
+    "hen you\'re done editing.";
             // 
             // actionButton
             // 
             this.actionButton.Enabled = false;
-            this.actionButton.Location = new System.Drawing.Point(619, 85);
+            this.actionButton.Location = new System.Drawing.Point(610, 3);
             this.actionButton.Name = "actionButton";
             this.actionButton.Size = new System.Drawing.Size(138, 27);
             this.actionButton.TabIndex = 2;
@@ -566,9 +666,20 @@
             this.actionButton.UseVisualStyleBackColor = true;
             this.actionButton.Click += new System.EventHandler(this.actionButton_Click);
             // 
+            // macAddrLabel
+            // 
+            this.macAddrLabel.AutoSize = true;
+            this.macAddrLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.macAddrLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.macAddrLabel.Location = new System.Drawing.Point(13, 406);
+            this.macAddrLabel.Name = "macAddrLabel";
+            this.macAddrLabel.Size = new System.Drawing.Size(37, 13);
+            this.macAddrLabel.TabIndex = 18;
+            this.macAddrLabel.Text = "MAC: ";
+            // 
             // forceRescanButton
             // 
-            this.forceRescanButton.Location = new System.Drawing.Point(619, 283);
+            this.forceRescanButton.Location = new System.Drawing.Point(618, 322);
             this.forceRescanButton.Name = "forceRescanButton";
             this.forceRescanButton.Size = new System.Drawing.Size(138, 28);
             this.forceRescanButton.TabIndex = 17;
@@ -578,7 +689,7 @@
             // 
             // deleteSelectedButton
             // 
-            this.deleteSelectedButton.Location = new System.Drawing.Point(619, 250);
+            this.deleteSelectedButton.Location = new System.Drawing.Point(618, 289);
             this.deleteSelectedButton.Name = "deleteSelectedButton";
             this.deleteSelectedButton.Size = new System.Drawing.Size(138, 28);
             this.deleteSelectedButton.TabIndex = 16;
@@ -588,7 +699,7 @@
             // 
             // addFolderButton
             // 
-            this.addFolderButton.Location = new System.Drawing.Point(619, 217);
+            this.addFolderButton.Location = new System.Drawing.Point(618, 256);
             this.addFolderButton.Name = "addFolderButton";
             this.addFolderButton.Size = new System.Drawing.Size(138, 28);
             this.addFolderButton.TabIndex = 15;
@@ -600,7 +711,7 @@
             // 
             this.sharedFolders.CheckOnClick = true;
             this.sharedFolders.FormattingEnabled = true;
-            this.sharedFolders.Location = new System.Drawing.Point(17, 218);
+            this.sharedFolders.Location = new System.Drawing.Point(16, 257);
             this.sharedFolders.Name = "sharedFolders";
             this.sharedFolders.Size = new System.Drawing.Size(596, 94);
             this.sharedFolders.TabIndex = 14;
@@ -610,7 +721,7 @@
             this.helpText3.AutoSize = true;
             this.helpText3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.helpText3.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.helpText3.Location = new System.Drawing.Point(14, 167);
+            this.helpText3.Location = new System.Drawing.Point(13, 206);
             this.helpText3.Name = "helpText3";
             this.helpText3.Size = new System.Drawing.Size(312, 13);
             this.helpText3.TabIndex = 13;
@@ -619,7 +730,7 @@
             // downloadFolder
             // 
             this.downloadFolder.AutoSize = true;
-            this.downloadFolder.Location = new System.Drawing.Point(14, 148);
+            this.downloadFolder.Location = new System.Drawing.Point(13, 187);
             this.downloadFolder.Name = "downloadFolder";
             this.downloadFolder.Size = new System.Drawing.Size(243, 15);
             this.downloadFolder.TabIndex = 12;
@@ -632,7 +743,7 @@
             this.fixedDownloadLocationLabel.AutoSize = true;
             this.fixedDownloadLocationLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fixedDownloadLocationLabel.ForeColor = System.Drawing.Color.Black;
-            this.fixedDownloadLocationLabel.Location = new System.Drawing.Point(14, 128);
+            this.fixedDownloadLocationLabel.Location = new System.Drawing.Point(13, 167);
             this.fixedDownloadLocationLabel.Name = "fixedDownloadLocationLabel";
             this.fixedDownloadLocationLabel.Size = new System.Drawing.Size(123, 13);
             this.fixedDownloadLocationLabel.TabIndex = 11;
@@ -643,7 +754,7 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.Black;
-            this.label2.Location = new System.Drawing.Point(14, 198);
+            this.label2.Location = new System.Drawing.Point(13, 237);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(100, 13);
             this.label2.TabIndex = 10;
@@ -654,19 +765,19 @@
             this.helpText5.AutoSize = true;
             this.helpText5.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.helpText5.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.helpText5.Location = new System.Drawing.Point(14, 348);
+            this.helpText5.Location = new System.Drawing.Point(13, 387);
             this.helpText5.Name = "helpText5";
-            this.helpText5.Size = new System.Drawing.Size(519, 13);
+            this.helpText5.Size = new System.Drawing.Size(488, 13);
             this.helpText5.TabIndex = 9;
-            this.helpText5.Text = "Bounced Client v0.9. Developed with love at IIIT-D by Raghav Sethi, Naved Alam an" +
-    "d Mayank Pundir.";
+            this.helpText5.Text = "Bounced Client v0.9. Built with love at IIIT-D by Raghav Sethi, Naved Alam and Ma" +
+    "yank Pundir.";
             // 
             // fixedAboutLabel
             // 
             this.fixedAboutLabel.AutoSize = true;
             this.fixedAboutLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fixedAboutLabel.ForeColor = System.Drawing.Color.Black;
-            this.fixedAboutLabel.Location = new System.Drawing.Point(14, 329);
+            this.fixedAboutLabel.Location = new System.Drawing.Point(13, 368);
             this.fixedAboutLabel.Name = "fixedAboutLabel";
             this.fixedAboutLabel.Size = new System.Drawing.Size(44, 13);
             this.fixedAboutLabel.TabIndex = 8;
@@ -677,7 +788,7 @@
             this.helpText2.AutoSize = true;
             this.helpText2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.helpText2.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.helpText2.Location = new System.Drawing.Point(187, 92);
+            this.helpText2.Location = new System.Drawing.Point(186, 131);
             this.helpText2.Name = "helpText2";
             this.helpText2.Size = new System.Drawing.Size(288, 13);
             this.helpText2.TabIndex = 7;
@@ -685,11 +796,13 @@
             // 
             // serverTextBox
             // 
-            this.serverTextBox.Location = new System.Drawing.Point(17, 88);
+            this.serverTextBox.Location = new System.Drawing.Point(16, 127);
+            this.serverTextBox.MaxLength = 100;
             this.serverTextBox.Name = "serverTextBox";
             this.serverTextBox.Size = new System.Drawing.Size(164, 23);
             this.serverTextBox.TabIndex = 6;
             this.serverTextBox.Text = "localhost:3000";
+            this.serverTextBox.TextChanged += new System.EventHandler(this.serverTextBox_TextChanged);
             this.serverTextBox.Leave += new System.EventHandler(this.serverTextBox_Leave);
             // 
             // fixedServerLabel
@@ -697,7 +810,7 @@
             this.fixedServerLabel.AutoSize = true;
             this.fixedServerLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fixedServerLabel.ForeColor = System.Drawing.Color.Black;
-            this.fixedServerLabel.Location = new System.Drawing.Point(14, 72);
+            this.fixedServerLabel.Location = new System.Drawing.Point(13, 111);
             this.fixedServerLabel.Name = "fixedServerLabel";
             this.fixedServerLabel.Size = new System.Drawing.Size(46, 13);
             this.fixedServerLabel.TabIndex = 5;
@@ -708,7 +821,7 @@
             this.helpText1.AutoSize = true;
             this.helpText1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.helpText1.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.helpText1.Location = new System.Drawing.Point(187, 39);
+            this.helpText1.Location = new System.Drawing.Point(186, 78);
             this.helpText1.Name = "helpText1";
             this.helpText1.Size = new System.Drawing.Size(570, 13);
             this.helpText1.TabIndex = 4;
@@ -717,10 +830,12 @@
             // 
             // usernameTextBox
             // 
-            this.usernameTextBox.Location = new System.Drawing.Point(17, 35);
+            this.usernameTextBox.Location = new System.Drawing.Point(16, 74);
+            this.usernameTextBox.MaxLength = 30;
             this.usernameTextBox.Name = "usernameTextBox";
             this.usernameTextBox.Size = new System.Drawing.Size(164, 23);
             this.usernameTextBox.TabIndex = 3;
+            this.usernameTextBox.TextChanged += new System.EventHandler(this.usernameTextBox_TextChanged);
             this.usernameTextBox.Leave += new System.EventHandler(this.usernameTextBox_Leave);
             // 
             // fixedUsernameLabel
@@ -728,21 +843,21 @@
             this.fixedUsernameLabel.AutoSize = true;
             this.fixedUsernameLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fixedUsernameLabel.ForeColor = System.Drawing.Color.Black;
-            this.fixedUsernameLabel.Location = new System.Drawing.Point(14, 18);
+            this.fixedUsernameLabel.Location = new System.Drawing.Point(13, 57);
             this.fixedUsernameLabel.Name = "fixedUsernameLabel";
             this.fixedUsernameLabel.Size = new System.Drawing.Size(68, 13);
             this.fixedUsernameLabel.TabIndex = 2;
             this.fixedUsernameLabel.Text = "USERNAME";
             // 
-            // pictureBox1
+            // logoPictureBox
             // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(679, 10);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(101, 34);
-            this.pictureBox1.TabIndex = 3;
-            this.pictureBox1.TabStop = false;
+            this.logoPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.logoPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("logoPictureBox.Image")));
+            this.logoPictureBox.Location = new System.Drawing.Point(647, 7);
+            this.logoPictureBox.Name = "logoPictureBox";
+            this.logoPictureBox.Size = new System.Drawing.Size(140, 40);
+            this.logoPictureBox.TabIndex = 3;
+            this.logoPictureBox.TabStop = false;
             // 
             // registerWorker
             // 
@@ -793,28 +908,76 @@
             this.reconnectTimer.Interval = 3000;
             this.reconnectTimer.Tick += new System.EventHandler(this.reconnectTimer_Tick);
             // 
-            // label6
+            // bounceStatusTimer
             // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label6.Location = new System.Drawing.Point(694, 11);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(58, 13);
-            this.label6.TabIndex = 8;
-            this.label6.Text = "UPLOADS";
+            this.bounceStatusTimer.Interval = 2000;
+            this.bounceStatusTimer.Tick += new System.EventHandler(this.bounceStatusTimer_Tick);
             // 
-            // label7
+            // pollStatusWorker
             // 
-            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.label7.AutoSize = true;
-            this.label7.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label7.Location = new System.Drawing.Point(758, 9);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(13, 15);
-            this.label7.TabIndex = 7;
-            this.label7.Text = "0";
+            this.pollStatusWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.pollStatusWorker_DoWork);
+            this.pollStatusWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.pollStatusWorker_RunWorkerCompleted);
+            // 
+            // dataGridViewImageColumn1
+            // 
+            this.dataGridViewImageColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dataGridViewImageColumn1.FillWeight = 40.60914F;
+            this.dataGridViewImageColumn1.HeaderText = "";
+            this.dataGridViewImageColumn1.Name = "dataGridViewImageColumn1";
+            this.dataGridViewImageColumn1.ReadOnly = true;
+            this.dataGridViewImageColumn1.Width = 25;
+            // 
+            // BouncesFileNameColumn
+            // 
+            this.BouncesFileNameColumn.FillWeight = 119.797F;
+            this.BouncesFileNameColumn.HeaderText = "File Name";
+            this.BouncesFileNameColumn.Name = "BouncesFileNameColumn";
+            this.BouncesFileNameColumn.ReadOnly = true;
+            this.BouncesFileNameColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.BouncesFileNameColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // BouncesFileSizeColumn
+            // 
+            this.BouncesFileSizeColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.BouncesFileSizeColumn.FillWeight = 119.797F;
+            this.BouncesFileSizeColumn.HeaderText = "File Size";
+            this.BouncesFileSizeColumn.Name = "BouncesFileSizeColumn";
+            this.BouncesFileSizeColumn.ReadOnly = true;
+            this.BouncesFileSizeColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.BouncesFileSizeColumn.Width = 80;
+            // 
+            // BouncesStatusColumn
+            // 
+            this.BouncesStatusColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.BouncesStatusColumn.HeaderText = "Status";
+            this.BouncesStatusColumn.Name = "BouncesStatusColumn";
+            this.BouncesStatusColumn.ReadOnly = true;
+            this.BouncesStatusColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.BouncesStatusColumn.Width = 250;
+            // 
+            // dataGridViewButtonColumn1
+            // 
+            this.dataGridViewButtonColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dataGridViewButtonColumn1.FillWeight = 119.797F;
+            this.dataGridViewButtonColumn1.HeaderText = "Action";
+            this.dataGridViewButtonColumn1.Name = "dataGridViewButtonColumn1";
+            this.dataGridViewButtonColumn1.ReadOnly = true;
+            // 
+            // BouncesFileHashColumn
+            // 
+            this.BouncesFileHashColumn.HeaderText = "Hash";
+            this.BouncesFileHashColumn.Name = "BouncesFileHashColumn";
+            this.BouncesFileHashColumn.ReadOnly = true;
+            this.BouncesFileHashColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.BouncesFileHashColumn.Visible = false;
+            // 
+            // BouncesTransferIDColumn
+            // 
+            this.BouncesTransferIDColumn.HeaderText = "TransferID";
+            this.BouncesTransferIDColumn.Name = "BouncesTransferIDColumn";
+            this.BouncesTransferIDColumn.ReadOnly = true;
+            this.BouncesTransferIDColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.BouncesTransferIDColumn.Visible = false;
             // 
             // MainForm
             // 
@@ -822,7 +985,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(784, 541);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.logoPictureBox);
             this.Controls.Add(this.MainTabControl);
             this.Controls.Add(this.StatusPanel);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -830,10 +993,11 @@
             this.MinimumSize = new System.Drawing.Size(800, 580);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Bounced";
+            this.Text = "Bounce";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.StatusPanel.ResumeLayout(false);
             this.StatusPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.statusPictureBox)).EndInit();
             this.MainTabControl.ResumeLayout(false);
             this.SearchTabPage.ResumeLayout(false);
             this.searchBoxPanel.ResumeLayout(false);
@@ -841,9 +1005,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.searchGridView)).EndInit();
             this.TransfersTabPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.downloadGridView)).EndInit();
+            this.BouncesTabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.bounceGridView)).EndInit();
             this.settingsTabPage.ResumeLayout(false);
             this.settingsTabPage.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -855,7 +1023,7 @@
         private System.Windows.Forms.TabPage SearchTabPage;
         private System.Windows.Forms.TabPage TransfersTabPage;
         private System.Windows.Forms.TabPage BouncesTabPage;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox logoPictureBox;
         private System.Windows.Forms.TabPage settingsTabPage;
         private System.Windows.Forms.DataGridView searchGridView;
         private System.Windows.Forms.Label statusLabel;
@@ -890,7 +1058,7 @@
         private System.ComponentModel.BackgroundWorker syncWorker;
         private System.ComponentModel.BackgroundWorker loadIndexWorker;
         private System.ComponentModel.BackgroundWorker searchWorker;
-        private System.Windows.Forms.Label ficedDownloadLabel;
+        private System.Windows.Forms.Label fixedDownloadLabel;
         private System.Windows.Forms.Label downloadStatusLabel;
         private System.Windows.Forms.DataGridViewImageColumn fileType;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileName;
@@ -920,6 +1088,19 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.DataGridView bounceGridView;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label settingsHelpText;
+        private System.Windows.Forms.PictureBox statusPictureBox;
+        private System.Windows.Forms.Timer bounceStatusTimer;
+        private System.ComponentModel.BackgroundWorker pollStatusWorker;
+        private System.Windows.Forms.DataGridViewImageColumn dataGridViewImageColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BouncesFileNameColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BouncesFileSizeColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BouncesStatusColumn;
+        private System.Windows.Forms.DataGridViewButtonColumn dataGridViewButtonColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BouncesFileHashColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BouncesTransferIDColumn;
     }
 }
 
