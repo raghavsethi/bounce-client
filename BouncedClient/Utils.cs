@@ -86,6 +86,20 @@ namespace BouncedClient
             return human;
         }
 
+        public static string getHumanSpeed(int kbps)
+        {
+            string human = kbps.ToString() + " KB/s";
+            if (kbps > 1024)
+            {
+                human = (kbps / 1024.0).ToString("F2") + " MB/s";
+            }
+            if (kbps > (1024 * 1024))
+            {
+                human = (kbps / (1024 * 1024.0)).ToString("F2") + " GB/s";
+            }
+            return human;
+        }
+
         public static string getHumanTime(double seconds)
         {
             if (seconds < 60)

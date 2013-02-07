@@ -107,6 +107,24 @@ namespace BouncedClient
                         worker.ReportProgress((int)(100 * bytesDownloaded / pr.fileSize), dp);
                         clientStream.Close();
                         strLocal.Close();
+
+                        // Report cancellation to server
+                        BackgroundWorker cancelUpdateWorker = new BackgroundWorker();
+                        cancelUpdateWorker.DoWork += Transfers.updateWorker_DoWork;
+                        cancelUpdateWorker.RunWorkerCompleted += Transfers.updateWorker_RunWorkerCompleted;
+
+                        // Set update parameters
+                        UpdateRequest cancelUpdateRequest = new UpdateRequest();
+                        cancelUpdateRequest.newHash = dp.hash;
+                        cancelUpdateRequest.transferID = dp.transferID;
+                        cancelUpdateRequest.status = "canceled";
+                        cancelUpdateRequest.uploader = dp.mac;
+                        cancelUpdateWorker.RunWorkerAsync(cancelUpdateRequest);
+
+                        // Remove from pendingToDownload
+                        DownloadProgress temp = null;
+                        pendingToDownload.TryRemove(pr, out temp);
+
                         return null;
                     }
 
@@ -160,8 +178,8 @@ namespace BouncedClient
                 clientStream.Close();
             }
 
-            Utils.writeLog("download: Successfully downloaded " + pr.fileName + 
-                "(" + dp.fileSize + ") Type:" + dp.type );
+            Utils.writeLog("download: Completed download of " + pr.fileName + 
+                " (" + dp.fileSize + ") Type:" + dp.type );
 
             String newHash = Indexer.GenerateHash(dp.downloadedFilePath);
 
@@ -190,7 +208,7 @@ namespace BouncedClient
                 {
                     Utils.writeLog("download: Hash verification failed");
                     dp.status = "Failed integrity check";
-                    ur.status = "hash_mismatch";
+                    ur.status = "hash_mismatch"; // Modify the updaterequest
                     worker.ReportProgress(100, dp);
 
                     try

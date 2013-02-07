@@ -227,7 +227,7 @@ namespace BouncedClient
                 return;
             }
 
-            downloadGridView["SpeedColumn", row].Value = dp.transferRate + " KB/s";
+            downloadGridView["SpeedColumn", row].Value = Utils.getHumanSpeed(dp.transferRate);
             downloadGridView["StatusColumn", row].Value = dp.status;
             downloadGridView["ProgressColumn", row].Value = e.ProgressPercentage + "%";
             downloadGridView["PeerColumn", row].Value = dp.nick;
@@ -386,7 +386,7 @@ namespace BouncedClient
 
             /*
             RestClient client = new RestClient("http://" + Configuration.server);
-            RestRequest request = new RestRequest("xbsnrixb", Method.POST);
+            RestRequest request = new RestRequest("sync", Method.POST);
 
             request.AddParameter("added", Indexer.getAddedJson());
             request.AddParameter("removed", Indexer.getRemovedJson());
@@ -476,11 +476,18 @@ namespace BouncedClient
             }
         }
 
+        private void searchGoButton_Click(object sender, EventArgs e)
+        {
+            performSearch(searchBox.Text);
+        }
+
         public void performSearch(String searchQuery)
         {
             if (!searchWorker.IsBusy && searchGoButton.Enabled)
+            {
+                searchGridView.Rows.Clear();
                 searchWorker.RunWorkerAsync(searchQuery);
-
+            }
             searchGoButton.Enabled = false;
         }
 
@@ -647,6 +654,7 @@ namespace BouncedClient
                     return;
                 }
 
+                // User clicked cancel
                 Utils.writeLog("downloadGridView_CellClick: Canceling download");
 
                 DataGridViewTextBoxCell macCell = dgv.Rows[e.RowIndex].Cells["MacColumn"] as DataGridViewTextBoxCell;
@@ -659,8 +667,7 @@ namespace BouncedClient
                 {
                     if (pr.uploader == canceledMac && pr.fileHash == canceledHash)
                     {
-                        //TODO: Update cancellation here
-                        Transfers.pendingToDownload[pr] = null;
+                        Transfers.pendingToDownload[pr] = null; // This effectively cancels the download
                         buttonCell.Value = "Clear";
                         break;
                     }
@@ -704,6 +711,7 @@ namespace BouncedClient
                 registerWorker.RunWorkerAsync();
             }
             actionButton.Enabled = false;
+            serverTextBox.ReadOnly = true;
         }
 
         private void MainTabControl_SelectedIndexChanged(object sender, EventArgs e)
@@ -756,6 +764,11 @@ namespace BouncedClient
             String status = "";
             Icon zipIcon = null;
 
+            if (bounceStatusResults.Count == 0)
+                bounceGridHelpTextLabel.Visible = true;
+            else
+                bounceGridHelpTextLabel.Visible = false;
+
             foreach (StatusResult sr in bounceStatusResults)
             {
                 type = sr.fileName.Substring(sr.fileName.LastIndexOf('.') + 1);
@@ -769,6 +782,29 @@ namespace BouncedClient
         private void bounceStatusTimer_Tick(object sender, EventArgs e)
         {
             updateBounceStatus();
+        }
+
+        private void serverTextBox_DoubleClick(object sender, EventArgs e)
+        {
+            DialogResult x = MessageBox.Show("Using a malicious server may result in malware or other harmful content" +
+                " being downloaded onto your computer.\n\n" +
+                "The easiest way to be safe is to use the server address displayed on the web page controlled by " +
+                "your administrator.\n\nAre you sure you want to change the server address?"
+                , "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            
+            if(x.Equals(DialogResult.Yes))
+                serverTextBox.ReadOnly = false;
+        }
+
+        // Will be used to perform simple, fast UI updates
+        private void uiUpdateTimer_Tick(object sender, EventArgs e)
+        {
+            if (downloadGridView.Rows.Count == 0)
+                downloadGridHelpTextLabel.Visible = true;
+            else
+                downloadGridHelpTextLabel.Visible = false;
+
+            uploadStatusLabel.Text = "" + Server.currentUploads;
         }
 
     }

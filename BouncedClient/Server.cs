@@ -16,10 +16,12 @@ namespace BouncedClient
     {
         public static TcpListener tcpListener;
         public static ASCIIEncoding encoder;
+        public static int currentUploads;
 
         public static void serverWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             Utils.writeLog("serverWorker_DoWork: Started");
+            currentUploads = 0;
 
             //Handles uploads to peers.
             try
@@ -45,7 +47,7 @@ namespace BouncedClient
                 //Creates a thread to handle the client.
                 BackgroundWorker uploadWorker = new BackgroundWorker();
                 uploadWorker.DoWork += uploadWorker_DoWork;
-                uploadWorker.ProgressChanged += uploadWorker_ProgressChanged;
+                //uploadWorker.ProgressChanged += uploadWorker_ProgressChanged;
                 uploadWorker.RunWorkerAsync(client);
             }
         }
@@ -107,6 +109,7 @@ namespace BouncedClient
         public static bool upload(string fileHash, NetworkStream fileUploadStream, String transferType)
         {
             Utils.writeLog("upload: Started");
+            currentUploads++;
 
             bool successfulTransfer = false;
             byte[] byteSend = new byte[4096];
@@ -169,6 +172,7 @@ namespace BouncedClient
             {
                 fileLocalStream.Close();
             }
+            currentUploads--;
             return successfulTransfer;
         }
     }
