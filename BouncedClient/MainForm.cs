@@ -29,7 +29,10 @@ namespace BouncedClient
         {
             textboxesInitialized = false;
             InitializeComponent();
-            Transfers.outstandingDownloadRequests = new List<DownloadRequest>();
+
+            Transfers.currentDownloadsCount = 0;
+            Server.currentUploadsCount = 0;
+
             Transfers.currentDownloads = new List<DownloadProgress>();
             Transfers.pendingToDownload = new ConcurrentDictionary<PendingResponse, DownloadProgress>(new PendingResponse.EqualityComparer());
         }
@@ -192,6 +195,12 @@ namespace BouncedClient
         {
             BackgroundWorker currentWorker = sender as BackgroundWorker;
             Tuple<PendingResponse, DownloadProgress> downloadArgs = e.Argument as Tuple<PendingResponse, DownloadProgress>;
+
+            lock (Transfers.downloadCountLock)
+            {
+                Transfers.currentDownloadsCount++;
+            }
+            
             String fileHash = Transfers.download(currentWorker, downloadArgs.Item1, downloadArgs.Item2);
 
             e.Result = new Tuple<string, long>(fileHash, downloadArgs.Item2.transferID);
@@ -200,9 +209,6 @@ namespace BouncedClient
         void downloadWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             DownloadProgress dp = e.UserState as DownloadProgress;
-
-            updateDownloadStatus();
-
             int row = -1;
             
             // Identify which row contains the download whose progress is being reported
@@ -224,6 +230,10 @@ namespace BouncedClient
 
                 downloadGridView.Rows.Add(new object[] { zipIcon, dp.fileName, dp.status, e.ProgressPercentage + "%", 
             0, "Unknown", Utils.getHumanSize(dp.fileSize), dp.uploaderIP, "Cancel", dp.mac, dp.hash, dp.fileSize, dp.downloadedFilePath });
+
+                // To kick off UI update instantly
+                uiUpdateTimer_Tick(sender, e);
+
                 return;
             }
 
@@ -231,12 +241,20 @@ namespace BouncedClient
             downloadGridView["StatusColumn", row].Value = dp.status;
             downloadGridView["ProgressColumn", row].Value = e.ProgressPercentage + "%";
             downloadGridView["PeerColumn", row].Value = dp.nick;
+            downloadGridView["FileNameColumn", row].Value = dp.fileName;
+
+            // Handles the case when a download is canceled, then restarted
+            // It makes sure that the new download has a 'Cancel' button rather than a 'Clear' button
+            if (!dp.status.Equals("Canceled") && downloadGridView["ActionColumn", row].Value.Equals("Clear")) // TODO: Finicky, change later
+            {
+                downloadGridView["ActionColumn", row].Value = "Cancel";
+            }
 
             if (dp.isComplete)
             {
                 downloadGridView["ActionColumn", row].Value = "Open folder";
             }
-
+            
             double secondsToComplete = ((dp.fileSize - dp.completed) / 1024.0) / dp.averageTransferRate;
             if (secondsToComplete > 0)
                 downloadGridView["ETAColumn", row].Value = Utils.getHumanTime(secondsToComplete);
@@ -246,7 +264,7 @@ namespace BouncedClient
 
         void downloadWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Utils.writeLog("downloadWorker_RunWorkerCompleted: Download completed.");
+            Utils.writeLog("downloadWorker_RunWorkerCompleted: Worker completed job.");
 
             Tuple<string, long> downloadResult = e.Result as Tuple<string, long>;
 
@@ -264,7 +282,10 @@ namespace BouncedClient
                 Utils.writeLog("downloadWorker_RunWorkerCompleted: Error : " + e.Error);
             }
 
-            updateDownloadStatus();
+            lock (Transfers.downloadCountLock)
+            {
+                Transfers.currentDownloadsCount--;
+            }
         }
 
         private void loadConfigWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -565,32 +586,12 @@ namespace BouncedClient
 
                 Utils.writeLog("searchGridView_CellClick: Sending download request for file : " + dr.fileName);
 
-                Transfers.outstandingDownloadRequests.Add(dr);
-                updateDownloadStatus();
                 downloadRequestWorker.RunWorkerAsync(dr);
+
+                // Switch the tab to show the new download/bounce
+                MainTabControl.SelectedIndex = ((String)buttonCell.Value).Equals("Download") ? 1 : 2;
             }
 
-        }
-
-        private void updateDownloadStatus()
-        {
-
-            foreach(DownloadProgress dp in Transfers.currentDownloads)
-            {
-                int i = 0;
-                while (i < Transfers.outstandingDownloadRequests.Count)
-                {
-                    if (Transfers.outstandingDownloadRequests[i].hash.Equals(dp.hash))
-                    {
-                        Transfers.outstandingDownloadRequests.RemoveAt(i);
-                        continue;
-                    }
-                    i++;
-                }
-            }
-
-            downloadStatusLabel.Text = Transfers.currentDownloads.Count + " (" + Transfers.outstandingDownloadRequests.Count +
-                " pending)";
         }
 
         private void downloadRequestWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -804,7 +805,8 @@ namespace BouncedClient
             else
                 downloadGridHelpTextLabel.Visible = false;
 
-            uploadStatusLabel.Text = "" + Server.currentUploads;
+            downloadStatusLabel.Text = "" + Transfers.currentDownloadsCount;
+            uploadStatusLabel.Text = "" + Server.currentUploadsCount;
         }
 
     }

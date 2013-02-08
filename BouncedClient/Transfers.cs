@@ -16,7 +16,9 @@ namespace BouncedClient
     {
         public static ConcurrentDictionary<PendingResponse, DownloadProgress> pendingToDownload;
         public static List<DownloadProgress> currentDownloads;
-        public static List<DownloadRequest> outstandingDownloadRequests;
+        public static int currentDownloadsCount;
+
+        public static System.Object downloadCountLock = new System.Object();
 
         public static string download(BackgroundWorker worker, PendingResponse pr, DownloadProgress dp)
         {
@@ -65,6 +67,27 @@ namespace BouncedClient
             DateTime refresh = DateTime.Now;    //To track time since last refresh
 
             byte[] downBuffer = new byte[4096];
+
+            // Find a free filename
+
+            if (File.Exists(dp.downloadedFilePath))
+            {
+                String candidatePath = "";
+                for (int i = 2; i < 100; i++) // 100 here is arbitrary, just want to make sure it doesnt loop forever
+                {
+                    candidatePath = dp.downloadedFilePath.Substring(0,dp.downloadedFilePath.LastIndexOf('.'));
+                    candidatePath += " ("+i+")";
+                    candidatePath += dp.downloadedFilePath.Substring(dp.downloadedFilePath.LastIndexOf('.'));
+
+                    if (!File.Exists(candidatePath))
+                    {
+                        Utils.writeLog("download: Found free file path " + candidatePath);
+                        dp.downloadedFilePath = candidatePath;
+                        dp.fileName = dp.downloadedFilePath.Substring(dp.downloadedFilePath.LastIndexOf(@"\") + 1);
+                        break;
+                    }
+                }
+            }
 
             try
             {

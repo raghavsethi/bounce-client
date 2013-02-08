@@ -16,14 +16,15 @@ namespace BouncedClient
     {
         public static TcpListener tcpListener;
         public static ASCIIEncoding encoder;
-        public static int currentUploads;
+        public static int currentUploadsCount;
+
+        public static System.Object uploadCountLock = new System.Object();
 
         public static void serverWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             Utils.writeLog("serverWorker_DoWork: Started");
-            currentUploads = 0;
 
-            //Handles uploads to peers.
+            // Handles uploads to peers.
             try
             {
                 tcpListener = new TcpListener(IPAddress.Any, 8002);
@@ -39,12 +40,12 @@ namespace BouncedClient
 
             while (true)
             {
-                //Waits until a client has connected to the server.
+                // Waits until a client has connected to the server.
                 TcpClient client = tcpListener.AcceptTcpClient();
                 //client.NoDelay = true;
                 Utils.writeLog("serverWorker_DoWork: New peer connected");
                 
-                //Creates a thread to handle the client.
+                // Creates a thread to handle the client.
                 BackgroundWorker uploadWorker = new BackgroundWorker();
                 uploadWorker.DoWork += uploadWorker_DoWork;
                 //uploadWorker.ProgressChanged += uploadWorker_ProgressChanged;
@@ -75,7 +76,7 @@ namespace BouncedClient
             
             try
             {
-                //Blocks until a client sends a message
+                // Blocks until a client sends a message
                 bytesRead = clientStream.Read(message, 0, 4096);
             }
             catch
@@ -90,10 +91,10 @@ namespace BouncedClient
                 return;
             }
 
-            //If code gets here, message was successfully received.
+            // If code gets here, message was successfully received.
             String uploadParameters = encoder.GetString(message, 0, bytesRead);
 
-            //Format: fileHash | transfer ID | transfer-type
+            // Format: fileHash | transfer ID | transfer-type
 
             //TODO: Add part which gets key and actually encrypts the transfer
             char[] sep = { '|' };
@@ -109,7 +110,11 @@ namespace BouncedClient
         public static bool upload(string fileHash, NetworkStream fileUploadStream, String transferType)
         {
             Utils.writeLog("upload: Started");
-            currentUploads++;
+
+            lock (Server.uploadCountLock)
+            {
+                Server.currentUploadsCount++;
+            }
 
             bool successfulTransfer = false;
             byte[] byteSend = new byte[4096];
@@ -117,7 +122,7 @@ namespace BouncedClient
             string filePath = "";
             string fileName = "";
 
-            //Get file path from hash.
+            // Get file path from hash.
             if (transferType == "direct" || transferType == "firstleg")
             {
                 filePath = ((LocalFile)Indexer.fileIndex[fileHash]).location;
@@ -152,7 +157,7 @@ namespace BouncedClient
             {
                 int bytesSize = 0;
 
-                //Send the file.
+                // Send the file.
                 while ((bytesSize = fileLocalStream.Read(byteSend, 0, byteSend.Length)) > 0)
                 {
                     //Thread.Sleep(100);
@@ -172,7 +177,12 @@ namespace BouncedClient
             {
                 fileLocalStream.Close();
             }
-            currentUploads--;
+
+            lock (Server.uploadCountLock)
+            {
+                Server.currentUploadsCount--;
+            }
+
             return successfulTransfer;
         }
     }
