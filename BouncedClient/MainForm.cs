@@ -47,7 +47,7 @@ namespace BouncedClient
 
         private void registerWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            statusPictureBox.Image = Resources.status_connecting;
+            statusPictureBox.Image = Resources.connection_working;
 
             RestClient client = new RestClient("http://"+Configuration.server);
             RestRequest request = new RestRequest("register", Method.POST);
@@ -69,7 +69,7 @@ namespace BouncedClient
             {
                 Utils.writeLog("registerWorker_RunWorkerCompleted: Error in registering");
                 //TODO: Put a timeout to start retry
-                statusPictureBox.Image = Resources.status_error;
+                statusPictureBox.Image = Resources.connection_working;
                 actionButton.Enabled = true;
                 reconnectTimer.Enabled = true;
                 return;
@@ -79,7 +79,7 @@ namespace BouncedClient
             
             if (sr.status.Equals("OK"))
             {
-                statusPictureBox.Image = Resources.status_ok;
+                statusPictureBox.Image = Resources.connection_done;
                 statusLabel.Text = "Connected";
                 Utils.writeLog("registerWorker_RunWorkerCompleted: Registered successfully");
                 pollPendingTimer.Enabled = true;
@@ -87,7 +87,7 @@ namespace BouncedClient
             }
             else
             {
-                statusPictureBox.Image = Resources.status_error;
+                statusPictureBox.Image = Resources.connection_working;
                 statusLabel.Text = sr.text;
                 Utils.writeLog("registerWorker_RunWorkerCompleted: Could not register..");
                 actionButton.Enabled = true;
@@ -118,7 +118,7 @@ namespace BouncedClient
 
             if (latestPending == null)
             {
-                statusPictureBox.Image = Resources.status_error;
+                statusPictureBox.Image = Resources.connection_working;
                 statusLabel.Text = "Lost connection to network";
                 pollPendingTimer.Enabled = false;
                 reconnectTimer.Enabled = true;
@@ -241,7 +241,7 @@ namespace BouncedClient
             downloadGridView["StatusColumn", row].Value = dp.status;
             downloadGridView["ProgressColumn", row].Value = e.ProgressPercentage + "%";
             downloadGridView["PeerColumn", row].Value = dp.nick;
-            downloadGridView["FileNameColumn", row].Value = dp.fileName;
+            downloadGridView["FilePathColumn", row].Value = dp.downloadedFilePath;
 
             // Handles the case when a download is canceled, then restarted
             // It makes sure that the new download has a 'Cancel' button rather than a 'Clear' button
@@ -256,6 +256,7 @@ namespace BouncedClient
             }
             
             double secondsToComplete = ((dp.fileSize - dp.completed) / 1024.0) / dp.averageTransferRate;
+
             if (secondsToComplete > 0)
                 downloadGridView["ETAColumn", row].Value = Utils.getHumanTime(secondsToComplete);
             else
@@ -370,6 +371,7 @@ namespace BouncedClient
         private void indexWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             Utils.writeLog("indexWorker_DoWork: Starting to build index");
+            syncStatusPictureBox.Image = Resources.sync_working;
             Indexer.buildIndex(sharedFolders.Items);
         }
 
@@ -380,6 +382,7 @@ namespace BouncedClient
             Utils.writeLog("indexWorker_RunWorkerCompleted: Starting syncWorker");
             syncWorker.RunWorkerAsync();
             statusLabel.Text = "Syncing..";
+            syncStatusPictureBox.Image = Resources.sync_sending;
         }
 
         private void usernameTextBox_Leave(object sender, EventArgs e)
@@ -437,6 +440,7 @@ namespace BouncedClient
                 StatusResponse sr = new StatusResponse();
                 sr.status = (response.Contains("OK")) ? "OK" : "Error";
                 sr.text = (response.Contains("OK")) ? "Synced successfully" : "Failed to sync";
+                syncStatusPictureBox.Image = Resources.sync_failed;
                 e.Result = sr;
             }
             
@@ -450,6 +454,7 @@ namespace BouncedClient
             {
                 statusLabel.Text = "Unable to sync";
                 Utils.writeLog("syncWorker_RunWorkerCompleted: Sync failed");
+                syncStatusPictureBox.Image = Resources.sync_failed;
                 return;
             }
 
@@ -459,6 +464,7 @@ namespace BouncedClient
             {
                 Indexer.successfulSync();
                 Utils.writeLog("syncWorker_RunWorkerCompleted: Sync complete");
+                syncStatusPictureBox.Image = Resources.sync_successful;
             }
             
         }
@@ -506,6 +512,7 @@ namespace BouncedClient
         {
             if (!searchWorker.IsBusy && searchGoButton.Enabled)
             {
+                searchGridHelpTextLabel.Visible = false;
                 searchGridView.Rows.Clear();
                 searchWorker.RunWorkerAsync(searchQuery);
             }
@@ -531,18 +538,15 @@ namespace BouncedClient
                 currentlyDisplayedSearchResults = new List<SearchResult>();
                 return;
             }
-
-            if (currentlyDisplayedSearchResults.Count == 0)
-            {
-                MessageBox.Show("We were unable to find any results for your search query. Please rephrase and try again.",
-                    "No results found", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
         }
         
         private void searchWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             repopulateSearchResults();
             searchGoButton.Enabled = true;
+
+            if(searchGridView.Rows.Count==0)
+                searchGridHelpTextLabel.Visible = true;
         }
 
         public void repopulateSearchResults()
@@ -695,7 +699,7 @@ namespace BouncedClient
         {
             if (!textboxesInitialized) // To ensure TextChanged was fired by a user
                 return;
-            statusPictureBox.Image = Resources.status_error;
+            statusPictureBox.Image = Resources.connection_working;
             actionButton.Enabled = true;
             reconnectTimer.Enabled = false;
             pollPendingTimer.Enabled = false;
@@ -705,7 +709,7 @@ namespace BouncedClient
         
         private void actionButton_Click(object sender, EventArgs e)
         {
-            statusPictureBox.Image = Resources.status_connecting;
+            statusPictureBox.Image = Resources.connection_working;
             actionButton.Font = new Font(actionButton.Font, FontStyle.Regular);
             if (!registerWorker.IsBusy)
             {

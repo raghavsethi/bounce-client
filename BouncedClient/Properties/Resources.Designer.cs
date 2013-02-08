@@ -63,9 +63,9 @@ namespace BounceClient.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap status_connecting {
+        internal static System.Drawing.Bitmap connection_done {
             get {
-                object obj = ResourceManager.GetObject("status_connecting", resourceCulture);
+                object obj = ResourceManager.GetObject("connection_done", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace BounceClient.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap status_error {
+        internal static System.Drawing.Bitmap connection_working {
             get {
-                object obj = ResourceManager.GetObject("status_error", resourceCulture);
+                object obj = ResourceManager.GetObject("connection_working", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -83,9 +83,39 @@ namespace BounceClient.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap status_ok {
+        internal static System.Drawing.Bitmap sync_failed {
             get {
-                object obj = ResourceManager.GetObject("status_ok", resourceCulture);
+                object obj = ResourceManager.GetObject("sync_failed", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap sync_sending {
+            get {
+                object obj = ResourceManager.GetObject("sync_sending", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap sync_successful {
+            get {
+                object obj = ResourceManager.GetObject("sync_successful", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap sync_working {
+            get {
+                object obj = ResourceManager.GetObject("sync_working", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -98,9 +98,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bounced.ico" />
+    <None Include="res\sync-working.gif" />
+    <None Include="res\sync-successful.png" />
+    <None Include="res\sync-sending.png" />
+    <None Include="res\sync-failed.png" />
+    <None Include="res\connection-working.gif" />
+    <None Include="res\connection-done.png" />
     <None Include="res\status-ok.png" />
     <None Include="res\status-error.png" />
     <None Include="res\status-connecting.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

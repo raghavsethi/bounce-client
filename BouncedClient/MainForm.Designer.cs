@@ -29,15 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.StatusPanel = new System.Windows.Forms.Panel();
-            this.statusPictureBox = new System.Windows.Forms.PictureBox();
             this.label6 = new System.Windows.Forms.Label();
             this.uploadStatusLabel = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.fixedDownloadLabel = new System.Windows.Forms.Label();
             this.downloadStatusLabel = new System.Windows.Forms.Label();
             this.statusLabel = new System.Windows.Forms.Label();
@@ -58,8 +56,23 @@
             this.Hash = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FileSizeBytes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TransfersTabPage = new System.Windows.Forms.TabPage();
+            this.downloadGridHelpTextLabel = new System.Windows.Forms.Label();
             this.downloadGridView = new System.Windows.Forms.DataGridView();
+            this.IconColumn = new System.Windows.Forms.DataGridViewImageColumn();
+            this.FileNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.StatusColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ProgressColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ETAColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SpeedColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FileSizeTextColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PeerColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ActionColumn = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.MacColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.HashColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FileSizeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FilePathColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BouncesTabPage = new System.Windows.Forms.TabPage();
+            this.bounceGridHelpTextLabel = new System.Windows.Forms.Label();
             this.bounceGridView = new System.Windows.Forms.DataGridView();
             this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
             this.BouncesFileNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -90,7 +103,6 @@
             this.helpText1 = new System.Windows.Forms.Label();
             this.usernameTextBox = new System.Windows.Forms.TextBox();
             this.fixedUsernameLabel = new System.Windows.Forms.Label();
-            this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.registerWorker = new System.ComponentModel.BackgroundWorker();
             this.pollPendingTimer = new System.Windows.Forms.Timer(this.components);
             this.pollPendingWorker = new System.ComponentModel.BackgroundWorker();
@@ -105,23 +117,12 @@
             this.bounceStatusTimer = new System.Windows.Forms.Timer(this.components);
             this.pollStatusWorker = new System.ComponentModel.BackgroundWorker();
             this.uiUpdateTimer = new System.Windows.Forms.Timer(this.components);
-            this.downloadGridHelpTextLabel = new System.Windows.Forms.Label();
-            this.bounceGridHelpTextLabel = new System.Windows.Forms.Label();
-            this.IconColumn = new System.Windows.Forms.DataGridViewImageColumn();
-            this.FileNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.StatusColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ProgressColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ETAColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SpeedColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FileSizeTextColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PeerColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ActionColumn = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.MacColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.HashColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FileSizeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FilePathColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.searchGridHelpTextLabel = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.logoPictureBox = new System.Windows.Forms.PictureBox();
+            this.syncStatusPictureBox = new System.Windows.Forms.PictureBox();
+            this.statusPictureBox = new System.Windows.Forms.PictureBox();
             this.StatusPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.statusPictureBox)).BeginInit();
             this.MainTabControl.SuspendLayout();
             this.SearchTabPage.SuspendLayout();
             this.searchBoxPanel.SuspendLayout();
@@ -133,15 +134,18 @@
             this.settingsTabPage.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.syncStatusPictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.statusPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // StatusPanel
             // 
             this.StatusPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(239)))), ((int)(((byte)(239)))));
+            this.StatusPanel.Controls.Add(this.syncStatusPictureBox);
+            this.StatusPanel.Controls.Add(this.label4);
             this.StatusPanel.Controls.Add(this.statusPictureBox);
             this.StatusPanel.Controls.Add(this.label6);
             this.StatusPanel.Controls.Add(this.uploadStatusLabel);
-            this.StatusPanel.Controls.Add(this.label3);
             this.StatusPanel.Controls.Add(this.fixedDownloadLabel);
             this.StatusPanel.Controls.Add(this.downloadStatusLabel);
             this.StatusPanel.Controls.Add(this.statusLabel);
@@ -151,22 +155,13 @@
             this.StatusPanel.Size = new System.Drawing.Size(784, 35);
             this.StatusPanel.TabIndex = 0;
             // 
-            // statusPictureBox
-            // 
-            this.statusPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("statusPictureBox.Image")));
-            this.statusPictureBox.Location = new System.Drawing.Point(9, 9);
-            this.statusPictureBox.Name = "statusPictureBox";
-            this.statusPictureBox.Size = new System.Drawing.Size(16, 16);
-            this.statusPictureBox.TabIndex = 4;
-            this.statusPictureBox.TabStop = false;
-            // 
             // label6
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label6.Location = new System.Drawing.Point(694, 10);
+            this.label6.Location = new System.Drawing.Point(693, 10);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(58, 13);
             this.label6.TabIndex = 8;
@@ -183,24 +178,13 @@
             this.uploadStatusLabel.TabIndex = 7;
             this.uploadStatusLabel.Text = "0";
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.Color.Gray;
-            this.label3.Location = new System.Drawing.Point(37, 10);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(45, 13);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "STATUS";
-            // 
             // fixedDownloadLabel
             // 
             this.fixedDownloadLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.fixedDownloadLabel.AutoSize = true;
             this.fixedDownloadLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fixedDownloadLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.fixedDownloadLabel.Location = new System.Drawing.Point(487, 10);
+            this.fixedDownloadLabel.Location = new System.Drawing.Point(567, 10);
             this.fixedDownloadLabel.Name = "fixedDownloadLabel";
             this.fixedDownloadLabel.Size = new System.Drawing.Size(79, 13);
             this.fixedDownloadLabel.TabIndex = 3;
@@ -211,7 +195,7 @@
             this.downloadStatusLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.downloadStatusLabel.AutoSize = true;
             this.downloadStatusLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.downloadStatusLabel.Location = new System.Drawing.Point(570, 9);
+            this.downloadStatusLabel.Location = new System.Drawing.Point(651, 9);
             this.downloadStatusLabel.Name = "downloadStatusLabel";
             this.downloadStatusLabel.Size = new System.Drawing.Size(13, 15);
             this.downloadStatusLabel.TabIndex = 2;
@@ -221,7 +205,7 @@
             // 
             this.statusLabel.AutoSize = true;
             this.statusLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.statusLabel.Location = new System.Drawing.Point(86, 9);
+            this.statusLabel.Location = new System.Drawing.Point(29, 10);
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(131, 15);
             this.statusLabel.TabIndex = 0;
@@ -247,6 +231,7 @@
             // 
             // SearchTabPage
             // 
+            this.SearchTabPage.Controls.Add(this.searchGridHelpTextLabel);
             this.SearchTabPage.Controls.Add(this.searchBoxPanel);
             this.SearchTabPage.Controls.Add(this.searchGridView);
             this.SearchTabPage.Location = new System.Drawing.Point(4, 44);
@@ -321,8 +306,8 @@
             this.searchGridView.AllowUserToAddRows = false;
             this.searchGridView.AllowUserToDeleteRows = false;
             this.searchGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.searchGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.searchGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
             this.searchGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -429,13 +414,26 @@
             this.TransfersTabPage.Text = "Transfers";
             this.TransfersTabPage.UseVisualStyleBackColor = true;
             // 
+            // downloadGridHelpTextLabel
+            // 
+            this.downloadGridHelpTextLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.downloadGridHelpTextLabel.AutoSize = true;
+            this.downloadGridHelpTextLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.downloadGridHelpTextLabel.Location = new System.Drawing.Point(222, 208);
+            this.downloadGridHelpTextLabel.Name = "downloadGridHelpTextLabel";
+            this.downloadGridHelpTextLabel.Size = new System.Drawing.Size(330, 30);
+            this.downloadGridHelpTextLabel.TabIndex = 9;
+            this.downloadGridHelpTextLabel.Text = "No transfers currently in progress.\r\nClick the \'download\' button next to a file t" +
+    "o see it appear here";
+            this.downloadGridHelpTextLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // downloadGridView
             // 
             this.downloadGridView.AllowUserToAddRows = false;
             this.downloadGridView.AllowUserToDeleteRows = false;
             this.downloadGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.downloadGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.downloadGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle8;
             this.downloadGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -470,6 +468,110 @@
             this.downloadGridView.TabIndex = 1;
             this.downloadGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.downloadGridView_CellClick);
             // 
+            // IconColumn
+            // 
+            this.IconColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.IconColumn.FillWeight = 40.60914F;
+            this.IconColumn.HeaderText = "";
+            this.IconColumn.Name = "IconColumn";
+            this.IconColumn.ReadOnly = true;
+            this.IconColumn.Width = 25;
+            // 
+            // FileNameColumn
+            // 
+            this.FileNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.FileNameColumn.FillWeight = 119.797F;
+            this.FileNameColumn.HeaderText = "File Name";
+            this.FileNameColumn.Name = "FileNameColumn";
+            this.FileNameColumn.ReadOnly = true;
+            this.FileNameColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.FileNameColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // StatusColumn
+            // 
+            this.StatusColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.StatusColumn.HeaderText = "Status";
+            this.StatusColumn.Name = "StatusColumn";
+            this.StatusColumn.ReadOnly = true;
+            this.StatusColumn.Width = 90;
+            // 
+            // ProgressColumn
+            // 
+            this.ProgressColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.ProgressColumn.HeaderText = "Progress";
+            this.ProgressColumn.Name = "ProgressColumn";
+            this.ProgressColumn.ReadOnly = true;
+            this.ProgressColumn.Width = 70;
+            // 
+            // ETAColumn
+            // 
+            this.ETAColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.ETAColumn.HeaderText = "ETA";
+            this.ETAColumn.Name = "ETAColumn";
+            this.ETAColumn.ReadOnly = true;
+            this.ETAColumn.Width = 70;
+            // 
+            // SpeedColumn
+            // 
+            this.SpeedColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.SpeedColumn.HeaderText = "Speed";
+            this.SpeedColumn.Name = "SpeedColumn";
+            this.SpeedColumn.ReadOnly = true;
+            this.SpeedColumn.Width = 80;
+            // 
+            // FileSizeTextColumn
+            // 
+            this.FileSizeTextColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.FileSizeTextColumn.FillWeight = 119.797F;
+            this.FileSizeTextColumn.HeaderText = "File Size";
+            this.FileSizeTextColumn.Name = "FileSizeTextColumn";
+            this.FileSizeTextColumn.ReadOnly = true;
+            this.FileSizeTextColumn.Width = 80;
+            // 
+            // PeerColumn
+            // 
+            this.PeerColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.PeerColumn.HeaderText = "Peer";
+            this.PeerColumn.Name = "PeerColumn";
+            this.PeerColumn.ReadOnly = true;
+            this.PeerColumn.Width = 110;
+            // 
+            // ActionColumn
+            // 
+            this.ActionColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.ActionColumn.FillWeight = 119.797F;
+            this.ActionColumn.HeaderText = "Action";
+            this.ActionColumn.Name = "ActionColumn";
+            this.ActionColumn.ReadOnly = true;
+            // 
+            // MacColumn
+            // 
+            this.MacColumn.HeaderText = "Mac";
+            this.MacColumn.Name = "MacColumn";
+            this.MacColumn.ReadOnly = true;
+            this.MacColumn.Visible = false;
+            // 
+            // HashColumn
+            // 
+            this.HashColumn.HeaderText = "Hash";
+            this.HashColumn.Name = "HashColumn";
+            this.HashColumn.ReadOnly = true;
+            this.HashColumn.Visible = false;
+            // 
+            // FileSizeColumn
+            // 
+            this.FileSizeColumn.HeaderText = "File Size (Bytes)";
+            this.FileSizeColumn.Name = "FileSizeColumn";
+            this.FileSizeColumn.ReadOnly = true;
+            this.FileSizeColumn.Visible = false;
+            // 
+            // FilePathColumn
+            // 
+            this.FilePathColumn.HeaderText = "File Path";
+            this.FilePathColumn.Name = "FilePathColumn";
+            this.FilePathColumn.ReadOnly = true;
+            this.FilePathColumn.Visible = false;
+            // 
             // BouncesTabPage
             // 
             this.BouncesTabPage.Controls.Add(this.bounceGridHelpTextLabel);
@@ -481,13 +583,26 @@
             this.BouncesTabPage.Text = "Bounces";
             this.BouncesTabPage.UseVisualStyleBackColor = true;
             // 
+            // bounceGridHelpTextLabel
+            // 
+            this.bounceGridHelpTextLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.bounceGridHelpTextLabel.AutoSize = true;
+            this.bounceGridHelpTextLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.bounceGridHelpTextLabel.Location = new System.Drawing.Point(218, 208);
+            this.bounceGridHelpTextLabel.Name = "bounceGridHelpTextLabel";
+            this.bounceGridHelpTextLabel.Size = new System.Drawing.Size(340, 30);
+            this.bounceGridHelpTextLabel.TabIndex = 10;
+            this.bounceGridHelpTextLabel.Text = "There aren\'t any files pending for you.\r\nFiles you requested that aren\'t currentl" +
+    "y available are listed here";
+            this.bounceGridHelpTextLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // bounceGridView
             // 
             this.bounceGridView.AllowUserToAddRows = false;
             this.bounceGridView.AllowUserToDeleteRows = false;
             this.bounceGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.bounceGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.bounceGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle9;
             this.bounceGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -835,16 +950,6 @@
             this.fixedUsernameLabel.TabIndex = 2;
             this.fixedUsernameLabel.Text = "USERNAME";
             // 
-            // logoPictureBox
-            // 
-            this.logoPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.logoPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("logoPictureBox.Image")));
-            this.logoPictureBox.Location = new System.Drawing.Point(647, 7);
-            this.logoPictureBox.Name = "logoPictureBox";
-            this.logoPictureBox.Size = new System.Drawing.Size(140, 40);
-            this.logoPictureBox.TabIndex = 3;
-            this.logoPictureBox.TabStop = false;
-            // 
             // registerWorker
             // 
             this.registerWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.registerWorker_DoWork);
@@ -910,135 +1015,59 @@
             this.uiUpdateTimer.Interval = 1000;
             this.uiUpdateTimer.Tick += new System.EventHandler(this.uiUpdateTimer_Tick);
             // 
-            // downloadGridHelpTextLabel
+            // searchGridHelpTextLabel
             // 
-            this.downloadGridHelpTextLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.downloadGridHelpTextLabel.AutoSize = true;
-            this.downloadGridHelpTextLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.downloadGridHelpTextLabel.Location = new System.Drawing.Point(222, 208);
-            this.downloadGridHelpTextLabel.Name = "downloadGridHelpTextLabel";
-            this.downloadGridHelpTextLabel.Size = new System.Drawing.Size(330, 30);
-            this.downloadGridHelpTextLabel.TabIndex = 9;
-            this.downloadGridHelpTextLabel.Text = "No transfers currently in progress.\r\nClick the \'download\' button next to a file t" +
-    "o see it appear here";
-            this.downloadGridHelpTextLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.searchGridHelpTextLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.searchGridHelpTextLabel.AutoSize = true;
+            this.searchGridHelpTextLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.searchGridHelpTextLabel.Location = new System.Drawing.Point(339, 208);
+            this.searchGridHelpTextLabel.Name = "searchGridHelpTextLabel";
+            this.searchGridHelpTextLabel.Size = new System.Drawing.Size(98, 15);
+            this.searchGridHelpTextLabel.TabIndex = 10;
+            this.searchGridHelpTextLabel.Text = "No results found.";
+            this.searchGridHelpTextLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.searchGridHelpTextLabel.Visible = false;
             // 
-            // bounceGridHelpTextLabel
+            // label4
             // 
-            this.bounceGridHelpTextLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.bounceGridHelpTextLabel.AutoSize = true;
-            this.bounceGridHelpTextLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.bounceGridHelpTextLabel.Location = new System.Drawing.Point(218, 208);
-            this.bounceGridHelpTextLabel.Name = "bounceGridHelpTextLabel";
-            this.bounceGridHelpTextLabel.Size = new System.Drawing.Size(340, 30);
-            this.bounceGridHelpTextLabel.TabIndex = 10;
-            this.bounceGridHelpTextLabel.Text = "There aren\'t any files pending for you.\r\nFiles you requested that aren\'t currentl" +
-    "y available are listed here";
-            this.bounceGridHelpTextLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label4.Location = new System.Drawing.Point(484, 10);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(36, 13);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "SYNC";
             // 
-            // IconColumn
+            // logoPictureBox
             // 
-            this.IconColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.IconColumn.FillWeight = 40.60914F;
-            this.IconColumn.HeaderText = "";
-            this.IconColumn.Name = "IconColumn";
-            this.IconColumn.ReadOnly = true;
-            this.IconColumn.Width = 25;
+            this.logoPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.logoPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("logoPictureBox.Image")));
+            this.logoPictureBox.Location = new System.Drawing.Point(647, 7);
+            this.logoPictureBox.Name = "logoPictureBox";
+            this.logoPictureBox.Size = new System.Drawing.Size(140, 40);
+            this.logoPictureBox.TabIndex = 3;
+            this.logoPictureBox.TabStop = false;
             // 
-            // FileNameColumn
+            // syncStatusPictureBox
             // 
-            this.FileNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.FileNameColumn.FillWeight = 119.797F;
-            this.FileNameColumn.HeaderText = "File Name";
-            this.FileNameColumn.Name = "FileNameColumn";
-            this.FileNameColumn.ReadOnly = true;
-            this.FileNameColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.FileNameColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.syncStatusPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.syncStatusPictureBox.Image = global::BounceClient.Properties.Resources.sync_working;
+            this.syncStatusPictureBox.Location = new System.Drawing.Point(524, 8);
+            this.syncStatusPictureBox.Name = "syncStatusPictureBox";
+            this.syncStatusPictureBox.Size = new System.Drawing.Size(16, 16);
+            this.syncStatusPictureBox.TabIndex = 10;
+            this.syncStatusPictureBox.TabStop = false;
             // 
-            // StatusColumn
+            // statusPictureBox
             // 
-            this.StatusColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.StatusColumn.HeaderText = "Status";
-            this.StatusColumn.Name = "StatusColumn";
-            this.StatusColumn.ReadOnly = true;
-            this.StatusColumn.Width = 90;
-            // 
-            // ProgressColumn
-            // 
-            this.ProgressColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.ProgressColumn.HeaderText = "Progress";
-            this.ProgressColumn.Name = "ProgressColumn";
-            this.ProgressColumn.ReadOnly = true;
-            this.ProgressColumn.Width = 70;
-            // 
-            // ETAColumn
-            // 
-            this.ETAColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.ETAColumn.HeaderText = "ETA";
-            this.ETAColumn.Name = "ETAColumn";
-            this.ETAColumn.ReadOnly = true;
-            this.ETAColumn.Width = 70;
-            // 
-            // SpeedColumn
-            // 
-            this.SpeedColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.SpeedColumn.HeaderText = "Speed";
-            this.SpeedColumn.Name = "SpeedColumn";
-            this.SpeedColumn.ReadOnly = true;
-            this.SpeedColumn.Width = 80;
-            // 
-            // FileSizeTextColumn
-            // 
-            this.FileSizeTextColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.FileSizeTextColumn.FillWeight = 119.797F;
-            this.FileSizeTextColumn.HeaderText = "File Size";
-            this.FileSizeTextColumn.Name = "FileSizeTextColumn";
-            this.FileSizeTextColumn.ReadOnly = true;
-            this.FileSizeTextColumn.Width = 80;
-            // 
-            // PeerColumn
-            // 
-            this.PeerColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.PeerColumn.HeaderText = "Peer";
-            this.PeerColumn.Name = "PeerColumn";
-            this.PeerColumn.ReadOnly = true;
-            this.PeerColumn.Width = 110;
-            // 
-            // ActionColumn
-            // 
-            this.ActionColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.ActionColumn.FillWeight = 119.797F;
-            this.ActionColumn.HeaderText = "Action";
-            this.ActionColumn.Name = "ActionColumn";
-            this.ActionColumn.ReadOnly = true;
-            // 
-            // MacColumn
-            // 
-            this.MacColumn.HeaderText = "Mac";
-            this.MacColumn.Name = "MacColumn";
-            this.MacColumn.ReadOnly = true;
-            this.MacColumn.Visible = false;
-            // 
-            // HashColumn
-            // 
-            this.HashColumn.HeaderText = "Hash";
-            this.HashColumn.Name = "HashColumn";
-            this.HashColumn.ReadOnly = true;
-            this.HashColumn.Visible = false;
-            // 
-            // FileSizeColumn
-            // 
-            this.FileSizeColumn.HeaderText = "File Size (Bytes)";
-            this.FileSizeColumn.Name = "FileSizeColumn";
-            this.FileSizeColumn.ReadOnly = true;
-            this.FileSizeColumn.Visible = false;
-            // 
-            // FilePathColumn
-            // 
-            this.FilePathColumn.HeaderText = "File Path";
-            this.FilePathColumn.Name = "FilePathColumn";
-            this.FilePathColumn.ReadOnly = true;
-            this.FilePathColumn.Visible = false;
+            this.statusPictureBox.Image = global::BounceClient.Properties.Resources.connection_working;
+            this.statusPictureBox.Location = new System.Drawing.Point(8, 10);
+            this.statusPictureBox.Name = "statusPictureBox";
+            this.statusPictureBox.Size = new System.Drawing.Size(16, 16);
+            this.statusPictureBox.TabIndex = 4;
+            this.statusPictureBox.TabStop = false;
             // 
             // MainForm
             // 
@@ -1058,9 +1087,9 @@
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.StatusPanel.ResumeLayout(false);
             this.StatusPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.statusPictureBox)).EndInit();
             this.MainTabControl.ResumeLayout(false);
             this.SearchTabPage.ResumeLayout(false);
+            this.SearchTabPage.PerformLayout();
             this.searchBoxPanel.ResumeLayout(false);
             this.searchBoxPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.searchGridView)).EndInit();
@@ -1075,6 +1104,8 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.syncStatusPictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.statusPictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1135,7 +1166,6 @@
         private System.ComponentModel.BackgroundWorker serverWorker;
         private System.Windows.Forms.Timer reconnectTimer;
         private System.Windows.Forms.Label macAddrLabel;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label uploadStatusLabel;
         private System.Windows.Forms.DataGridView bounceGridView;
@@ -1168,6 +1198,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn HashColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileSizeColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn FilePathColumn;
+        private System.Windows.Forms.Label searchGridHelpTextLabel;
+        private System.Windows.Forms.PictureBox syncStatusPictureBox;
+        private System.Windows.Forms.Label label4;
     }
 }
 
