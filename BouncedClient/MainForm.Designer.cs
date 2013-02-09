@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.StatusPanel = new System.Windows.Forms.Panel();
             this.label6 = new System.Windows.Forms.Label();
@@ -74,13 +74,6 @@
             this.BouncesTabPage = new System.Windows.Forms.TabPage();
             this.bounceGridHelpTextLabel = new System.Windows.Forms.Label();
             this.bounceGridView = new System.Windows.Forms.DataGridView();
-            this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
-            this.BouncesFileNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BouncesFileSizeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BouncesStatusColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewButtonColumn1 = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.BouncesFileHashColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BouncesTransferIDColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.settingsTabPage = new System.Windows.Forms.TabPage();
             this.privacyLinkLabel = new System.Windows.Forms.LinkLabel();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -122,6 +115,14 @@
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.syncStatusPictureBox = new System.Windows.Forms.PictureBox();
             this.statusPictureBox = new System.Windows.Forms.PictureBox();
+            this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
+            this.BouncesFileNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BouncesFileSizeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BouncesStatusColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewButtonColumn1 = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.BouncesFileHashColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BouncesTransferIDColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BouncesUploaderMacColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.StatusPanel.SuspendLayout();
             this.MainTabControl.SuspendLayout();
             this.SearchTabPage.SuspendLayout();
@@ -306,8 +307,8 @@
             this.searchGridView.AllowUserToAddRows = false;
             this.searchGridView.AllowUserToDeleteRows = false;
             this.searchGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.searchGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.searchGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.searchGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -432,8 +433,8 @@
             this.downloadGridView.AllowUserToAddRows = false;
             this.downloadGridView.AllowUserToDeleteRows = false;
             this.downloadGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.downloadGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.downloadGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
             this.downloadGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -601,8 +602,8 @@
             this.bounceGridView.AllowUserToAddRows = false;
             this.bounceGridView.AllowUserToDeleteRows = false;
             this.bounceGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.bounceGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.bounceGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
             this.bounceGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -619,7 +620,8 @@
             this.BouncesStatusColumn,
             this.dataGridViewButtonColumn1,
             this.BouncesFileHashColumn,
-            this.BouncesTransferIDColumn});
+            this.BouncesTransferIDColumn,
+            this.BouncesUploaderMacColumn});
             this.bounceGridView.Location = new System.Drawing.Point(8, 6);
             this.bounceGridView.MultiSelect = false;
             this.bounceGridView.Name = "bounceGridView";
@@ -629,67 +631,7 @@
             this.bounceGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.bounceGridView.Size = new System.Drawing.Size(761, 435);
             this.bounceGridView.TabIndex = 1;
-            // 
-            // dataGridViewImageColumn1
-            // 
-            this.dataGridViewImageColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dataGridViewImageColumn1.FillWeight = 40.60914F;
-            this.dataGridViewImageColumn1.HeaderText = "";
-            this.dataGridViewImageColumn1.Name = "dataGridViewImageColumn1";
-            this.dataGridViewImageColumn1.ReadOnly = true;
-            this.dataGridViewImageColumn1.Width = 25;
-            // 
-            // BouncesFileNameColumn
-            // 
-            this.BouncesFileNameColumn.FillWeight = 119.797F;
-            this.BouncesFileNameColumn.HeaderText = "File Name";
-            this.BouncesFileNameColumn.Name = "BouncesFileNameColumn";
-            this.BouncesFileNameColumn.ReadOnly = true;
-            this.BouncesFileNameColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.BouncesFileNameColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // BouncesFileSizeColumn
-            // 
-            this.BouncesFileSizeColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.BouncesFileSizeColumn.FillWeight = 119.797F;
-            this.BouncesFileSizeColumn.HeaderText = "File Size";
-            this.BouncesFileSizeColumn.Name = "BouncesFileSizeColumn";
-            this.BouncesFileSizeColumn.ReadOnly = true;
-            this.BouncesFileSizeColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.BouncesFileSizeColumn.Width = 80;
-            // 
-            // BouncesStatusColumn
-            // 
-            this.BouncesStatusColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.BouncesStatusColumn.HeaderText = "Status";
-            this.BouncesStatusColumn.Name = "BouncesStatusColumn";
-            this.BouncesStatusColumn.ReadOnly = true;
-            this.BouncesStatusColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.BouncesStatusColumn.Width = 250;
-            // 
-            // dataGridViewButtonColumn1
-            // 
-            this.dataGridViewButtonColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dataGridViewButtonColumn1.FillWeight = 119.797F;
-            this.dataGridViewButtonColumn1.HeaderText = "Action";
-            this.dataGridViewButtonColumn1.Name = "dataGridViewButtonColumn1";
-            this.dataGridViewButtonColumn1.ReadOnly = true;
-            // 
-            // BouncesFileHashColumn
-            // 
-            this.BouncesFileHashColumn.HeaderText = "Hash";
-            this.BouncesFileHashColumn.Name = "BouncesFileHashColumn";
-            this.BouncesFileHashColumn.ReadOnly = true;
-            this.BouncesFileHashColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.BouncesFileHashColumn.Visible = false;
-            // 
-            // BouncesTransferIDColumn
-            // 
-            this.BouncesTransferIDColumn.HeaderText = "TransferID";
-            this.BouncesTransferIDColumn.Name = "BouncesTransferIDColumn";
-            this.BouncesTransferIDColumn.ReadOnly = true;
-            this.BouncesTransferIDColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.BouncesTransferIDColumn.Visible = false;
+            this.bounceGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.bounceGridView_CellClick);
             // 
             // settingsTabPage
             // 
@@ -1069,6 +1011,74 @@
             this.statusPictureBox.TabIndex = 4;
             this.statusPictureBox.TabStop = false;
             // 
+            // dataGridViewImageColumn1
+            // 
+            this.dataGridViewImageColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dataGridViewImageColumn1.FillWeight = 40.60914F;
+            this.dataGridViewImageColumn1.HeaderText = "";
+            this.dataGridViewImageColumn1.Name = "dataGridViewImageColumn1";
+            this.dataGridViewImageColumn1.ReadOnly = true;
+            this.dataGridViewImageColumn1.Width = 25;
+            // 
+            // BouncesFileNameColumn
+            // 
+            this.BouncesFileNameColumn.FillWeight = 119.797F;
+            this.BouncesFileNameColumn.HeaderText = "File Name";
+            this.BouncesFileNameColumn.Name = "BouncesFileNameColumn";
+            this.BouncesFileNameColumn.ReadOnly = true;
+            this.BouncesFileNameColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.BouncesFileNameColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // BouncesFileSizeColumn
+            // 
+            this.BouncesFileSizeColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.BouncesFileSizeColumn.FillWeight = 119.797F;
+            this.BouncesFileSizeColumn.HeaderText = "File Size";
+            this.BouncesFileSizeColumn.Name = "BouncesFileSizeColumn";
+            this.BouncesFileSizeColumn.ReadOnly = true;
+            this.BouncesFileSizeColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.BouncesFileSizeColumn.Width = 80;
+            // 
+            // BouncesStatusColumn
+            // 
+            this.BouncesStatusColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.BouncesStatusColumn.HeaderText = "Status";
+            this.BouncesStatusColumn.Name = "BouncesStatusColumn";
+            this.BouncesStatusColumn.ReadOnly = true;
+            this.BouncesStatusColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.BouncesStatusColumn.Width = 250;
+            // 
+            // dataGridViewButtonColumn1
+            // 
+            this.dataGridViewButtonColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dataGridViewButtonColumn1.FillWeight = 119.797F;
+            this.dataGridViewButtonColumn1.HeaderText = "Action";
+            this.dataGridViewButtonColumn1.Name = "dataGridViewButtonColumn1";
+            this.dataGridViewButtonColumn1.ReadOnly = true;
+            // 
+            // BouncesFileHashColumn
+            // 
+            this.BouncesFileHashColumn.HeaderText = "Hash";
+            this.BouncesFileHashColumn.Name = "BouncesFileHashColumn";
+            this.BouncesFileHashColumn.ReadOnly = true;
+            this.BouncesFileHashColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.BouncesFileHashColumn.Visible = false;
+            // 
+            // BouncesTransferIDColumn
+            // 
+            this.BouncesTransferIDColumn.HeaderText = "TransferID";
+            this.BouncesTransferIDColumn.Name = "BouncesTransferIDColumn";
+            this.BouncesTransferIDColumn.ReadOnly = true;
+            this.BouncesTransferIDColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.BouncesTransferIDColumn.Visible = false;
+            // 
+            // BouncesUploaderMacColumn
+            // 
+            this.BouncesUploaderMacColumn.HeaderText = "Uploader Mac";
+            this.BouncesUploaderMacColumn.Name = "BouncesUploaderMacColumn";
+            this.BouncesUploaderMacColumn.ReadOnly = true;
+            this.BouncesUploaderMacColumn.Visible = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1174,13 +1184,6 @@
         private System.Windows.Forms.PictureBox statusPictureBox;
         private System.Windows.Forms.Timer bounceStatusTimer;
         private System.ComponentModel.BackgroundWorker pollStatusWorker;
-        private System.Windows.Forms.DataGridViewImageColumn dataGridViewImageColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn BouncesFileNameColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn BouncesFileSizeColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn BouncesStatusColumn;
-        private System.Windows.Forms.DataGridViewButtonColumn dataGridViewButtonColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn BouncesFileHashColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn BouncesTransferIDColumn;
         private System.Windows.Forms.LinkLabel privacyLinkLabel;
         private System.Windows.Forms.Timer uiUpdateTimer;
         private System.Windows.Forms.Label downloadGridHelpTextLabel;
@@ -1201,6 +1204,14 @@
         private System.Windows.Forms.Label searchGridHelpTextLabel;
         private System.Windows.Forms.PictureBox syncStatusPictureBox;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.DataGridViewImageColumn dataGridViewImageColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BouncesFileNameColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BouncesFileSizeColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BouncesStatusColumn;
+        private System.Windows.Forms.DataGridViewButtonColumn dataGridViewButtonColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BouncesFileHashColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BouncesTransferIDColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BouncesUploaderMacColumn;
     }
 }
 

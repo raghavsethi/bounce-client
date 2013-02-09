@@ -813,5 +813,30 @@ namespace BouncedClient
             uploadStatusLabel.Text = "" + Server.currentUploadsCount;
         }
 
+        private void bounceGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView dgv = sender as DataGridView;
+            if (dgv != null && e.ColumnIndex == 4 && e.RowIndex > -1)
+            {
+                DataGridViewTextBoxCell transferIdCell = dgv.Rows[e.RowIndex].Cells[6] as DataGridViewTextBoxCell;
+                DataGridViewTextBoxCell macCell = dgv.Rows[e.RowIndex].Cells[7] as DataGridViewTextBoxCell;
+
+                // Tell the server to cancel bounce
+                BackgroundWorker updateWorker = new BackgroundWorker();
+                updateWorker.DoWork += Transfers.updateWorker_DoWork;
+                updateWorker.RunWorkerCompleted += Transfers.updateWorker_RunWorkerCompleted;
+
+                // Set update parameters and kick off update
+                UpdateRequest ur = new UpdateRequest();
+                ur.transferID = long.Parse((String)transferIdCell.Value);
+                ur.status = "canceled";
+                ur.uploader = (String)macCell.Value;
+                updateWorker.RunWorkerAsync(ur);
+
+                DataGridViewButtonCell buttonCell = dgv.Rows[e.RowIndex].Cells[4] as DataGridViewButtonCell;
+                buttonCell.Value = "Canceling...";
+            }
+        }
+
     }
 }
