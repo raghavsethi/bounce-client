@@ -47,7 +47,7 @@ namespace BouncedClient
                 TextWriter tw;
                 try
                 {
-                    tw = new StreamWriter("log.txt", true);
+                    tw = new StreamWriter(getAppDataPath("log.txt"), true);
                 }
                 catch (IOException e)
                 {
@@ -63,7 +63,7 @@ namespace BouncedClient
         public static void clearLog()
         {
             TextWriter tw;
-            tw = new StreamWriter("log.txt", false);
+            tw = new StreamWriter(getAppDataPath("log.txt"), false);
             tw.Write("");
             tw.Close();
         }
@@ -116,6 +116,12 @@ namespace BouncedClient
             }
 
             return "Unknown";
+        }
+
+        public static string getAppDataPath(String filename)
+        {
+            String x =  Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Bounce",  filename);
+            return x;
         }
 
     }

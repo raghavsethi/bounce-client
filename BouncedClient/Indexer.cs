@@ -376,7 +376,7 @@ namespace BouncedClient
             Hashtable temp = null;
             try
             {
-                Stream s = File.Open(file, FileMode.Open, FileAccess.Read);
+                Stream s = File.Open(Utils.getAppDataPath(file), FileMode.Open, FileAccess.Read);
                 BinaryFormatter b = new BinaryFormatter();
                 temp = (Hashtable)b.Deserialize(s);
                 s.Close();
@@ -391,7 +391,7 @@ namespace BouncedClient
 
         public static void serializeFile(Hashtable h, String file)
         {
-            Stream s = File.Open(file, FileMode.Create, FileAccess.ReadWrite);
+            Stream s = File.Open(Utils.getAppDataPath(file), FileMode.Create, FileAccess.ReadWrite);
             BinaryFormatter b = new BinaryFormatter();
             b.Serialize(s, h);
             s.Close();

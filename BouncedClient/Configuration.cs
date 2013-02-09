@@ -65,13 +65,13 @@ namespace BouncedClient
             TextReader tr;
             try
             {
-                 tr = new StreamReader("config.dat");
+                 tr = new StreamReader(Utils.getAppDataPath("config.dat"));
             }
             catch (Exception e)
             {
-                TextWriter tw = new StreamWriter("config.dat", false);
+                TextWriter tw = new StreamWriter(Utils.getAppDataPath("config.dat"), false);
                 tw.Close();
-                tr = new StreamReader("config.dat");
+                tr = new StreamReader(Utils.getAppDataPath("config.dat"));
             }
 
             m_sharedFolders = new List<string>();
@@ -105,7 +105,7 @@ namespace BouncedClient
 
         public static void saveConfiguration()
         {
-            TextWriter tw = new StreamWriter("config.dat", false);
+            TextWriter tw = new StreamWriter(Utils.getAppDataPath("config.dat"), false);
             tw.WriteLine(m_username);
             tw.WriteLine(m_numFilesShared);
             tw.WriteLine(m_GBShared);

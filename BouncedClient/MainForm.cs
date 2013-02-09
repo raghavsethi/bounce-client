@@ -35,6 +35,10 @@ namespace BouncedClient
 
             Transfers.currentDownloads = new List<DownloadProgress>();
             Transfers.pendingToDownload = new ConcurrentDictionary<PendingResponse, DownloadProgress>(new PendingResponse.EqualityComparer());
+
+            // Create bounce folder in APPDATA
+            if(!Directory.Exists(Utils.getAppDataPath("")))
+                Directory.CreateDirectory(Utils.getAppDataPath(""));
         }
 
         private void MainForm_Load(object sender, EventArgs e)
