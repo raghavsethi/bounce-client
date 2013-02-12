@@ -98,9 +98,9 @@ namespace BouncedClient
             while (folders.Count > 0)
             {
                 // Persist data from time to time so that we can eventually index very large sets
-                if ((DateTime.Now - timeOfLastSave).TotalMinutes > 3)
+                if ((DateTime.Now - timeOfLastSave).TotalMinutes > 2)
                 {
-                    Utils.writeLog("buildIndex : Time exceeded 3 minutes, writing indices to disk..");
+                    Utils.writeLog("buildIndex : Time exceeded 2 minutes, writing indices to disk..");
                     serializeHashTables();
                     timeOfLastSave = DateTime.Now;
                 }

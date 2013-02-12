@@ -51,7 +51,6 @@ namespace BouncedClient
 
         private void registerWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            statusPictureBox.Image = Resources.connection_working;
 
             RestClient client = new RestClient("http://"+Configuration.server);
             RestRequest request = new RestRequest("register", Method.POST);
@@ -74,6 +73,7 @@ namespace BouncedClient
                 Utils.writeLog("registerWorker_RunWorkerCompleted: Error in registering");
                 //TODO: Put a timeout to start retry
                 statusPictureBox.Image = Resources.connection_working;
+                mainToolTip.SetToolTip(statusPictureBox, "Trying to connect..");
                 actionButton.Enabled = true;
                 reconnectTimer.Enabled = true;
                 return;
@@ -84,6 +84,7 @@ namespace BouncedClient
             if (sr.status.Equals("OK"))
             {
                 statusPictureBox.Image = Resources.connection_done;
+                mainToolTip.SetToolTip(statusPictureBox, "Connected");
                 statusLabel.Text = "Connected";
                 Utils.writeLog("registerWorker_RunWorkerCompleted: Registered successfully");
                 pollPendingTimer.Enabled = true;
@@ -92,6 +93,7 @@ namespace BouncedClient
             else
             {
                 statusPictureBox.Image = Resources.connection_working;
+                mainToolTip.SetToolTip(statusPictureBox, "Trying to connect..");
                 statusLabel.Text = sr.text;
                 Utils.writeLog("registerWorker_RunWorkerCompleted: Could not register..");
                 actionButton.Enabled = true;
@@ -123,6 +125,7 @@ namespace BouncedClient
             if (latestPending == null)
             {
                 statusPictureBox.Image = Resources.connection_working;
+                mainToolTip.SetToolTip(statusPictureBox, "Trying to connect..");
                 statusLabel.Text = "Lost connection to network";
                 pollPendingTimer.Enabled = false;
                 reconnectTimer.Enabled = true;
@@ -131,6 +134,11 @@ namespace BouncedClient
 
             foreach (PendingResponse pr in latestPending)
             {
+                if (pr == null)
+                {
+                    Utils.writeLog("pollPendingWorker_RunWorkerCompleted: Received a null pending");
+                    continue;
+                }
                 if (pr.type.Equals("delete"))
                 {
                     Utils.writeLog("pollPendingWorker_RunWorkerCompleted: Got delete request for " + pr.fileHash + " (" + pr.fileName + ") ");
@@ -257,6 +265,12 @@ namespace BouncedClient
             if (dp.isComplete)
             {
                 downloadGridView["ActionColumn", row].Value = "Open folder";
+
+                notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
+                notifyIcon.BalloonTipTitle = "Download complete   ";
+                notifyIcon.BalloonTipText = (String)downloadGridView["FileNameColumn", row].Value;
+                notifyIcon.ShowBalloonTip(5000);
+
             }
             
             double secondsToComplete = ((dp.fileSize - dp.completed) / 1024.0) / dp.averageTransferRate;
@@ -310,21 +324,23 @@ namespace BouncedClient
 
                 //Defaults for config should be set here
 
-                serverTextBox.Text = "localhost:3000";
-                downloadFolder.Text = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+                serverTextBox.Text = "192.168.2.231";
+                downloadFolder.Text = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile)
                     + "\\Bounced Downloads";
-                sharedFolders.Items.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyMusic));
+                sharedFolders.Items.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyVideos));
 
                 Configuration.downloadFolder = downloadFolder.Text;
                 Configuration.server = serverTextBox.Text;
                 Configuration.sharedFolders = new List<string>();
-                Configuration.sharedFolders.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyMusic));
+                Configuration.sharedFolders.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyVideos));
                 Configuration.saveConfiguration();
             }
             else
             {
                 statusLabel.Text = "Loaded configuration successfully";
                 registerWorker.RunWorkerAsync();
+                statusPictureBox.Image = Resources.connection_working;
+                mainToolTip.SetToolTip(statusPictureBox, "Trying to connect..");
 
                 usernameTextBox.Text = Configuration.username;
                 downloadFolder.Text = Configuration.downloadFolder;
@@ -368,14 +384,18 @@ namespace BouncedClient
         {
             forceRescanButton.Enabled = false;
             forceRescanButton.Text = "Indexing..";
-            if(!indexWorker.IsBusy)
+            if (!indexWorker.IsBusy)
+            {
                 indexWorker.RunWorkerAsync();
+                syncStatusPictureBox.Image = Resources.sync_working;
+                mainToolTip.SetToolTip(syncStatusPictureBox, "Indexing your shared folders..");
+            }
         }
 
         private void indexWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             Utils.writeLog("indexWorker_DoWork: Starting to build index");
-            syncStatusPictureBox.Image = Resources.sync_working;
+            
             Indexer.buildIndex(sharedFolders.Items);
         }
 
@@ -387,6 +407,7 @@ namespace BouncedClient
             syncWorker.RunWorkerAsync();
             statusLabel.Text = "Syncing..";
             syncStatusPictureBox.Image = Resources.sync_sending;
+            mainToolTip.SetToolTip(syncStatusPictureBox, "Syncing the file list with server..");
         }
 
         private void usernameTextBox_Leave(object sender, EventArgs e)
@@ -459,6 +480,7 @@ namespace BouncedClient
                 statusLabel.Text = "Unable to sync";
                 Utils.writeLog("syncWorker_RunWorkerCompleted: Sync failed");
                 syncStatusPictureBox.Image = Resources.sync_failed;
+                mainToolTip.SetToolTip(syncStatusPictureBox, "Sync with server failed");
                 return;
             }
 
@@ -469,6 +491,7 @@ namespace BouncedClient
                 Indexer.successfulSync();
                 Utils.writeLog("syncWorker_RunWorkerCompleted: Sync complete");
                 syncStatusPictureBox.Image = Resources.sync_successful;
+                mainToolTip.SetToolTip(syncStatusPictureBox, "Successfully synced");
             }
             
         }
@@ -484,6 +507,8 @@ namespace BouncedClient
             serverWorker.RunWorkerAsync();
             Utils.writeLog("loadIndexWorker_RunWorkerCompleted: Kicking off index job");
             indexWorker.RunWorkerAsync();
+            syncStatusPictureBox.Image = Resources.sync_working;
+            mainToolTip.SetToolTip(syncStatusPictureBox, "Indexing your shared folders..");
         }
 
         private void searchBox_TextChanged(object sender, EventArgs e)
@@ -637,6 +662,8 @@ namespace BouncedClient
             if (!registerWorker.IsBusy)
             {
                 registerWorker.RunWorkerAsync();
+                statusPictureBox.Image = Resources.connection_working;
+                mainToolTip.SetToolTip(statusPictureBox, "Trying to connect..");
             }
         }
 
@@ -703,7 +730,8 @@ namespace BouncedClient
         {
             if (!textboxesInitialized) // To ensure TextChanged was fired by a user
                 return;
-            statusPictureBox.Image = Resources.connection_working;
+            statusPictureBox.Image = null; //TODO: Put X image instead
+            mainToolTip.SetToolTip(statusPictureBox, "No connection"); 
             actionButton.Enabled = true;
             reconnectTimer.Enabled = false;
             pollPendingTimer.Enabled = false;
@@ -714,10 +742,13 @@ namespace BouncedClient
         private void actionButton_Click(object sender, EventArgs e)
         {
             statusPictureBox.Image = Resources.connection_working;
+            mainToolTip.SetToolTip(statusPictureBox, "Connecting..");
             actionButton.Font = new Font(actionButton.Font, FontStyle.Regular);
             if (!registerWorker.IsBusy)
             {
                 registerWorker.RunWorkerAsync();
+                statusPictureBox.Image = Resources.connection_working;
+                mainToolTip.SetToolTip(statusPictureBox, "Trying to connect..");
             }
             actionButton.Enabled = false;
             serverTextBox.ReadOnly = true;
@@ -840,6 +871,24 @@ namespace BouncedClient
                 DataGridViewButtonCell buttonCell = dgv.Rows[e.RowIndex].Cells[4] as DataGridViewButtonCell;
                 buttonCell.Value = "Canceling...";
             }
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Configuration.username = usernameTextBox.Text;
+            Configuration.server = serverTextBox.Text;
+            Configuration.saveConfiguration();
+        }
+
+        private void viewLogLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            string argument = "/select, \"" + Utils.getAppDataPath("log.txt");
+            System.Diagnostics.Process.Start("explorer.exe", argument);
+        }
+
+        private void helpLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
         }
 
     }
