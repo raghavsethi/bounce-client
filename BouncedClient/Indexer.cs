@@ -342,7 +342,7 @@ namespace BouncedClient
         {
             var p = new Process();
 
-            p.StartInfo.FileName = Application.StartupPath + "\\md5sums.exe";
+            p.StartInfo.FileName = Utils.getAppDataPath("md5sums.exe");
             p.StartInfo.Arguments = " -e -u \"" + file + "\"";
             p.StartInfo.UseShellExecute = false;
             p.StartInfo.RedirectStandardOutput = true;

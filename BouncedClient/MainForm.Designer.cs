@@ -124,9 +124,9 @@
             this.bounceStatusTimer = new System.Windows.Forms.Timer(this.components);
             this.pollStatusWorker = new System.ComponentModel.BackgroundWorker();
             this.uiUpdateTimer = new System.Windows.Forms.Timer(this.components);
-            this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.mainToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.StatusPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.syncStatusPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusPictureBox)).BeginInit();
@@ -1111,6 +1111,12 @@
             this.uiUpdateTimer.Interval = 1000;
             this.uiUpdateTimer.Tick += new System.EventHandler(this.uiUpdateTimer_Tick);
             // 
+            // notifyIcon
+            // 
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "notifyIcon1";
+            this.notifyIcon.Visible = true;
+            // 
             // logoPictureBox
             // 
             this.logoPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -1120,12 +1126,6 @@
             this.logoPictureBox.Size = new System.Drawing.Size(140, 40);
             this.logoPictureBox.TabIndex = 3;
             this.logoPictureBox.TabStop = false;
-            // 
-            // notifyIcon
-            // 
-            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
-            this.notifyIcon.Text = "notifyIcon1";
-            this.notifyIcon.Visible = true;
             // 
             // MainForm
             // 

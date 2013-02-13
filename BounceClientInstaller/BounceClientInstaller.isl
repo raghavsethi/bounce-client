@@ -349,7 +349,6 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
-		<row><td>BounceClient.Content_Files</td><td>{470E8882-6980-4044-ADFB-3A71A27A0FB1}</td><td>INSTALLDIR</td><td>2</td><td/><td>bounceclient.content_files</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>BounceClient.Primary_output</td><td>{3095C2A5-B9C6-43C9-B236-94411926E8D3}</td><td>INSTALLDIR</td><td>2</td><td/><td>bounceclient.primary_output</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>md5sums.exe</td><td>{51A4FB73-A54E-4F80-A90C-A2AEEA6CB1D6}</td><td>INSTALLDIR</td><td>2</td><td/><td>md5sums.exe</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
@@ -1874,7 +1873,6 @@
 	<table name="FeatureComponents">
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s72">Component_</col>
-		<row><td>AlwaysInstall</td><td>BounceClient.Content_Files</td></row>
 		<row><td>AlwaysInstall</td><td>BounceClient.Primary_output</td></row>
 		<row><td>AlwaysInstall</td><td>md5sums.exe</td></row>
 	</table>
@@ -1891,7 +1889,6 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
-		<row><td>bounceclient.content_files</td><td>BounceClient.Content_Files</td><td>BounceClient.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;BounceClient&gt;|ContentFiles</td><td>3</td><td/></row>
 		<row><td>bounceclient.primary_output</td><td>BounceClient.Primary_output</td><td>BounceClient.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;BounceClient&gt;|Built</td><td>3</td><td/></row>
 		<row><td>md5sums.exe</td><td>md5sums.exe</td><td>md5sums.exe</td><td>0</td><td/><td/><td/><td>1</td><td>C:\bounced\bounce-client\BouncedClient\bin\Debug\md5sums.exe</td><td>1</td><td/></row>
 	</table>
@@ -2150,7 +2147,6 @@
 		<col def="S0">FTPLocation</col>
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
-		<row><td>BounceClient.Content_Files</td><td/><td/><td>_C98753D2_3468_4C72_B6A5_3AC30142F879_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>BounceClient.Primary_output</td><td/><td/><td>_660E0EB8_1F28_4E92_8E0C_C2FA594FB424_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>md5sums.exe</td><td/><td/><td>_DF3C733D_E9B2_4979_9E20_0C2DC27B385B_FILTER</td><td/><td/><td/><td/></row>
 	</table>
@@ -4128,7 +4124,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>ISTheme</td><td>Classic.theme</td></row>
 		<row><td>ISUSLock</td><td>{89A78A8A-4ED7-4941-ADAE-7A72C9C5F04F}</td></row>
 		<row><td>ISUSSignature</td><td>{53C874C3-7ADF-435A-AAB0-CF7E39028AF8}</td></row>
-		<row><td>ISVisitedViews</td><td>viewAssistant,viewUI,viewISToday,viewProject,viewRealSetupDesign,viewSetupDesign,viewSetupTypes,viewUpgradePaths,viewUpdateService,viewObjects,viewBillboards,viewTextMessages,viewSystemSearch,viewInstallScriptStd,viewCustomActions,viewSupportFiles,viewRelease,viewShortcuts,viewAppFiles,viewFeatureFiles</td></row>
+		<row><td>ISVisitedViews</td><td>viewAssistant,viewUI,viewISToday,viewProject,viewRealSetupDesign,viewSetupDesign,viewSetupTypes,viewUpgradePaths,viewUpdateService,viewObjects,viewBillboards,viewTextMessages,viewSystemSearch,viewInstallScriptStd,viewCustomActions,viewSupportFiles,viewRelease,viewShortcuts,viewAppFiles,viewFeatureFiles,viewDependencies</td></row>
 		<row><td>Limited</td><td>1</td></row>
 		<row><td>LockPermissionMode</td><td>1</td></row>
 		<row><td>MsiExecCmdLineOptions</td><td/></row>

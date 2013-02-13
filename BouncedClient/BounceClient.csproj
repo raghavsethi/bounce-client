@@ -22,14 +22,14 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>http://muc.iiitd.edu.in/bounce/</InstallUrl>
+    <InstallUrl>http://muc.iiitd.edu.in/bounce/releases/</InstallUrl>
     <SupportUrl>http://muc.iiitd.edu.in/bounce/help</SupportUrl>
     <ProductName>Bounce Client</ProductName>
     <PublisherName>IIIT-D MUC</PublisherName>
-    <MinimumRequiredVersion>0.9.5.2</MinimumRequiredVersion>
+    <MinimumRequiredVersion>0.9.5.7</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationRevision>8</ApplicationRevision>
     <ApplicationVersion>0.9.5.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -140,6 +140,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="bin\Debug\md5sums.exe" />
     <Content Include="bounced.ico" />
     <None Include="res\sync-working.gif" />
     <None Include="res\sync-successful.png" />

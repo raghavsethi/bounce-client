@@ -120,6 +120,7 @@ namespace BouncedClient
             try
             {
                 // Perform file transfer.
+                clientStream.ReadTimeout = 2000; // Need to timeout to prevent stalled appearance in UI
                 while ((bytesSize = clientStream.Read(downBuffer, 0, downBuffer.Length)) > 0)
                 {
                     // In case user cancels download
@@ -192,7 +193,7 @@ namespace BouncedClient
             {
                 Utils.writeLog("download: Error:" + e.ToString());
                 dp.transferRate = 0;
-                dp.status = "Download failed.";
+                dp.status = "Failed";
                 worker.ReportProgress(0, dp);
                 return null;
             }

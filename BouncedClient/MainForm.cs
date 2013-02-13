@@ -36,9 +36,14 @@ namespace BouncedClient
             Transfers.currentDownloads = new List<DownloadProgress>();
             Transfers.pendingToDownload = new ConcurrentDictionary<PendingResponse, DownloadProgress>(new PendingResponse.EqualityComparer());
 
-            // Create bounce folder in APPDATA
-            if(!Directory.Exists(Utils.getAppDataPath("")))
+            // Create bounce folder in APPDATA and write the hasher executable to it
+            if (!Directory.Exists(Utils.getAppDataPath("")))
+            {
                 Directory.CreateDirectory(Utils.getAppDataPath(""));
+                FileStream md5write = File.OpenWrite(Utils.getAppDataPath("md5sums.exe"));
+                md5write.Write(Resources.md5sums, 0, Resources.md5sums.Length);
+                md5write.Close();
+            }
         }
 
         private void MainForm_Load(object sender, EventArgs e)
