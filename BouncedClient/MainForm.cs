@@ -321,6 +321,16 @@ namespace BouncedClient
         {
             if (!(bool)e.Result)
             {
+                // First run behaviour
+
+                MessageBox.Show("Welcome to the Bounced file-sharing network.\n\nUsing Bounced is completely legal. " +
+    "However, downloading copyrighted media without permission may be illegal in your country. " +
+    "By using this software you agree that you will not use Bounced for this purpose.", "Welcome to Bounced",
+    MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                
+
+
                 MainTabControl.SelectedIndex = 3;
                 actionButton.Enabled = true;
                 statusLabel.Text = "Invalid username";

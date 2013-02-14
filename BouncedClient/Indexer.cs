@@ -61,7 +61,7 @@ namespace BouncedClient
 
         public static void buildIndex(CheckedListBox.ObjectCollection sharedFoldersList)
         {
-            Utils.writeLog("buildIndex: Started indexing...");
+            Utils.writeLog("buildIndex: Started indexing!");
 
             int numFoldersIndexed = 0;
 

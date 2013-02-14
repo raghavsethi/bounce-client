@@ -78,12 +78,9 @@ namespace BouncedClient
 
             string currentLine;
 
+            // First run behaviour
             if ((m_username = tr.ReadLine()) == null)
             {
-                MessageBox.Show("Welcome to the Bounced file-sharing network.\n\nUsing Bounced is completely legal. " +
-                    "However, downloading copyrighted media without permission may be illegal. " +
-                    "By using this software you agree that you will not use Bounced for this purpose.", "Welcome to Bounced",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
                 tr.Close();
                 return false;
             }
