@@ -32,7 +32,7 @@ namespace BouncedClient
                 if (!nic.NetworkInterfaceType.Equals(NetworkInterfaceType.Loopback))
                 {
                     macAddresses = nic.GetPhysicalAddress().ToString();
-                    Utils.writeLog("GetMACAddress: MAC address is " + macAddresses);
+                    //Utils.writeLog("GetMACAddress: MAC address is " + macAddresses);
                     break;
                 }
 

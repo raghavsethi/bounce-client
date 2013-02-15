@@ -1,4 +1,5 @@
-﻿using BounceClient.Properties;
+﻿using BounceClient;
+using BounceClient.Properties;
 using Bounced;
 using RestSharp;
 using RestSharp.Contrib;
@@ -139,7 +140,7 @@ namespace BouncedClient
 
             foreach (PendingResponse pr in latestPending)
             {
-                if (pr == null)
+                if (pr == null || pr.type == null)
                 {
                     Utils.writeLog("pollPendingWorker_RunWorkerCompleted: Received a null pending");
                     continue;
@@ -323,23 +324,16 @@ namespace BouncedClient
             {
                 // First run behaviour
 
-                MessageBox.Show("Welcome to the Bounced file-sharing network.\n\nUsing Bounced is completely legal. " +
-    "However, downloading copyrighted media without permission may be illegal in your country. " +
-    "By using this software you agree that you will not use Bounced for this purpose.", "Welcome to Bounced",
-    MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                
-
-
-                MainTabControl.SelectedIndex = 3;
+                /*
                 actionButton.Enabled = true;
                 statusLabel.Text = "Invalid username";
                 MessageBox.Show("Select a valid username, and check that at least " +
                     "one shared folder is present. When you're ready, press 'Reconnect'", "Can't connect to server");
+                */
 
                 //Defaults for config should be set here
 
-                serverTextBox.Text = "192.168.2.231";
+                serverTextBox.Text = "192.168.50.18:3000";
                 downloadFolder.Text = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile)
                     + "\\Bounced Downloads";
                 sharedFolders.Items.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyVideos));
@@ -348,14 +342,20 @@ namespace BouncedClient
                 Configuration.server = serverTextBox.Text;
                 Configuration.sharedFolders = new List<string>();
                 Configuration.sharedFolders.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyVideos));
+
+                WelcomeForm welcomeForm = new WelcomeForm();
+                welcomeForm.ShowDialog();
+
+                if(!welcomeForm.verified)
+                    MainTabControl.SelectedIndex = 3;
+
+                usernameTextBox.Text = welcomeForm.username;
+                Configuration.username = usernameTextBox.Text;
                 Configuration.saveConfiguration();
             }
             else
             {
                 statusLabel.Text = "Loaded configuration successfully";
-                registerWorker.RunWorkerAsync();
-                statusPictureBox.Image = Resources.connection_working;
-                mainToolTip.SetToolTip(statusPictureBox, "Trying to connect..");
 
                 usernameTextBox.Text = Configuration.username;
                 downloadFolder.Text = Configuration.downloadFolder;
@@ -366,7 +366,11 @@ namespace BouncedClient
                 }
 
             }
-            textboxesInitialized = true;
+
+            registerWorker.RunWorkerAsync();
+            statusPictureBox.Image = Resources.connection_working;
+            mainToolTip.SetToolTip(statusPictureBox, "Trying to connect..");
+            statusLabel.Text = "Connecting..";
         }
 
         private void addFolderButton_Click(object sender, EventArgs e)
