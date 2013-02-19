@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BounceClient", "BouncedClient\BounceClient.csproj", "{D0FF2EB3-A001-4870-90B3-5E2FE0917752}"
 EndProject
-Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "BounceClientInstaller", "BounceClientInstaller\BounceClientInstaller.isproj", "{002C8DE2-6948-4997-84F5-BF544AA1D781}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CD_ROM|Any CPU = CD_ROM|Any CPU
@@ -24,16 +22,6 @@ Global
 		{D0FF2EB3-A001-4870-90B3-5E2FE0917752}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D0FF2EB3-A001-4870-90B3-5E2FE0917752}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{D0FF2EB3-A001-4870-90B3-5E2FE0917752}.SingleImage|Any CPU.Build.0 = Release|Any CPU
-		{002C8DE2-6948-4997-84F5-BF544AA1D781}.CD_ROM|Any CPU.ActiveCfg = CD_ROM
-		{002C8DE2-6948-4997-84F5-BF544AA1D781}.CD_ROM|Any CPU.Build.0 = CD_ROM
-		{002C8DE2-6948-4997-84F5-BF544AA1D781}.Debug|Any CPU.ActiveCfg = SingleImage
-		{002C8DE2-6948-4997-84F5-BF544AA1D781}.Debug|Any CPU.Build.0 = SingleImage
-		{002C8DE2-6948-4997-84F5-BF544AA1D781}.DVD-5|Any CPU.ActiveCfg = DVD-5
-		{002C8DE2-6948-4997-84F5-BF544AA1D781}.DVD-5|Any CPU.Build.0 = DVD-5
-		{002C8DE2-6948-4997-84F5-BF544AA1D781}.Release|Any CPU.ActiveCfg = SingleImage
-		{002C8DE2-6948-4997-84F5-BF544AA1D781}.Release|Any CPU.Build.0 = SingleImage
-		{002C8DE2-6948-4997-84F5-BF544AA1D781}.SingleImage|Any CPU.ActiveCfg = SingleImage
-		{002C8DE2-6948-4997-84F5-BF544AA1D781}.SingleImage|Any CPU.Build.0 = SingleImage
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
