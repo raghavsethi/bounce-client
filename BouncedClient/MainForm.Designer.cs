@@ -389,6 +389,7 @@
             this.searchGridView.Size = new System.Drawing.Size(761, 396);
             this.searchGridView.TabIndex = 0;
             this.searchGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.searchGridView_CellClick);
+            this.searchGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.searchGridView_CellFormatting);
             // 
             // fileType
             // 
@@ -788,7 +789,7 @@
             this.helpLinkLabel.AutoSize = true;
             this.helpLinkLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.helpLinkLabel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.helpLinkLabel.Location = new System.Drawing.Point(255, 424);
+            this.helpLinkLabel.Location = new System.Drawing.Point(255, 417);
             this.helpLinkLabel.Name = "helpLinkLabel";
             this.helpLinkLabel.Size = new System.Drawing.Size(31, 13);
             this.helpLinkLabel.TabIndex = 22;
@@ -801,7 +802,7 @@
             this.viewLogLinkLabel.AutoSize = true;
             this.viewLogLinkLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.viewLogLinkLabel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.viewLogLinkLabel.Location = new System.Drawing.Point(186, 424);
+            this.viewLogLinkLabel.Location = new System.Drawing.Point(186, 417);
             this.viewLogLinkLabel.Name = "viewLogLinkLabel";
             this.viewLogLinkLabel.Size = new System.Drawing.Size(54, 13);
             this.viewLogLinkLabel.TabIndex = 21;
@@ -815,7 +816,7 @@
             this.privacyLinkLabel.AutoSize = true;
             this.privacyLinkLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.privacyLinkLabel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.privacyLinkLabel.Location = new System.Drawing.Point(13, 424);
+            this.privacyLinkLabel.Location = new System.Drawing.Point(13, 417);
             this.privacyLinkLabel.Name = "privacyLinkLabel";
             this.privacyLinkLabel.Size = new System.Drawing.Size(164, 13);
             this.privacyLinkLabel.TabIndex = 20;
@@ -862,7 +863,7 @@
             this.macAddrLabel.AutoSize = true;
             this.macAddrLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.macAddrLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.macAddrLabel.Location = new System.Drawing.Point(13, 406);
+            this.macAddrLabel.Location = new System.Drawing.Point(13, 399);
             this.macAddrLabel.Name = "macAddrLabel";
             this.macAddrLabel.Size = new System.Drawing.Size(37, 13);
             this.macAddrLabel.TabIndex = 18;
@@ -870,7 +871,7 @@
             // 
             // forceRescanButton
             // 
-            this.forceRescanButton.Location = new System.Drawing.Point(618, 322);
+            this.forceRescanButton.Location = new System.Drawing.Point(618, 315);
             this.forceRescanButton.Name = "forceRescanButton";
             this.forceRescanButton.Size = new System.Drawing.Size(138, 28);
             this.forceRescanButton.TabIndex = 17;
@@ -881,7 +882,7 @@
             // 
             // deleteSelectedButton
             // 
-            this.deleteSelectedButton.Location = new System.Drawing.Point(618, 289);
+            this.deleteSelectedButton.Location = new System.Drawing.Point(618, 282);
             this.deleteSelectedButton.Name = "deleteSelectedButton";
             this.deleteSelectedButton.Size = new System.Drawing.Size(138, 28);
             this.deleteSelectedButton.TabIndex = 16;
@@ -891,7 +892,7 @@
             // 
             // addFolderButton
             // 
-            this.addFolderButton.Location = new System.Drawing.Point(618, 256);
+            this.addFolderButton.Location = new System.Drawing.Point(618, 249);
             this.addFolderButton.Name = "addFolderButton";
             this.addFolderButton.Size = new System.Drawing.Size(138, 28);
             this.addFolderButton.TabIndex = 15;
@@ -903,7 +904,7 @@
             // 
             this.sharedFolders.CheckOnClick = true;
             this.sharedFolders.FormattingEnabled = true;
-            this.sharedFolders.Location = new System.Drawing.Point(16, 257);
+            this.sharedFolders.Location = new System.Drawing.Point(16, 250);
             this.sharedFolders.Name = "sharedFolders";
             this.sharedFolders.Size = new System.Drawing.Size(596, 94);
             this.sharedFolders.TabIndex = 14;
@@ -914,7 +915,7 @@
             this.helpText3.AutoSize = true;
             this.helpText3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.helpText3.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.helpText3.Location = new System.Drawing.Point(13, 206);
+            this.helpText3.Location = new System.Drawing.Point(13, 199);
             this.helpText3.Name = "helpText3";
             this.helpText3.Size = new System.Drawing.Size(312, 13);
             this.helpText3.TabIndex = 13;
@@ -923,7 +924,7 @@
             // downloadFolder
             // 
             this.downloadFolder.AutoSize = true;
-            this.downloadFolder.Location = new System.Drawing.Point(13, 187);
+            this.downloadFolder.Location = new System.Drawing.Point(13, 180);
             this.downloadFolder.Name = "downloadFolder";
             this.downloadFolder.Size = new System.Drawing.Size(243, 15);
             this.downloadFolder.TabIndex = 12;
@@ -936,7 +937,7 @@
             this.fixedDownloadLocationLabel.AutoSize = true;
             this.fixedDownloadLocationLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fixedDownloadLocationLabel.ForeColor = System.Drawing.Color.Black;
-            this.fixedDownloadLocationLabel.Location = new System.Drawing.Point(13, 167);
+            this.fixedDownloadLocationLabel.Location = new System.Drawing.Point(13, 160);
             this.fixedDownloadLocationLabel.Name = "fixedDownloadLocationLabel";
             this.fixedDownloadLocationLabel.Size = new System.Drawing.Size(123, 13);
             this.fixedDownloadLocationLabel.TabIndex = 11;
@@ -947,7 +948,7 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.Black;
-            this.label2.Location = new System.Drawing.Point(13, 237);
+            this.label2.Location = new System.Drawing.Point(13, 230);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(100, 13);
             this.label2.TabIndex = 10;
@@ -959,7 +960,7 @@
             this.helpText5.AutoSize = true;
             this.helpText5.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.helpText5.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.helpText5.Location = new System.Drawing.Point(13, 387);
+            this.helpText5.Location = new System.Drawing.Point(13, 380);
             this.helpText5.Name = "helpText5";
             this.helpText5.Size = new System.Drawing.Size(488, 13);
             this.helpText5.TabIndex = 9;
@@ -971,7 +972,7 @@
             this.fixedAboutLabel.AutoSize = true;
             this.fixedAboutLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fixedAboutLabel.ForeColor = System.Drawing.Color.Black;
-            this.fixedAboutLabel.Location = new System.Drawing.Point(13, 368);
+            this.fixedAboutLabel.Location = new System.Drawing.Point(13, 361);
             this.fixedAboutLabel.Name = "fixedAboutLabel";
             this.fixedAboutLabel.Size = new System.Drawing.Size(44, 13);
             this.fixedAboutLabel.TabIndex = 8;
@@ -982,7 +983,7 @@
             this.helpText2.AutoSize = true;
             this.helpText2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.helpText2.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.helpText2.Location = new System.Drawing.Point(186, 131);
+            this.helpText2.Location = new System.Drawing.Point(186, 124);
             this.helpText2.Name = "helpText2";
             this.helpText2.Size = new System.Drawing.Size(123, 13);
             this.helpText2.TabIndex = 7;
@@ -991,7 +992,7 @@
             // 
             // serverTextBox
             // 
-            this.serverTextBox.Location = new System.Drawing.Point(16, 127);
+            this.serverTextBox.Location = new System.Drawing.Point(16, 120);
             this.serverTextBox.MaxLength = 100;
             this.serverTextBox.Name = "serverTextBox";
             this.serverTextBox.ReadOnly = true;
@@ -1007,7 +1008,7 @@
             this.fixedServerLabel.AutoSize = true;
             this.fixedServerLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fixedServerLabel.ForeColor = System.Drawing.Color.Black;
-            this.fixedServerLabel.Location = new System.Drawing.Point(13, 111);
+            this.fixedServerLabel.Location = new System.Drawing.Point(13, 104);
             this.fixedServerLabel.Name = "fixedServerLabel";
             this.fixedServerLabel.Size = new System.Drawing.Size(46, 13);
             this.fixedServerLabel.TabIndex = 5;
@@ -1018,7 +1019,7 @@
             this.helpText1.AutoSize = true;
             this.helpText1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.helpText1.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.helpText1.Location = new System.Drawing.Point(186, 78);
+            this.helpText1.Location = new System.Drawing.Point(186, 71);
             this.helpText1.Name = "helpText1";
             this.helpText1.Size = new System.Drawing.Size(570, 13);
             this.helpText1.TabIndex = 4;
@@ -1027,7 +1028,7 @@
             // 
             // usernameTextBox
             // 
-            this.usernameTextBox.Location = new System.Drawing.Point(16, 74);
+            this.usernameTextBox.Location = new System.Drawing.Point(16, 67);
             this.usernameTextBox.MaxLength = 30;
             this.usernameTextBox.Name = "usernameTextBox";
             this.usernameTextBox.Size = new System.Drawing.Size(164, 23);
@@ -1040,7 +1041,7 @@
             this.fixedUsernameLabel.AutoSize = true;
             this.fixedUsernameLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fixedUsernameLabel.ForeColor = System.Drawing.Color.Black;
-            this.fixedUsernameLabel.Location = new System.Drawing.Point(13, 57);
+            this.fixedUsernameLabel.Location = new System.Drawing.Point(13, 50);
             this.fixedUsernameLabel.Name = "fixedUsernameLabel";
             this.fixedUsernameLabel.Size = new System.Drawing.Size(68, 13);
             this.fixedUsernameLabel.TabIndex = 2;
@@ -1114,7 +1115,7 @@
             // notifyIcon
             // 
             this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
-            this.notifyIcon.Text = "notifyIcon1";
+            this.notifyIcon.Text = "Bounce";
             this.notifyIcon.Visible = true;
             // 
             // logoPictureBox

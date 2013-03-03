@@ -120,7 +120,7 @@ namespace BouncedClient
             try
             {
                 // Perform file transfer.
-                clientStream.ReadTimeout = 2000; // Need to timeout to prevent stalled appearance in UI
+                clientStream.ReadTimeout = 4000; // Need to timeout to prevent stalled appearance in UI
                 while ((bytesSize = clientStream.Read(downBuffer, 0, downBuffer.Length)) > 0)
                 {
                     // In case user cancels download

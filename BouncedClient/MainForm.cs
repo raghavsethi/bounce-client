@@ -25,10 +25,13 @@ namespace BouncedClient
     {
         List<SearchResult> currentlyDisplayedSearchResults;
         bool textboxesInitialized; // Used to make sure textChanged events don't fire during initialization
-        
+        bool syncPending; // Used to keep track of whether a sync has failed and can be completed when online next
+
         public MainForm()
         {
             textboxesInitialized = false;
+            syncPending = false;
+
             InitializeComponent();
 
             Transfers.currentDownloadsCount = 0;
@@ -57,13 +60,23 @@ namespace BouncedClient
 
         private void registerWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-
             RestClient client = new RestClient("http://"+Configuration.server);
             RestRequest request = new RestRequest("register", Method.POST);
+
+            String versionID = "Debug";
+
+            if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
+            {
+                System.Deployment.Application.ApplicationDeployment ad = System.Deployment.Application.ApplicationDeployment.CurrentDeployment;
+                versionID = ad.CurrentVersion.ToString();
+            }
 
             request.AddParameter("mac", Utils.getMACAddress());
             request.AddParameter("nick", Configuration.username);
             request.AddParameter("space_allocated", "123"); // TODO: Functionality to be added later.
+            request.AddParameter("version", versionID);
+
+            Utils.writeLog("registerWorker_DoWork: Version ID: " + versionID);
 
             RestResponse<StatusResponse> response = (RestResponse<StatusResponse>)client.Execute<StatusResponse>(request);
 
@@ -95,6 +108,13 @@ namespace BouncedClient
                 Utils.writeLog("registerWorker_RunWorkerCompleted: Registered successfully");
                 pollPendingTimer.Enabled = true;
                 reconnectTimer.Enabled = false;
+
+                // If we had a failed sync, and are now connected
+                if (syncPending && !syncWorker.IsBusy)
+                {
+                    syncWorker.RunWorkerAsync();
+                }
+
             }
             else
             {
@@ -148,8 +168,7 @@ namespace BouncedClient
                 if (pr.type.Equals("delete"))
                 {
                     Utils.writeLog("pollPendingWorker_RunWorkerCompleted: Got delete request for " + pr.fileHash + " (" + pr.fileName + ") ");
-                    String filePath = Application.StartupPath + "\\Bounces" + "\\" + pr.fileHash +
-                    ".bounced";
+                    String filePath = Utils.getAppDataPath(@"\Bounces\" + pr.fileHash + ".bounced");
                     try
                     {
                         File.Delete(filePath);
@@ -367,6 +386,7 @@ namespace BouncedClient
 
             }
 
+            textboxesInitialized = true;
             registerWorker.RunWorkerAsync();
             statusPictureBox.Image = Resources.connection_working;
             mainToolTip.SetToolTip(statusPictureBox, "Trying to connect..");
@@ -449,7 +469,6 @@ namespace BouncedClient
         private void syncWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             Utils.writeLog("syncWorker_DoWork: Started sync..");
-
             // This should work, but doesn't
 
             /*
@@ -484,6 +503,10 @@ namespace BouncedClient
                 StatusResponse sr = new StatusResponse();
                 sr.status = (response.Contains("OK")) ? "OK" : "Error";
                 sr.text = (response.Contains("OK")) ? "Synced successfully" : "Failed to sync";
+
+                if (response == "")
+                    sr = null;
+
                 syncStatusPictureBox.Image = Resources.sync_failed;
                 e.Result = sr;
             }
@@ -500,6 +523,7 @@ namespace BouncedClient
                 Utils.writeLog("syncWorker_RunWorkerCompleted: Sync failed");
                 syncStatusPictureBox.Image = Resources.sync_failed;
                 mainToolTip.SetToolTip(syncStatusPictureBox, "Sync with server failed");
+                syncPending = true;
                 return;
             }
 
@@ -511,6 +535,7 @@ namespace BouncedClient
                 Utils.writeLog("syncWorker_RunWorkerCompleted: Sync complete");
                 syncStatusPictureBox.Image = Resources.sync_successful;
                 mainToolTip.SetToolTip(syncStatusPictureBox, "Successfully synced");
+                syncPending = false;
             }
             
         }
@@ -548,6 +573,7 @@ namespace BouncedClient
             if (e.KeyChar == (char)13 && searchBox.Text != "")
             {
                 performSearch(searchBox.Text);
+                e.Handled = true;
             }
         }
 
@@ -834,7 +860,7 @@ namespace BouncedClient
                 zipIcon = Icons.IconFromExtension(type);
                 status = "Replicated to " + sr.sent + " of " + sr.total + " users";
                 bounceGridView.Rows.Add(new object[] { zipIcon, sr.fileName, Utils.getHumanSize(sr.fileSize), status, 
-            buttonText, sr.hash, sr.transferID});
+            buttonText, sr.hash, sr.transferID, sr.uploader});
             }
         }
 
@@ -872,8 +898,8 @@ namespace BouncedClient
             DataGridView dgv = sender as DataGridView;
             if (dgv != null && e.ColumnIndex == 4 && e.RowIndex > -1)
             {
-                DataGridViewTextBoxCell transferIdCell = dgv.Rows[e.RowIndex].Cells[6] as DataGridViewTextBoxCell;
-                DataGridViewTextBoxCell macCell = dgv.Rows[e.RowIndex].Cells[7] as DataGridViewTextBoxCell;
+                DataGridViewTextBoxCell transferIdCell = dgv.Rows[e.RowIndex].Cells["BouncesTransferIDColumn"] as DataGridViewTextBoxCell;
+                DataGridViewTextBoxCell macCell = dgv.Rows[e.RowIndex].Cells["BouncesUploaderMacColumn"] as DataGridViewTextBoxCell;
 
                 // Tell the server to cancel bounce
                 BackgroundWorker updateWorker = new BackgroundWorker();
@@ -882,7 +908,7 @@ namespace BouncedClient
 
                 // Set update parameters and kick off update
                 UpdateRequest ur = new UpdateRequest();
-                ur.transferID = long.Parse((String)transferIdCell.Value);
+                ur.transferID = long.Parse(transferIdCell.Value.ToString());
                 ur.status = "canceled";
                 ur.uploader = (String)macCell.Value;
                 updateWorker.RunWorkerAsync(ur);
@@ -897,6 +923,7 @@ namespace BouncedClient
             Configuration.username = usernameTextBox.Text;
             Configuration.server = serverTextBox.Text;
             Configuration.saveConfiguration();
+            notifyIcon.Visible = false;
         }
 
         private void viewLogLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -908,6 +935,23 @@ namespace BouncedClient
         private void helpLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
 
+        }
+
+        private void searchGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if ((e.ColumnIndex == searchGridView.Columns["Action"].Index)
+        && e.Value != null)
+            {
+                DataGridViewCell cell = searchGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                if (e.Value.Equals("Download"))
+                {
+                    cell.ToolTipText = "Downloads the file directly from the peer";
+                }
+                else if (e.Value.Equals("Bounce"))
+                {
+                    cell.ToolTipText = "Tells the server to transfer the file to you as soon as it is available";
+                }
+            }
         }
 
     }

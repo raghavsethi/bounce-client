@@ -107,6 +107,7 @@ namespace BouncedClient
     {
         public string hash { get; set; }
         public string fileName { get; set; }
+        public string uploader { get; set; }
         public int sent { get; set; }
         public int total { get; set; }
         public long fileSize { get; set; }
@@ -164,8 +165,7 @@ namespace BouncedClient
             }
             else
             {
-                downloadedFilePath = Application.StartupPath + "\\Bounces" + "\\" + pr.fileHash +
-                    ".bounce";
+                downloadedFilePath = Utils.getAppDataPath(@"\Bounces\" + pr.fileHash + ".bounce");
                 visible = false;
             }
             completed = 0;

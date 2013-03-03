@@ -26,10 +26,10 @@
     <SupportUrl>http://muc.iiitd.edu.in/bounce/help</SupportUrl>
     <ProductName>Bounce Client</ProductName>
     <PublisherName>IIIT-D MUC</PublisherName>
-    <MinimumRequiredVersion>0.9.5.12</MinimumRequiredVersion>
+    <MinimumRequiredVersion>0.9.5.15</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>13</ApplicationRevision>
+    <ApplicationRevision>16</ApplicationRevision>
     <ApplicationVersion>0.9.5.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -149,6 +149,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\search_spinner.bmp" />
     <None Include="bin\Debug\md5sums.exe" />
     <Content Include="bounced.ico" />
     <None Include="res\sync-working.gif" />
@@ -161,9 +162,7 @@
     <None Include="res\status-error.png" />
     <None Include="res\status-connecting.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
       <Visible>False</Visible>

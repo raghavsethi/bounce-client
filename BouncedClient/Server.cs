@@ -125,12 +125,20 @@ namespace BouncedClient
             // Get file path from hash.
             if (transferType == "direct" || transferType == "firstleg")
             {
-                filePath = ((LocalFile)Indexer.fileIndex[fileHash]).location;
+                LocalFile lf = (LocalFile)Indexer.fileIndex[fileHash];
+                
+                // Got request for a file that we don't have.
+                if (lf == null)
+                {
+                    Utils.writeLog("upload: Upload failed. Got request for a file not present in index. Hash:" + fileHash);
+                    return false;
+                }
+
+                filePath = lf.location;
             }
             else
             {
-                filePath = Application.StartupPath + "\\Bounces" + "\\" + fileHash +
-                    ".bounced";
+                filePath = Utils.getAppDataPath(@"\Bounces\" + fileHash + ".bounced");
             }
 
             FileStream fileLocalStream;
