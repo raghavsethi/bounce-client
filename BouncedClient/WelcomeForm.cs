@@ -64,7 +64,9 @@ namespace BounceClient
                 licenseLabel.Visible = true;
                 licenseLabel.Text = "We couldn't verify that your username was \navailable. We'll keep trying to connect.";
             }
+
             beginButton.Text = "Finish »";
+            helloLabel.Text = "Almost done.";
             sharedFolderShown = true;
         }
 
