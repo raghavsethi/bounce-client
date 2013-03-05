@@ -120,8 +120,10 @@ namespace BouncedClient
 
         public static string getAppDataPath(String filename)
         {
-            String x =  Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Bounce",  filename);
-            return x;
+            String appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            appDataPath = Path.Combine(appDataPath, "Bounce");
+            appDataPath = Path.GetFullPath(appDataPath + "..\\" + filename); ;
+            return appDataPath;
         }
 
     }
