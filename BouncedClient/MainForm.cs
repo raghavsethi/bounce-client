@@ -247,7 +247,11 @@ namespace BouncedClient
         {
             DownloadProgress dp = e.UserState as DownloadProgress;
             int row = -1;
-            
+
+            // Don't need to update the UI for transfers that are invisible
+            if (!dp.visible)
+                return;
+
             // Identify which row contains the download whose progress is being reported
             for (int i = 0; i < downloadGridView.RowCount; i++)
             {
@@ -352,7 +356,7 @@ namespace BouncedClient
 
                 //Defaults for config should be set here
 
-                serverTextBox.Text = "192.168.50.18:3000";
+                serverTextBox.Text = "192.168.1.40:3000";
                 downloadFolder.Text = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile)
                     + "\\Bounced Downloads";
                 sharedFolders.Items.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyVideos));
