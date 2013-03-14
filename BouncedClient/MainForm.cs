@@ -26,11 +26,14 @@ namespace BouncedClient
         List<SearchResult> currentlyDisplayedSearchResults;
         bool textboxesInitialized; // Used to make sure textChanged events don't fire during initialization
         bool syncPending; // Used to keep track of whether a sync has failed and can be completed when online next
+        bool reconnectBlinking, forceRescanBlinking;
 
         public MainForm()
         {
             textboxesInitialized = false;
             syncPending = false;
+            reconnectBlinking = false;
+            forceRescanBlinking = false;
 
             InitializeComponent();
 
@@ -56,6 +59,7 @@ namespace BouncedClient
             loadIndexWorker.RunWorkerAsync();
             Utils.clearLog();
             macAddrLabel.Text = "MAC Address: " + Utils.getMACAddress();
+            helpText5.Text = "Bounced Client v" + Utils.getVersion() + ". Built with love at IIIT-D by Raghav Sethi, Naved Alam and Mayank Pundir.";
         }
 
         private void registerWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -63,20 +67,10 @@ namespace BouncedClient
             RestClient client = new RestClient("http://"+Configuration.server);
             RestRequest request = new RestRequest("register", Method.POST);
 
-            String versionID = "Debug";
-
-            if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
-            {
-                System.Deployment.Application.ApplicationDeployment ad = System.Deployment.Application.ApplicationDeployment.CurrentDeployment;
-                versionID = ad.CurrentVersion.ToString();
-            }
-
             request.AddParameter("mac", Utils.getMACAddress());
             request.AddParameter("nick", Configuration.username);
             request.AddParameter("space_allocated", "123"); // TODO: Functionality to be added later.
-            request.AddParameter("version", versionID);
-
-            Utils.writeLog("registerWorker_DoWork: Version ID: " + versionID);
+            request.AddParameter("version", Utils.getVersion());
 
             RestResponse<StatusResponse> response = (RestResponse<StatusResponse>)client.Execute<StatusResponse>(request);
 
@@ -406,6 +400,8 @@ namespace BouncedClient
             }
             indexWorker.CancelAsync();
             forceRescanButton.Font = new Font(forceRescanButton.Font, FontStyle.Bold);
+            forceRescanBlinking = true;
+            uiBlinkTimer.Enabled = true;
         }
         
         private void deleteSelectedButton_Click(object sender, EventArgs e)
@@ -423,11 +419,15 @@ namespace BouncedClient
             Configuration.saveConfiguration();
             indexWorker.CancelAsync();
             forceRescanButton.Font = new Font(forceRescanButton.Font, FontStyle.Bold);
+            forceRescanBlinking = true;
+            uiBlinkTimer.Enabled = true;
         }
 
         private void forceRescanButton_Click(object sender, EventArgs e)
         {
             forceRescanButton.Font = new Font(forceRescanButton.Font, FontStyle.Regular);
+            forceRescanBlinking = false;
+
             forceRescanButton.Enabled = false;
             forceRescanButton.Text = "Indexing..";
             if (!indexWorker.IsBusy)
@@ -442,13 +442,21 @@ namespace BouncedClient
         {
             Utils.writeLog("indexWorker_DoWork: Starting to build index");
             
-            Indexer.buildIndex(sharedFolders.Items, indexWorker);
+            Indexer.buildIndex(sharedFolders.Items, indexWorker, e);
         }
 
         private void indexWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             forceRescanButton.Enabled = true;
             forceRescanButton.Text = "Force Rescan";
+
+            if (e.Cancelled)
+            {
+                Utils.writeLog("indexWorker_RunWorkerCompleted: Indexing was cancelled, not syncing.");
+                syncStatusPictureBox.Image = Resources.sync_failed;
+                return;
+            }
+
             Utils.writeLog("indexWorker_RunWorkerCompleted: Starting syncWorker");
             syncWorker.RunWorkerAsync();
             statusLabel.Text = "Syncing..";
@@ -789,6 +797,8 @@ namespace BouncedClient
             reconnectTimer.Enabled = false;
             pollPendingTimer.Enabled = false;
             actionButton.Font = new Font(actionButton.Font, FontStyle.Bold);
+            reconnectBlinking = true;
+            uiBlinkTimer.Enabled = true;
         }
 
         
@@ -797,6 +807,8 @@ namespace BouncedClient
             statusPictureBox.Image = Resources.connection_working;
             mainToolTip.SetToolTip(statusPictureBox, "Connecting..");
             actionButton.Font = new Font(actionButton.Font, FontStyle.Regular);
+            reconnectBlinking = false;
+
             if (!registerWorker.IsBusy)
             {
                 registerWorker.RunWorkerAsync();
@@ -975,6 +987,28 @@ namespace BouncedClient
             if (forceRescanButton.Enabled)
             {
                 forceRescanButton_Click(sender, e);
+            }
+        }
+
+        private void uiBlinkTimer_Tick(object sender, EventArgs e)
+        {
+            if (!forceRescanBlinking && !reconnectBlinking)
+                uiBlinkTimer.Enabled = false;
+
+            if (forceRescanBlinking)
+            {
+                if (forceRescanButton.Font.Bold)
+                    forceRescanButton.Font = new Font(forceRescanButton.Font, FontStyle.Regular);
+                else
+                    forceRescanButton.Font = new Font(forceRescanButton.Font, FontStyle.Bold);
+            }
+
+            if (reconnectBlinking)
+            {
+                if (actionButton.Font.Bold)
+                    actionButton.Font = new Font(actionButton.Font, FontStyle.Regular);
+                else
+                    actionButton.Font = new Font(actionButton.Font, FontStyle.Bold);
             }
         }
 

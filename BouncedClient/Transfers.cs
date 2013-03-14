@@ -166,7 +166,7 @@ namespace BouncedClient
                         
                         // Compute download speed with smoothing factor
                         if (dp.averageTransferRate == 0)
-                            dp.averageTransferRate = dp.transferRate;
+                            dp.averageTransferRate = tempTransferRate;
                         
                         dp.transferRate = tempTransferRate;
                         dp.averageTransferRate = (0.01) * tempTransferRate + (0.99) * dp.averageTransferRate;

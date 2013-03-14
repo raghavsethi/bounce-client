@@ -60,7 +60,7 @@ namespace BouncedClient
             serializeHashTables();
         }
 
-        public static void buildIndex(CheckedListBox.ObjectCollection sharedFoldersList, BackgroundWorker indexWorker)
+        public static void buildIndex(CheckedListBox.ObjectCollection sharedFoldersList, BackgroundWorker indexWorker, DoWorkEventArgs e)
         {
             Utils.writeLog("buildIndex: Started indexing!");
 
@@ -168,6 +168,7 @@ namespace BouncedClient
 
                         if (indexWorker.CancellationPending)
                         {
+                            e.Cancel = true;
                             Utils.writeLog("buildIndex: Cancelled indexing. All changes lost.");
                             return;
                         }

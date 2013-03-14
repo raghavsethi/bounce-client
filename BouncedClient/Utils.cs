@@ -126,5 +126,18 @@ namespace BouncedClient
             return appDataPath;
         }
 
+        public static string getVersion()
+        {
+            String versionID = "Debug";
+
+            if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
+            {
+                System.Deployment.Application.ApplicationDeployment ad = System.Deployment.Application.ApplicationDeployment.CurrentDeployment;
+                versionID = ad.CurrentVersion.ToString();
+            }
+
+            return versionID;
+        }
+
     }
 }
