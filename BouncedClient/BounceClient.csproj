@@ -27,7 +27,7 @@
     <SupportUrl>http://muc.iiitd.edu.in/bounce/help.html</SupportUrl>
     <ProductName>Bounce</ProductName>
     <PublisherName>IIIT-D MUC</PublisherName>
-    <MinimumRequiredVersion>0.9.5.18</MinimumRequiredVersion>
+    <MinimumRequiredVersion>0.9.5.19</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <ApplicationRevision>19</ApplicationRevision>

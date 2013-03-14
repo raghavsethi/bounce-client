@@ -34,7 +34,7 @@
             this.usernameTextBox = new System.Windows.Forms.TextBox();
             this.beginButton = new System.Windows.Forms.Button();
             this.statusPictureBox = new System.Windows.Forms.PictureBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.subheadLabel = new System.Windows.Forms.Label();
             this.licenseLabel = new System.Windows.Forms.Label();
             this.licenseLinkLabel = new System.Windows.Forms.LinkLabel();
             this.checkStatusLabel = new System.Windows.Forms.Label();
@@ -95,16 +95,16 @@
             this.statusPictureBox.TabIndex = 5;
             this.statusPictureBox.TabStop = false;
             // 
-            // label1
+            // subheadLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.Gray;
-            this.label1.Location = new System.Drawing.Point(10, 58);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(268, 50);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "Welcome to the Bounce \r\nfilesharing network.";
+            this.subheadLabel.AutoSize = true;
+            this.subheadLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.subheadLabel.ForeColor = System.Drawing.Color.Gray;
+            this.subheadLabel.Location = new System.Drawing.Point(10, 58);
+            this.subheadLabel.Name = "subheadLabel";
+            this.subheadLabel.Size = new System.Drawing.Size(268, 50);
+            this.subheadLabel.TabIndex = 7;
+            this.subheadLabel.Text = "Welcome to the Bounce \r\nfilesharing network.";
             // 
             // licenseLabel
             // 
@@ -154,7 +154,7 @@
             this.Controls.Add(this.checkStatusLabel);
             this.Controls.Add(this.licenseLinkLabel);
             this.Controls.Add(this.licenseLabel);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.subheadLabel);
             this.Controls.Add(this.statusPictureBox);
             this.Controls.Add(this.beginButton);
             this.Controls.Add(this.usernameTextBox);
@@ -181,7 +181,7 @@
         private System.Windows.Forms.TextBox usernameTextBox;
         private System.Windows.Forms.Button beginButton;
         private System.Windows.Forms.PictureBox statusPictureBox;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label subheadLabel;
         private System.Windows.Forms.Label licenseLabel;
         private System.Windows.Forms.LinkLabel licenseLinkLabel;
         private System.Windows.Forms.Label checkStatusLabel;

@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.StatusPanel = new System.Windows.Forms.Panel();
             this.syncStatusPictureBox = new System.Windows.Forms.PictureBox();
@@ -89,7 +89,7 @@
             this.settingsTabPage = new System.Windows.Forms.TabPage();
             this.helpLinkLabel = new System.Windows.Forms.LinkLabel();
             this.viewLogLinkLabel = new System.Windows.Forms.LinkLabel();
-            this.privacyLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.homeLinkLabel = new System.Windows.Forms.LinkLabel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.settingsHelpText = new System.Windows.Forms.Label();
             this.actionButton = new System.Windows.Forms.Button();
@@ -359,8 +359,8 @@
             this.searchGridView.AllowUserToAddRows = false;
             this.searchGridView.AllowUserToDeleteRows = false;
             this.searchGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.searchGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.searchGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
             this.searchGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -486,8 +486,8 @@
             this.downloadGridView.AllowUserToAddRows = false;
             this.downloadGridView.AllowUserToDeleteRows = false;
             this.downloadGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.downloadGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.downloadGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             this.downloadGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -655,8 +655,8 @@
             this.bounceGridView.AllowUserToAddRows = false;
             this.bounceGridView.AllowUserToDeleteRows = false;
             this.bounceGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.bounceGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.bounceGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle6;
             this.bounceGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -758,7 +758,7 @@
             // 
             this.settingsTabPage.Controls.Add(this.helpLinkLabel);
             this.settingsTabPage.Controls.Add(this.viewLogLinkLabel);
-            this.settingsTabPage.Controls.Add(this.privacyLinkLabel);
+            this.settingsTabPage.Controls.Add(this.homeLinkLabel);
             this.settingsTabPage.Controls.Add(this.panel1);
             this.settingsTabPage.Controls.Add(this.macAddrLabel);
             this.settingsTabPage.Controls.Add(this.forceRescanButton);
@@ -789,7 +789,7 @@
             this.helpLinkLabel.AutoSize = true;
             this.helpLinkLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.helpLinkLabel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.helpLinkLabel.Location = new System.Drawing.Point(255, 417);
+            this.helpLinkLabel.Location = new System.Drawing.Point(148, 417);
             this.helpLinkLabel.Name = "helpLinkLabel";
             this.helpLinkLabel.Size = new System.Drawing.Size(31, 13);
             this.helpLinkLabel.TabIndex = 22;
@@ -802,7 +802,7 @@
             this.viewLogLinkLabel.AutoSize = true;
             this.viewLogLinkLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.viewLogLinkLabel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.viewLogLinkLabel.Location = new System.Drawing.Point(186, 417);
+            this.viewLogLinkLabel.Location = new System.Drawing.Point(85, 417);
             this.viewLogLinkLabel.Name = "viewLogLinkLabel";
             this.viewLogLinkLabel.Size = new System.Drawing.Size(54, 13);
             this.viewLogLinkLabel.TabIndex = 21;
@@ -811,17 +811,18 @@
             this.mainToolTip.SetToolTip(this.viewLogLinkLabel, "In case of errors, the log file can help figure out what went wrong.");
             this.viewLogLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.viewLogLinkLabel_LinkClicked);
             // 
-            // privacyLinkLabel
+            // homeLinkLabel
             // 
-            this.privacyLinkLabel.AutoSize = true;
-            this.privacyLinkLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.privacyLinkLabel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.privacyLinkLabel.Location = new System.Drawing.Point(13, 417);
-            this.privacyLinkLabel.Name = "privacyLinkLabel";
-            this.privacyLinkLabel.Size = new System.Drawing.Size(164, 13);
-            this.privacyLinkLabel.TabIndex = 20;
-            this.privacyLinkLabel.TabStop = true;
-            this.privacyLinkLabel.Text = "Privacy Policy and Terms of Use";
+            this.homeLinkLabel.AutoSize = true;
+            this.homeLinkLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.homeLinkLabel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.homeLinkLabel.Location = new System.Drawing.Point(13, 417);
+            this.homeLinkLabel.Name = "homeLinkLabel";
+            this.homeLinkLabel.Size = new System.Drawing.Size(63, 13);
+            this.homeLinkLabel.TabIndex = 20;
+            this.homeLinkLabel.TabStop = true;
+            this.homeLinkLabel.Text = "Homepage";
+            this.homeLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.homeLinkLabel_LinkClicked);
             // 
             // panel1
             // 
@@ -1234,7 +1235,7 @@
         private System.Windows.Forms.PictureBox statusPictureBox;
         private System.Windows.Forms.Timer bounceStatusTimer;
         private System.ComponentModel.BackgroundWorker pollStatusWorker;
-        private System.Windows.Forms.LinkLabel privacyLinkLabel;
+        private System.Windows.Forms.LinkLabel homeLinkLabel;
         private System.Windows.Forms.Timer uiUpdateTimer;
         private System.Windows.Forms.Label downloadGridHelpTextLabel;
         private System.Windows.Forms.Label bounceGridHelpTextLabel;

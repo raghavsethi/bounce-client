@@ -87,19 +87,17 @@ namespace BouncedClient
         {
             StatusResponse sr = (StatusResponse)e.Result;
 
+            // Happens in both cases - if disconnected, will attempt to reconnect.
             if (sr == null || sr.status==null)
             {
                 Utils.writeLog("registerWorker_RunWorkerCompleted: Error in registering");
-                //TODO: Put a timeout to start retry
                 statusPictureBox.Image = Resources.connection_working;
                 mainToolTip.SetToolTip(statusPictureBox, "Trying to connect..");
                 actionButton.Enabled = true;
                 reconnectTimer.Enabled = true;
                 return;
             }
-
-            //Happens in both cases - if disconnected, will attempt to reconnect.
-            
+           
             if (sr.status.Equals("OK"))
             {
                 statusPictureBox.Image = Resources.connection_done;
@@ -473,7 +471,7 @@ namespace BouncedClient
         private void syncWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             Utils.writeLog("syncWorker_DoWork: Started sync..");
-            // This should work, but doesn't
+            // This should work, but I don't know for the life of me why it doesn't
 
             /*
             RestClient client = new RestClient("http://" + Configuration.server);
@@ -577,7 +575,7 @@ namespace BouncedClient
             if (e.KeyChar == (char)13 && searchBox.Text != "")
             {
                 performSearch(searchBox.Text);
-                e.Handled = true;
+                e.Handled = true; // To prevent the annoying ding sound when pressing enter
             }
         }
 
@@ -708,7 +706,7 @@ namespace BouncedClient
 
         private void reconnectTimer_Tick(object sender, EventArgs e)
         {
-            if (!registerWorker.IsBusy)
+            if (!registerWorker.IsBusy) // In the worst case, it will try again on next tick
             {
                 registerWorker.RunWorkerAsync();
                 statusPictureBox.Image = Resources.connection_working;
@@ -780,6 +778,7 @@ namespace BouncedClient
             if (!textboxesInitialized) // To ensure TextChanged was fired by a user
                 return;
             statusPictureBox.Image = null; //TODO: Put X image instead
+            statusLabel.Text = "Click on the 'Reconnect' button to retry";
             mainToolTip.SetToolTip(statusPictureBox, "No connection"); 
             actionButton.Enabled = true;
             reconnectTimer.Enabled = false;
@@ -875,6 +874,9 @@ namespace BouncedClient
 
         private void serverTextBox_DoubleClick(object sender, EventArgs e)
         {
+            if (!serverTextBox.ReadOnly)
+                return;
+
             DialogResult x = MessageBox.Show("Using a malicious server may result in malware or other harmful content" +
                 " being downloaded onto your computer.\n\n" +
                 "The easiest way to be safe is to use the server address displayed on the web page controlled by " +
@@ -936,11 +938,6 @@ namespace BouncedClient
             System.Diagnostics.Process.Start("explorer.exe", argument);
         }
 
-        private void helpLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-
-        }
-
         private void searchGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if ((e.ColumnIndex == searchGridView.Columns["Action"].Index)
@@ -956,6 +953,16 @@ namespace BouncedClient
                     cell.ToolTipText = "Tells the server to transfer the file to you as soon as it is available";
                 }
             }
+        }
+
+        private void helpLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://muc.iiitd.edu.in/bounce/help.html");
+        }
+
+        private void homeLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://muc.iiitd.edu.in/bounce/");
         }
 
     }

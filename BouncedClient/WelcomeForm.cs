@@ -67,6 +67,7 @@ namespace BounceClient
 
             beginButton.Text = "Finish »";
             helloLabel.Text = "Almost done.";
+            subheadLabel.Text = "Please read the information \nbelow.";
             sharedFolderShown = true;
         }
 
