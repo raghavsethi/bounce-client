@@ -404,6 +404,8 @@ namespace BouncedClient
                 Configuration.sharedFolders.Add(folderBrowser.SelectedPath);
                 Configuration.saveConfiguration();
             }
+            indexWorker.CancelAsync();
+            forceRescanButton.Font = new Font(forceRescanButton.Font, FontStyle.Bold);
         }
         
         private void deleteSelectedButton_Click(object sender, EventArgs e)
@@ -419,10 +421,13 @@ namespace BouncedClient
                 Configuration.sharedFolders.RemoveAt(deletedIndex);
             }
             Configuration.saveConfiguration();
+            indexWorker.CancelAsync();
+            forceRescanButton.Font = new Font(forceRescanButton.Font, FontStyle.Bold);
         }
 
         private void forceRescanButton_Click(object sender, EventArgs e)
         {
+            forceRescanButton.Font = new Font(forceRescanButton.Font, FontStyle.Regular);
             forceRescanButton.Enabled = false;
             forceRescanButton.Text = "Indexing..";
             if (!indexWorker.IsBusy)
@@ -437,7 +442,7 @@ namespace BouncedClient
         {
             Utils.writeLog("indexWorker_DoWork: Starting to build index");
             
-            Indexer.buildIndex(sharedFolders.Items);
+            Indexer.buildIndex(sharedFolders.Items, indexWorker);
         }
 
         private void indexWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -963,6 +968,14 @@ namespace BouncedClient
         private void homeLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("http://muc.iiitd.edu.in/bounce/");
+        }
+
+        private void reIndexTimer_Tick(object sender, EventArgs e)
+        {
+            if (forceRescanButton.Enabled)
+            {
+                forceRescanButton_Click(sender, e);
+            }
         }
 
     }

@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using System.ComponentModel;
 
 namespace BouncedClient
 {
@@ -59,7 +60,7 @@ namespace BouncedClient
             serializeHashTables();
         }
 
-        public static void buildIndex(CheckedListBox.ObjectCollection sharedFoldersList)
+        public static void buildIndex(CheckedListBox.ObjectCollection sharedFoldersList, BackgroundWorker indexWorker)
         {
             Utils.writeLog("buildIndex: Started indexing!");
 
@@ -164,6 +165,12 @@ namespace BouncedClient
 
                         addedFiles[currentFile.hash] = currentFile;
                         updatedIndex[currentFile.hash] = currentFile;
+
+                        if (indexWorker.CancellationPending)
+                        {
+                            Utils.writeLog("buildIndex: Cancelled indexing. All changes lost.");
+                            return;
+                        }
                     }
 
                     folders.Remove(folders[0]);

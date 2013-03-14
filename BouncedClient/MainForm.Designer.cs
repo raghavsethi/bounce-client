@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.StatusPanel = new System.Windows.Forms.Panel();
             this.syncStatusPictureBox = new System.Windows.Forms.PictureBox();
@@ -127,6 +127,8 @@
             this.mainToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
+            this.uiBlinkTimer = new System.Windows.Forms.Timer(this.components);
+            this.reIndexTimer = new System.Windows.Forms.Timer(this.components);
             this.StatusPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.syncStatusPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusPictureBox)).BeginInit();
@@ -359,8 +361,8 @@
             this.searchGridView.AllowUserToAddRows = false;
             this.searchGridView.AllowUserToDeleteRows = false;
             this.searchGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.searchGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.searchGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.searchGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -486,8 +488,8 @@
             this.downloadGridView.AllowUserToAddRows = false;
             this.downloadGridView.AllowUserToDeleteRows = false;
             this.downloadGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.downloadGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.downloadGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
             this.downloadGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -655,8 +657,8 @@
             this.bounceGridView.AllowUserToAddRows = false;
             this.bounceGridView.AllowUserToDeleteRows = false;
             this.bounceGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.bounceGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.bounceGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
             this.bounceGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -1070,6 +1072,7 @@
             // 
             // indexWorker
             // 
+            this.indexWorker.WorkerSupportsCancellation = true;
             this.indexWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.indexWorker_DoWork);
             this.indexWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.indexWorker_RunWorkerCompleted);
             // 
@@ -1128,6 +1131,15 @@
             this.logoPictureBox.Size = new System.Drawing.Size(140, 40);
             this.logoPictureBox.TabIndex = 3;
             this.logoPictureBox.TabStop = false;
+            // 
+            // uiBlinkTimer
+            // 
+            this.uiBlinkTimer.Interval = 500;
+            // 
+            // reIndexTimer
+            // 
+            this.reIndexTimer.Interval = 300000;
+            this.reIndexTimer.Tick += new System.EventHandler(this.reIndexTimer_Tick);
             // 
             // MainForm
             // 
@@ -1267,6 +1279,8 @@
         private System.Windows.Forms.LinkLabel viewLogLinkLabel;
         private System.Windows.Forms.ToolTip mainToolTip;
         private System.Windows.Forms.NotifyIcon notifyIcon;
+        private System.Windows.Forms.Timer uiBlinkTimer;
+        private System.Windows.Forms.Timer reIndexTimer;
     }
 }
 
