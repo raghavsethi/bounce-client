@@ -27,10 +27,10 @@
     <SupportUrl>http://muc.iiitd.edu.in/bounce/help.html</SupportUrl>
     <ProductName>Bounce</ProductName>
     <PublisherName>IIIT-D MUC</PublisherName>
-    <MinimumRequiredVersion>0.9.5.22</MinimumRequiredVersion>
+    <MinimumRequiredVersion>0.9.5.29</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>23</ApplicationRevision>
+    <ApplicationRevision>29</ApplicationRevision>
     <ApplicationVersion>0.9.5.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -59,7 +59,7 @@
     <ApplicationIcon>bounced.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>58C9266995322DA289A62BCDBC7B28CE82F0AF44</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>E1B247DF53BE4C4CEF9DAF0F98A4473DC1AA4CD4</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>BounceClient_TemporaryKey.pfx</ManifestKeyFile>

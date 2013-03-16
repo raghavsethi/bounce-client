@@ -27,7 +27,9 @@ namespace BouncedClient
                 */
 
                 // Made the change to get a fixed MAC address for each computer 
-                // regardless of current connection
+                // regardless of current connection. Doesn't seem to work perfectly yet.
+
+                Utils.writeLog("MAC: " + nic.GetPhysicalAddress().ToString() + " Type: " + nic.NetworkInterfaceType);
 
                 if (!nic.NetworkInterfaceType.Equals(NetworkInterfaceType.Loopback))
                 {

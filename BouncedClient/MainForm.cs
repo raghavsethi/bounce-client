@@ -128,6 +128,7 @@ namespace BouncedClient
         private void pollPendingWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             RestClient client = new RestClient("http://"+Configuration.server);
+            client.Timeout = 5000;
             RestRequest request = new RestRequest("pending", Method.GET);
 
             RestResponse<List<PendingResponse>> response =
@@ -147,6 +148,7 @@ namespace BouncedClient
                 statusLabel.Text = "Lost connection to network";
                 pollPendingTimer.Enabled = false;
                 reconnectTimer.Enabled = true;
+                Utils.writeLog("pollPendingWorker_RunWorkerCompleted: Received null response from server");
                 return;
             }
 
