@@ -261,7 +261,15 @@ namespace BouncedClient
             if(row == -1)
             {
                 String type = dp.fileName.Substring(dp.fileName.LastIndexOf('.') + 1);
-                Icon zipIcon = Icons.IconFromExtension(type);
+                Icon zipIcon = null;
+                
+                try
+                {
+                    zipIcon = Icons.IconFromExtension(type);
+                }
+                catch (Exception e2)
+                {
+                }
 
                 downloadGridView.Rows.Add(new object[] { zipIcon, dp.fileName, dp.status, e.ProgressPercentage + "%", 
             0, "Unknown", Utils.getHumanSize(dp.fileSize), dp.uploaderIP, "Cancel", dp.mac, dp.hash, dp.fileSize, dp.downloadedFilePath });
@@ -359,6 +367,8 @@ namespace BouncedClient
                 Configuration.server = serverTextBox.Text;
                 Configuration.sharedFolders = new List<string>();
                 Configuration.sharedFolders.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyVideos));
+                Configuration.sharedFolders.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile)
+                    + "\\Bounced Downloads");
 
                 WelcomeForm welcomeForm = new WelcomeForm();
                 welcomeForm.ShowDialog();
@@ -474,13 +484,7 @@ namespace BouncedClient
 
         private void downloadFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            folderBrowser.ShowDialog();
-            Configuration.downloadFolder = folderBrowser.SelectedPath;
-            if (folderBrowser.SelectedPath != "")
-            {
-                downloadFolder.Text = folderBrowser.SelectedPath;
-                Configuration.saveConfiguration();
-            }
+            Process.Start(Configuration.downloadFolder);
         }
 
         private void syncWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -646,9 +650,15 @@ namespace BouncedClient
 
             foreach (SearchResult sr in currentlyDisplayedSearchResults)
             {
-                //Utils.writeLog(sr.ToString());
-                Icon zipIcon = Icons.IconFromExtension(sr.type);
+                Icon zipIcon = null;
+                try
+                {
+                    zipIcon = Icons.IconFromExtension(sr.type);
+                }
+                catch (Exception e)
+                {
 
+                }
                 String buttonText = "Bounce";
                 if (sr.online == true)
                     buttonText = "Download";
@@ -879,7 +889,13 @@ namespace BouncedClient
             foreach (StatusResult sr in bounceStatusResults)
             {
                 type = sr.fileName.Substring(sr.fileName.LastIndexOf('.') + 1);
-                zipIcon = Icons.IconFromExtension(type);
+                try
+                {
+                    zipIcon = Icons.IconFromExtension(type);
+                }
+                catch (Exception e2)
+                {
+                }
                 status = "Replicated to " + sr.sent + " of " + sr.total + " users";
                 bounceGridView.Rows.Add(new object[] { zipIcon, sr.fileName, Utils.getHumanSize(sr.fileSize), status, 
             buttonText, sr.hash, sr.transferID, sr.uploader});
@@ -1011,6 +1027,17 @@ namespace BouncedClient
                     actionButton.Font = new Font(actionButton.Font, FontStyle.Regular);
                 else
                     actionButton.Font = new Font(actionButton.Font, FontStyle.Bold);
+            }
+        }
+
+        private void changeFolderButton_Click(object sender, EventArgs e)
+        {
+            folderBrowser.ShowDialog();
+            Configuration.downloadFolder = folderBrowser.SelectedPath;
+            if (folderBrowser.SelectedPath != "")
+            {
+                downloadFolder.Text = folderBrowser.SelectedPath;
+                Configuration.saveConfiguration();
             }
         }
 

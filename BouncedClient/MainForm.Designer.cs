@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.StatusPanel = new System.Windows.Forms.Panel();
             this.syncStatusPictureBox = new System.Windows.Forms.PictureBox();
@@ -129,6 +129,7 @@
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.uiBlinkTimer = new System.Windows.Forms.Timer(this.components);
             this.reIndexTimer = new System.Windows.Forms.Timer(this.components);
+            this.changeFolderButton = new System.Windows.Forms.Button();
             this.StatusPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.syncStatusPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusPictureBox)).BeginInit();
@@ -361,8 +362,8 @@
             this.searchGridView.AllowUserToAddRows = false;
             this.searchGridView.AllowUserToDeleteRows = false;
             this.searchGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.searchGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.searchGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.searchGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -488,8 +489,8 @@
             this.downloadGridView.AllowUserToAddRows = false;
             this.downloadGridView.AllowUserToDeleteRows = false;
             this.downloadGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.downloadGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.downloadGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
             this.downloadGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -657,8 +658,8 @@
             this.bounceGridView.AllowUserToAddRows = false;
             this.bounceGridView.AllowUserToDeleteRows = false;
             this.bounceGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.bounceGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.bounceGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
             this.bounceGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -758,6 +759,7 @@
             // 
             // settingsTabPage
             // 
+            this.settingsTabPage.Controls.Add(this.changeFolderButton);
             this.settingsTabPage.Controls.Add(this.helpLinkLabel);
             this.settingsTabPage.Controls.Add(this.viewLogLinkLabel);
             this.settingsTabPage.Controls.Add(this.homeLinkLabel);
@@ -889,7 +891,7 @@
             this.deleteSelectedButton.Name = "deleteSelectedButton";
             this.deleteSelectedButton.Size = new System.Drawing.Size(138, 28);
             this.deleteSelectedButton.TabIndex = 16;
-            this.deleteSelectedButton.Text = "Delete Selected";
+            this.deleteSelectedButton.Text = "Remove Selected";
             this.deleteSelectedButton.UseVisualStyleBackColor = true;
             this.deleteSelectedButton.Click += new System.EventHandler(this.deleteSelectedButton_Click);
             // 
@@ -920,9 +922,10 @@
             this.helpText3.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.helpText3.Location = new System.Drawing.Point(13, 199);
             this.helpText3.Name = "helpText3";
-            this.helpText3.Size = new System.Drawing.Size(312, 13);
+            this.helpText3.Size = new System.Drawing.Size(561, 13);
             this.helpText3.TabIndex = 13;
-            this.helpText3.Text = "This is the location your downloaded files will be placed in.";
+            this.helpText3.Text = "Completed downloads will be placed here. We recommend this folder be present in y" +
+    "our shared folders list.";
             // 
             // downloadFolder
             // 
@@ -1143,6 +1146,16 @@
             this.reIndexTimer.Interval = 300000;
             this.reIndexTimer.Tick += new System.EventHandler(this.reIndexTimer_Tick);
             // 
+            // changeFolderButton
+            // 
+            this.changeFolderButton.Location = new System.Drawing.Point(618, 180);
+            this.changeFolderButton.Name = "changeFolderButton";
+            this.changeFolderButton.Size = new System.Drawing.Size(138, 28);
+            this.changeFolderButton.TabIndex = 23;
+            this.changeFolderButton.Text = "Change";
+            this.changeFolderButton.UseVisualStyleBackColor = true;
+            this.changeFolderButton.Click += new System.EventHandler(this.changeFolderButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1283,6 +1296,7 @@
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Windows.Forms.Timer uiBlinkTimer;
         private System.Windows.Forms.Timer reIndexTimer;
+        private System.Windows.Forms.Button changeFolderButton;
     }
 }
 
