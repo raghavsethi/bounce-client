@@ -67,7 +67,7 @@ namespace BounceClient
 
             beginButton.Text = "Finish »";
             helloLabel.Text = "Almost done.";
-            subheadLabel.Text = "Please read the information \nbelow.";
+            subheadLabel.Text = "Carefully read the information \nbelow.";
             sharedFolderShown = true;
         }
 
@@ -75,6 +75,7 @@ namespace BounceClient
         {
             RestClient client = new RestClient("http://" + Configuration.server);
             RestRequest request = new RestRequest("checkuser", Method.POST);
+            client.Timeout = 3000;
 
             request.AddParameter("mac", Utils.getMACAddress());
             request.AddParameter("nick", usernameTextBox.Text);
@@ -93,6 +94,7 @@ namespace BounceClient
                 Utils.writeLog("checkWorker_RunWorkerCompleted: Error in checking username");
                 serverOK = false;
                 checkStatusLabel.Text = "Couldn't connect to server";
+                statusPictureBox.Visible = false;
                 beginButton.Text = "Continue »";
                 beginButton.Enabled = true;
                 return;

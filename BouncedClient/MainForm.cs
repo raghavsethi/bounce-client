@@ -380,17 +380,19 @@ namespace BouncedClient
 
                 //Defaults for config should be set here
 
-                serverTextBox.Text = "192.168.1.40:3000";
-                downloadFolder.Text = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile)
-                    + "\\Bounced Downloads";
-                sharedFolders.Items.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyVideos));
+                String defaultDownloadFolder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile)
+                    + "\\Bounce Downloads";
 
-                Configuration.downloadFolder = downloadFolder.Text;
+                serverTextBox.Text = "192.168.1.40:3000";
+                downloadFolder.Text = defaultDownloadFolder;
+                sharedFolders.Items.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyVideos));
+                sharedFolders.Items.Add(defaultDownloadFolder);
+
+                Configuration.downloadFolder = defaultDownloadFolder;
                 Configuration.server = serverTextBox.Text;
                 Configuration.sharedFolders = new List<string>();
                 Configuration.sharedFolders.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyVideos));
-                Configuration.sharedFolders.Add(System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile)
-                    + "\\Bounced Downloads");
+                Configuration.sharedFolders.Add(defaultDownloadFolder);
 
                 WelcomeForm welcomeForm = new WelcomeForm();
                 welcomeForm.ShowDialog();
