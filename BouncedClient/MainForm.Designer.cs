@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.StatusPanel = new System.Windows.Forms.Panel();
             this.syncStatusPictureBox = new System.Windows.Forms.PictureBox();
@@ -87,6 +87,7 @@
             this.BouncesTransferIDColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BouncesUploaderMacColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.settingsTabPage = new System.Windows.Forms.TabPage();
+            this.changeFolderButton = new System.Windows.Forms.Button();
             this.helpLinkLabel = new System.Windows.Forms.LinkLabel();
             this.viewLogLinkLabel = new System.Windows.Forms.LinkLabel();
             this.homeLinkLabel = new System.Windows.Forms.LinkLabel();
@@ -129,7 +130,6 @@
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.uiBlinkTimer = new System.Windows.Forms.Timer(this.components);
             this.reIndexTimer = new System.Windows.Forms.Timer(this.components);
-            this.changeFolderButton = new System.Windows.Forms.Button();
             this.StatusPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.syncStatusPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusPictureBox)).BeginInit();
@@ -292,9 +292,9 @@
             this.searchGridHelpTextLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.searchGridHelpTextLabel.Location = new System.Drawing.Point(269, 208);
             this.searchGridHelpTextLabel.Name = "searchGridHelpTextLabel";
-            this.searchGridHelpTextLabel.Size = new System.Drawing.Size(246, 30);
+            this.searchGridHelpTextLabel.Size = new System.Drawing.Size(236, 30);
             this.searchGridHelpTextLabel.TabIndex = 10;
-            this.searchGridHelpTextLabel.Text = "No results found.\r\nTry a more general search, like \"avi\" or \"mp3\"";
+            this.searchGridHelpTextLabel.Text = "No results found.\r\nTry a more general search, like \"avi\" or \"hd\"";
             this.searchGridHelpTextLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.searchGridHelpTextLabel.Visible = false;
             // 
@@ -362,8 +362,8 @@
             this.searchGridView.AllowUserToAddRows = false;
             this.searchGridView.AllowUserToDeleteRows = false;
             this.searchGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.searchGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.searchGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
             this.searchGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -489,8 +489,8 @@
             this.downloadGridView.AllowUserToAddRows = false;
             this.downloadGridView.AllowUserToDeleteRows = false;
             this.downloadGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.downloadGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.downloadGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             this.downloadGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -658,8 +658,8 @@
             this.bounceGridView.AllowUserToAddRows = false;
             this.bounceGridView.AllowUserToDeleteRows = false;
             this.bounceGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.bounceGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.bounceGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle6;
             this.bounceGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -687,6 +687,9 @@
             this.bounceGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.bounceGridView.Size = new System.Drawing.Size(761, 435);
             this.bounceGridView.TabIndex = 1;
+            this.mainToolTip.SetToolTip(this.bounceGridView, "Shows you how many people have copies of the files you requested. The more people" +
+        " your requested file has been replicated to, the higher the chances that Bounce " +
+        "will download the file for you shortly.");
             this.bounceGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.bounceGridView_CellClick);
             // 
             // dataGridViewImageColumn1
@@ -788,6 +791,16 @@
             this.settingsTabPage.Text = "Settings";
             this.settingsTabPage.UseVisualStyleBackColor = true;
             // 
+            // changeFolderButton
+            // 
+            this.changeFolderButton.Location = new System.Drawing.Point(618, 180);
+            this.changeFolderButton.Name = "changeFolderButton";
+            this.changeFolderButton.Size = new System.Drawing.Size(138, 28);
+            this.changeFolderButton.TabIndex = 23;
+            this.changeFolderButton.Text = "Change";
+            this.changeFolderButton.UseVisualStyleBackColor = true;
+            this.changeFolderButton.Click += new System.EventHandler(this.changeFolderButton_Click);
+            // 
             // helpLinkLabel
             // 
             this.helpLinkLabel.AutoSize = true;
@@ -860,6 +873,8 @@
             this.actionButton.Size = new System.Drawing.Size(138, 27);
             this.actionButton.TabIndex = 2;
             this.actionButton.Text = "Reconnect";
+            this.mainToolTip.SetToolTip(this.actionButton, "Will attempt to reconnect to the server if the connection has been lost or connec" +
+        "tion parameters have changed.");
             this.actionButton.UseVisualStyleBackColor = true;
             this.actionButton.Click += new System.EventHandler(this.actionButton_Click);
             // 
@@ -881,7 +896,8 @@
             this.forceRescanButton.Size = new System.Drawing.Size(138, 28);
             this.forceRescanButton.TabIndex = 17;
             this.forceRescanButton.Text = "Force Rescan";
-            this.mainToolTip.SetToolTip(this.forceRescanButton, "Will scan your shared folders again to determine whether there are any changes");
+            this.mainToolTip.SetToolTip(this.forceRescanButton, "Will scan your shared folders again to determine whether there are any changes. I" +
+        "f changes are found, they will be synced to the server.");
             this.forceRescanButton.UseVisualStyleBackColor = true;
             this.forceRescanButton.Click += new System.EventHandler(this.forceRescanButton_Click);
             // 
@@ -1124,6 +1140,8 @@
             this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
             this.notifyIcon.Text = "Bounce";
             this.notifyIcon.Visible = true;
+            this.notifyIcon.Click += new System.EventHandler(this.notifyIcon_Click);
+            this.notifyIcon.DoubleClick += new System.EventHandler(this.notifyIcon_Click);
             // 
             // logoPictureBox
             // 
@@ -1145,16 +1163,6 @@
             this.reIndexTimer.Enabled = true;
             this.reIndexTimer.Interval = 300000;
             this.reIndexTimer.Tick += new System.EventHandler(this.reIndexTimer_Tick);
-            // 
-            // changeFolderButton
-            // 
-            this.changeFolderButton.Location = new System.Drawing.Point(618, 180);
-            this.changeFolderButton.Name = "changeFolderButton";
-            this.changeFolderButton.Size = new System.Drawing.Size(138, 28);
-            this.changeFolderButton.TabIndex = 23;
-            this.changeFolderButton.Text = "Change";
-            this.changeFolderButton.UseVisualStyleBackColor = true;
-            this.changeFolderButton.Click += new System.EventHandler(this.changeFolderButton_Click);
             // 
             // MainForm
             // 

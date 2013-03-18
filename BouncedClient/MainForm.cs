@@ -60,6 +60,28 @@ namespace BouncedClient
             Utils.clearLog();
             macAddrLabel.Text = "MAC Address: " + Utils.getMACAddress();
             helpText5.Text = "Bounced Client v" + Utils.getVersion() + ". Built with love at IIIT-D by Raghav Sethi, Naved Alam and Mayank Pundir.";
+            
+            // Generate tray icon
+            notifyIcon.Visible = true;
+            
+            ContextMenu notifyIconMenu = new ContextMenu();
+            MenuItem showMenuItem = new MenuItem("S&how", new System.EventHandler(showMenuItem_Click));
+            notifyIconMenu.MenuItems.Add(showMenuItem);
+            MenuItem exitMenuItem = new MenuItem("E&xit", new System.EventHandler(exitMenuItem_Click));
+            notifyIconMenu.MenuItems.Add(exitMenuItem);
+            
+            notifyIcon.ContextMenu = notifyIconMenu;
+        }
+
+        private void exitMenuItem_Click(object sender, System.EventArgs e)
+        {
+            notifyIcon.Visible = false;
+            Application.Exit();
+        }
+
+        private void showMenuItem_Click(object sender, System.EventArgs e)
+        {
+            this.Visible = true;
         }
 
         private void registerWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -718,10 +740,25 @@ namespace BouncedClient
 
             StatusResponse sr = response.Data as StatusResponse;
 
-            if(sr!=null)
+            if (sr != null)
+            {
                 Utils.writeLog("downloadRequestWorker_DoWork: Download request returned : " + sr.ToString());
+                if (!sr.status.Equals("OK"))
+                {
+                    MessageBox.Show("Couldn't process the download request. Error: " + sr.text, "Download Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    // To make the download appear in the UI faster
+                    if (!pollPendingWorker.IsBusy)
+                        pollPendingWorker.RunWorkerAsync();
+                }
+            }
             else
+            {
                 Utils.writeLog("downloadRequestWorker_DoWork: Download request returned null");
+                MessageBox.Show("Couldn't process the download request. Error: The server failed to return a valid response", 
+                    "Download Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void serverWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -964,7 +1001,14 @@ namespace BouncedClient
             Configuration.username = usernameTextBox.Text;
             Configuration.server = serverTextBox.Text;
             Configuration.saveConfiguration();
-            notifyIcon.Visible = false;
+
+            e.Cancel = true;
+            this.Hide();
+
+            notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
+            notifyIcon.BalloonTipTitle = "Bounce is running in the tray";
+            notifyIcon.BalloonTipText = "To exit Bounce, right-click on the icon and select 'Exit'";
+            notifyIcon.ShowBalloonTip(3000);
         }
 
         private void viewLogLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -1039,6 +1083,12 @@ namespace BouncedClient
                 downloadFolder.Text = folderBrowser.SelectedPath;
                 Configuration.saveConfiguration();
             }
+        }
+
+        private void notifyIcon_Click(object sender, EventArgs e)
+        {
+            //if (this.Visible == false)
+                this.Show();
         }
 
     }

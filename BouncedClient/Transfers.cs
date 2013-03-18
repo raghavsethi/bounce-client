@@ -62,6 +62,7 @@ namespace BouncedClient
             int bytesSize;              //Number of bytes read by the stream reader
             int tempTransferRate = 0;   //Instantaneous (for 1 refresh cycle) download rate
             long downloadedInCycle = 0; //Total bytes downloaded in the last refresh cycle
+            int percentComplete = 0;
 
             DateTime startTime = DateTime.Now;  //To track total download time
             DateTime refresh = DateTime.Now;    //To track time since last refresh
@@ -120,7 +121,7 @@ namespace BouncedClient
             try
             {
                 // Perform file transfer.
-                clientStream.ReadTimeout = 4000; // Need to timeout to prevent stalled appearance in UI
+                clientStream.ReadTimeout = 6000; // Need to timeout to prevent stalled appearance in UI
                 while ((bytesSize = clientStream.Read(downBuffer, 0, downBuffer.Length)) > 0)
                 {
                     // In case user cancels download
@@ -170,8 +171,7 @@ namespace BouncedClient
                         
                         dp.transferRate = tempTransferRate;
                         dp.averageTransferRate = (0.01) * tempTransferRate + (0.99) * dp.averageTransferRate;
-                        
-                        int percentComplete = 0;
+
                         if(pr.fileSize != 0)
                             percentComplete = (int) (100 * bytesDownloaded / pr.fileSize);
 
@@ -192,9 +192,8 @@ namespace BouncedClient
             catch (Exception e)
             {
                 Utils.writeLog("download: Error:" + e.ToString());
-                dp.transferRate = 0;
                 dp.status = "Failed";
-                worker.ReportProgress(0, dp);
+                worker.ReportProgress(percentComplete, dp);
                 return null;
             }
             finally
