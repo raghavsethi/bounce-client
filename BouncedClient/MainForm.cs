@@ -27,6 +27,7 @@ namespace BouncedClient
         bool textboxesInitialized; // Used to make sure textChanged events don't fire during initialization
         bool syncPending; // Used to keep track of whether a sync has failed and can be completed when online next
         bool reconnectBlinking, forceRescanBlinking;
+        bool minimizingToTray; // To keep track of whether the close call should show close completely or minimize
 
         public MainForm()
         {
@@ -34,6 +35,7 @@ namespace BouncedClient
             syncPending = false;
             reconnectBlinking = false;
             forceRescanBlinking = false;
+            minimizingToTray = true;
 
             InitializeComponent();
 
@@ -76,7 +78,8 @@ namespace BouncedClient
         private void exitMenuItem_Click(object sender, System.EventArgs e)
         {
             notifyIcon.Visible = false;
-            Application.Exit();
+            minimizingToTray = false;
+            MainForm_FormClosing(sender, new FormClosingEventArgs(CloseReason.UserClosing, false));
         }
 
         private void showMenuItem_Click(object sender, System.EventArgs e)
@@ -323,7 +326,14 @@ namespace BouncedClient
                 notifyIcon.BalloonTipTitle = "Download complete   ";
                 notifyIcon.BalloonTipText = (String)downloadGridView["FileNameColumn", row].Value;
                 notifyIcon.ShowBalloonTip(5000);
+            }
 
+            if (dp.isFailed)
+            {
+                notifyIcon.BalloonTipIcon = ToolTipIcon.Error;
+                notifyIcon.BalloonTipTitle = "Download failed   ";
+                notifyIcon.BalloonTipText = (String)downloadGridView["FileNameColumn", row].Value;
+                notifyIcon.ShowBalloonTip(5000);
             }
             
             double secondsToComplete = ((dp.fileSize - dp.completed) / 1024.0) / dp.averageTransferRate;
@@ -792,6 +802,10 @@ namespace BouncedClient
                     dgv.Rows.RemoveAt(e.RowIndex);
                     return;
                 }
+                else if (action == "Retry")
+                {
+                    dgv.Rows.RemoveAt(e.RowIndex);
+                }
 
                 // Open explorer and highlight downloaded file
                 if (action == "Open folder")
@@ -1004,13 +1018,22 @@ namespace BouncedClient
             Configuration.server = serverTextBox.Text;
             Configuration.saveConfiguration();
 
-            e.Cancel = true;
-            this.Hide();
+            if (minimizingToTray)
+            {
+                e.Cancel = true;
+                this.Hide();
 
-            notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
-            notifyIcon.BalloonTipTitle = "Bounce is running in the tray";
-            notifyIcon.BalloonTipText = "To exit Bounce, right-click on the icon and select 'Exit'";
-            notifyIcon.ShowBalloonTip(3000);
+                notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
+                notifyIcon.BalloonTipTitle = "Bounce is running in the tray";
+                notifyIcon.BalloonTipText = "To exit Bounce, right-click on the icon and select 'Exit'";
+                notifyIcon.ShowBalloonTip(500);
+                minimizingToTray = true;
+            }
+            else
+            {
+                this.Dispose();
+                Application.Exit();
+            }
         }
 
         private void viewLogLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

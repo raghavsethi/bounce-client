@@ -140,7 +140,9 @@ namespace BouncedClient
         public string downloadedFilePath;
         public string nick;
         public double averageTransferRate;
+        
         public bool isComplete;
+        public bool isFailed;
 
         public DownloadProgress()
         { }
@@ -157,6 +159,7 @@ namespace BouncedClient
             nick = pr.nick;
             averageTransferRate = 0;
             isComplete = false;
+            isFailed = false;
 
             if (pr.type == "secondleg" || pr.type == "direct")
             {

@@ -193,7 +193,19 @@ namespace BouncedClient
             {
                 Utils.writeLog("download: Error:" + e.ToString());
                 dp.status = "Failed";
+                dp.isFailed = true;
                 worker.ReportProgress(percentComplete, dp);
+                
+                try
+                {
+                    strLocal.Close();
+                    File.Delete(dp.downloadedFilePath);
+                }
+                catch (Exception e2)
+                {
+                    // Do nothing. We only want to try and delete the file.
+                }
+
                 return null;
             }
             finally
@@ -232,6 +244,7 @@ namespace BouncedClient
                     Utils.writeLog("download: Hash verification failed");
                     dp.status = "Failed integrity check";
                     ur.status = "hash_mismatch"; // Modify the updaterequest
+                    dp.isFailed = true;
                     worker.ReportProgress(100, dp);
 
                     try

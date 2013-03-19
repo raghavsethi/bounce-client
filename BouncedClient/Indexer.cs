@@ -65,6 +65,7 @@ namespace BouncedClient
             Utils.writeLog("buildIndex: Started indexing!");
 
             int numFoldersIndexed = 0;
+            bool newFile = false;
 
             DateTime timeOfLastSave = DateTime.Now; //Keeps track of when to persist stuff in the middle of indexing
 
@@ -148,7 +149,7 @@ namespace BouncedClient
                         }
                         else
                         {
-                            Utils.writeLog("buildIndex: New file seen : " + fi.FullName);
+                            newFile = true;
                         }
 
                         // Get file details, including hash and keywords
@@ -156,9 +157,14 @@ namespace BouncedClient
 
                         if (currentFile == null)
                         {
-                            Utils.writeLog("buildIndex: Didn't process file :" + fi.FullName);
+                            //Utils.writeLog("buildIndex: Didn't process file :" + fi.FullName);
                             continue;
                         }
+
+                        if(newFile)
+                            Utils.writeLog("buildIndex: New file seen : " + fi.FullName);
+
+                        newFile = false;
 
                         hashIndex[fi.FullName] = currentFile.hash;
                         modifiedIndex[fi.FullName] = fi.LastWriteTime;
