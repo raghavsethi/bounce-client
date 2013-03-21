@@ -56,20 +56,20 @@
             // usernameHelpTextlabel
             // 
             this.usernameHelpTextlabel.AutoSize = true;
-            this.usernameHelpTextlabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.usernameHelpTextlabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.usernameHelpTextlabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.usernameHelpTextlabel.Location = new System.Drawing.Point(10, 189);
+            this.usernameHelpTextlabel.Location = new System.Drawing.Point(10, 174);
             this.usernameHelpTextlabel.Name = "usernameHelpTextlabel";
-            this.usernameHelpTextlabel.Size = new System.Drawing.Size(318, 90);
+            this.usernameHelpTextlabel.Size = new System.Drawing.Size(336, 108);
             this.usernameHelpTextlabel.TabIndex = 2;
-            this.usernameHelpTextlabel.Text = "By entering your username, you agree to abide \r\nby the terms in license agreement" +
-    " linked above.\r\n\r\nSelect a username to identify yourself.\r\nWe don\'t recommend us" +
-    "ing your real name.";
+            this.usernameHelpTextlabel.Text = "By entering your username, you agree to \r\nabide by the terms in license agreement" +
+    " \r\nlinked above.\r\n\r\nSelect a username to identify yourself.\r\nWe don\'t recommend " +
+    "using your real name.";
             // 
             // usernameTextBox
             // 
             this.usernameTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.usernameTextBox.Location = new System.Drawing.Point(13, 298);
+            this.usernameTextBox.Location = new System.Drawing.Point(13, 299);
             this.usernameTextBox.Name = "usernameTextBox";
             this.usernameTextBox.Size = new System.Drawing.Size(307, 24);
             this.usernameTextBox.TabIndex = 3;
@@ -89,7 +89,7 @@
             // 
             // statusPictureBox
             // 
-            this.statusPictureBox.Location = new System.Drawing.Point(326, 302);
+            this.statusPictureBox.Location = new System.Drawing.Point(326, 303);
             this.statusPictureBox.Name = "statusPictureBox";
             this.statusPictureBox.Size = new System.Drawing.Size(16, 16);
             this.statusPictureBox.TabIndex = 5;
@@ -111,7 +111,7 @@
             this.licenseLabel.AutoSize = true;
             this.licenseLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.licenseLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.licenseLabel.Location = new System.Drawing.Point(10, 129);
+            this.licenseLabel.Location = new System.Drawing.Point(10, 122);
             this.licenseLabel.Name = "licenseLabel";
             this.licenseLabel.Size = new System.Drawing.Size(321, 36);
             this.licenseLabel.TabIndex = 8;
@@ -121,7 +121,7 @@
             // 
             this.licenseLinkLabel.AutoSize = true;
             this.licenseLinkLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.licenseLinkLabel.Location = new System.Drawing.Point(140, 147);
+            this.licenseLinkLabel.Location = new System.Drawing.Point(140, 140);
             this.licenseLinkLabel.Name = "licenseLinkLabel";
             this.licenseLinkLabel.Size = new System.Drawing.Size(134, 18);
             this.licenseLinkLabel.TabIndex = 9;

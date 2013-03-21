@@ -682,24 +682,37 @@ namespace BouncedClient
         {
             searchGridView.Rows.Clear();
 
+            Dictionary<String, Icon> extToIcon = new Dictionary<string, Icon>();
+            
             foreach (SearchResult sr in currentlyDisplayedSearchResults)
             {
                 Icon zipIcon = null;
-                try
+                if (!extToIcon.ContainsKey(sr.type))
                 {
-                    zipIcon = Icons.IconFromExtension(sr.type);
+                    try
+                    {
+                        zipIcon = Icons.IconFromExtension(sr.type);
+                    }
+                    catch (Exception e)
+                    { }
+                    extToIcon[sr.type] = zipIcon;
                 }
-                catch (Exception e)
+                else
                 {
+                    zipIcon = extToIcon[sr.type];
+                }
 
-                }
                 String buttonText = "Bounce";
                 if (sr.online == true)
                     buttonText = "Download";
 
                 searchGridView.Rows.Add(new object[] { zipIcon, sr.name, Utils.getHumanSize(sr.size), sr.nick, 
             buttonText, sr.mac, sr.hash, sr.size });
+
             }
+
+            GC.Collect();
+            Utils.writeLog("repopulateSearchResults: Memory used after repop and GC: " + GC.GetTotalMemory(true) / 1024.0);
         }
 
         private void searchGridView_CellClick(object sender, DataGridViewCellEventArgs e)
