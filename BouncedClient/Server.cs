@@ -102,7 +102,15 @@ namespace BouncedClient
             String fileHash = temp[0];
             String transferId = temp[1];
             String transferType = temp[2]; //direct, firstleg, secondleg
-            long startByte = long.Parse(temp[3]); //starting position
+            long startByte;
+            try
+            {
+                startByte = long.Parse(temp[3]); //starting position
+            }
+            catch (Exception e)
+            {
+                startByte = 0;
+            }
             
             upload(fileHash, clientStream, transferType, startByte);
             clientStream.Close();
