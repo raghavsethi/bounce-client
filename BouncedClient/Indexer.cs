@@ -115,9 +115,10 @@ namespace BouncedClient
                     fileInfoArr = di.GetFiles();
                     directoryInfoArr = di.GetDirectories();
                 }
-                catch (UnauthorizedAccessException u)
+                catch (Exception u)
                 {
-                    Utils.writeLog("ERROR! buildIndex: UnauthorizedAccessException while indexing " + di.FullName);
+                    folders.RemoveAt(0);
+                    Utils.writeLog("ERROR! buildIndex: Exception while indexing " + di.FullName + " Error: " + u);
                     continue;
                 }
 
@@ -203,9 +204,10 @@ namespace BouncedClient
                     fileInfoArr = di.GetFiles();
                     directoryInfoArr = di.GetDirectories();
                 }
-                catch (UnauthorizedAccessException u)
+                catch (Exception u)
                 {
-                    Utils.writeLog("ERROR! buildIndex: UnauthorizedAccessException while indexing " + di.FullName);
+                    folders.RemoveAt(0);
+                    Utils.writeLog("ERROR! buildIndex: Exception while indexing " + di.FullName + " Error: " + u);
                     continue;
                 }
 
@@ -308,7 +310,7 @@ namespace BouncedClient
                 currentFile.name.ToLower().Contains("desktop.ini") || 
                 currentFile.name.ToLower().Contains("folder.jpg"))
             {
-                Utils.writeLog("getFileInfo: Ignored file " + filePath);
+                //Utils.writeLog("getFileInfo: Ignored file " + filePath);
                 return null;
             }
 
@@ -361,8 +363,18 @@ namespace BouncedClient
             p.StartInfo.UseShellExecute = false;
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.CreateNoWindow = true;
-            p.Start();
+            try
+            {
+
+                p.Start();
+            }
+            catch (Exception e2) // Handling only the case when md5sums is not present.
+            {
+                Utils.writeHasherToDisk();
+                p.Start();
+            }
             p.WaitForExit();
+            
             string output = p.StandardOutput.ReadToEnd();
             try
             {

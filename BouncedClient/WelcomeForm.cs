@@ -56,8 +56,8 @@ namespace BounceClient
             usernameTextBox.Enabled = false;
             checkStatusLabel.Visible = false;
 
-            usernameHelpTextlabel.Text = "We've added your 'Videos' folder to the\nshared list. Remember to add to or modify your" +
-                "\nshared folder list in the settings tab.";
+            usernameHelpTextlabel.Text = "We've added your 'Videos' folder to the\nshared list.\n\n" + 
+                "Remember to add to or modify your shared\nfolder list in the settings tab.";
             
             if(!serverOK)
             {

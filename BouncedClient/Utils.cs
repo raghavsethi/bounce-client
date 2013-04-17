@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BounceClient.Properties;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -139,6 +140,13 @@ namespace BouncedClient
             }
 
             return versionID;
+        }
+
+        public static void writeHasherToDisk()
+        {
+            FileStream md5write = File.OpenWrite(Utils.getAppDataPath("md5sums.exe"));
+            md5write.Write(Resources.md5sums, 0, Resources.md5sums.Length);
+            md5write.Close();
         }
 
     }

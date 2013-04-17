@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace BouncedClient
 {
-    class Transfers
+    class Downloads
     {
         public static ConcurrentDictionary<PendingResponse, DownloadProgress> pendingToDownload;
         public static List<DownloadProgress> currentDownloads;
@@ -20,11 +20,10 @@ namespace BouncedClient
 
         public static System.Object downloadCountLock = new System.Object();
 
-        public static string download(BackgroundWorker worker, PendingResponse pr, DownloadProgress dp)
+        public static string download(BackgroundWorker worker, PendingResponse pr, DownloadProgress dp, long startByte)
         {
             TcpClient tcpClient = new TcpClient();
-            //tcpClient.NoDelay = true;
-            NetworkStream clientStream;
+            NetworkStream clientStream = null;
             
             try
             {
@@ -36,7 +35,7 @@ namespace BouncedClient
                 //Format: fileHash | transfer ID | transfer-type
                 Utils.writeLog("tid is "+ pr.transferID);
                 ASCIIEncoding encoder = new ASCIIEncoding();
-                byte[] buffer = encoder.GetBytes(pr.fileHash + "|" + pr.transferID + "|" + pr.type);
+                byte[] buffer = encoder.GetBytes(pr.fileHash + "|" + pr.transferID + "|" + pr.type + "|" + startByte);
 
                 clientStream.Write(buffer, 0, buffer.Length);
                 clientStream.Flush();
@@ -45,20 +44,21 @@ namespace BouncedClient
             catch (Exception e)
             {
                 Utils.writeLog("download: Could not establish connection. Error : " + e);
-                return null;
+                dp.isFailed = true;
+                return postDownload(dp, pr, worker);
             }
 
             // Begin file transfer
             FileStream strLocal = null;
 
-            Transfers.currentDownloads.Add(dp);
+            Downloads.currentDownloads.Add(dp);
 
             // Add the download to the gridview
             worker.ReportProgress(0, dp);
 
             #region initvars
 
-            long bytesDownloaded = 0;   //Total bytes downloaded for the file
+            long bytesDownloaded = startByte;   //Total bytes downloaded for the file
             int bytesSize;              //Number of bytes read by the stream reader
             int tempTransferRate = 0;   //Instantaneous (for 1 refresh cycle) download rate
             long downloadedInCycle = 0; //Total bytes downloaded in the last refresh cycle
@@ -69,31 +69,61 @@ namespace BouncedClient
 
             byte[] downBuffer = new byte[4096];
 
-            // Find a free filename
+            bool appendToExistingFile = false;
 
+            // Find a free filename
+            
             if (File.Exists(dp.downloadedFilePath))
             {
-                String candidatePath = "";
-                for (int i = 2; i < 100; i++) // 100 here is arbitrary, just want to make sure it doesnt loop forever
-                {
-                    candidatePath = dp.downloadedFilePath.Substring(0,dp.downloadedFilePath.LastIndexOf('.'));
-                    candidatePath += " ("+i+")";
-                    candidatePath += dp.downloadedFilePath.Substring(dp.downloadedFilePath.LastIndexOf('.'));
 
-                    if (!File.Exists(candidatePath))
+                long existingFileLength = new FileInfo(dp.downloadedFilePath).Length;
+
+                // First file found should be appended to
+                if (startByte > 0 && startByte == existingFileLength)
+                    appendToExistingFile = true;
+                else
+                {
+                    String candidatePath = "";
+                    for (int i = 2; i < 100; i++) // 100 here is arbitrary, just want to make sure it doesnt loop forever
                     {
-                        Utils.writeLog("download: Found free file path " + candidatePath);
-                        dp.downloadedFilePath = candidatePath;
-                        dp.fileName = dp.downloadedFilePath.Substring(dp.downloadedFilePath.LastIndexOf(@"\") + 1);
-                        break;
+                        candidatePath = dp.downloadedFilePath.Substring(0, dp.downloadedFilePath.LastIndexOf('.'));
+                        candidatePath += " (" + i + ")";
+                        candidatePath += dp.downloadedFilePath.Substring(dp.downloadedFilePath.LastIndexOf('.'));
+
+                        if (!File.Exists(candidatePath))
+                        {
+                            Utils.writeLog("download: Found free file path " + candidatePath);
+                            dp.downloadedFilePath = candidatePath;
+                            dp.fileName = dp.downloadedFilePath.Substring(dp.downloadedFilePath.LastIndexOf(@"\") + 1);
+                            break;
+                        }
+                        else
+                        {
+                            existingFileLength = new FileInfo(candidatePath).Length;
+                            if (startByte > 0 && startByte == existingFileLength)
+                            {
+                                dp.downloadedFilePath = candidatePath;
+                                appendToExistingFile = true;
+                                break;
+                            }
+                        }
                     }
                 }
+            
             }
 
             try
             {
-                strLocal = new FileStream(dp.downloadedFilePath,
+                if (appendToExistingFile)
+                {
+                    strLocal = new FileStream(dp.downloadedFilePath,
+                    FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+                }
+                else
+                {
+                    strLocal = new FileStream(dp.downloadedFilePath,
                     FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+                }
             }
             catch (Exception e)
             {
@@ -121,59 +151,39 @@ namespace BouncedClient
             try
             {
                 // Perform file transfer.
-                clientStream.ReadTimeout = 6000; // Need to timeout to prevent stalled appearance in UI
+                clientStream.ReadTimeout = 6000; // Need to timeout now to prevent stalled appearance in UI
+
                 while ((bytesSize = clientStream.Read(downBuffer, 0, downBuffer.Length)) > 0)
                 {
                     // In case user cancels download
-                    if (pendingToDownload[pr]==null || worker.CancellationPending)
+                    if (pendingToDownload[pr] == null || worker.CancellationPending)
                     {
-                        Utils.writeLog("Download canceled by user");
-                        dp.status = "Canceled";
-                        worker.ReportProgress((int)(100 * bytesDownloaded / pr.fileSize), dp);
-                        clientStream.Close();
-                        strLocal.Close();
-
-                        // Report cancellation to server
-                        BackgroundWorker cancelUpdateWorker = new BackgroundWorker();
-                        cancelUpdateWorker.DoWork += Transfers.updateWorker_DoWork;
-                        cancelUpdateWorker.RunWorkerCompleted += Transfers.updateWorker_RunWorkerCompleted;
-
-                        // Set update parameters
-                        UpdateRequest cancelUpdateRequest = new UpdateRequest();
-                        cancelUpdateRequest.newHash = dp.hash;
-                        cancelUpdateRequest.transferID = dp.transferID;
-                        cancelUpdateRequest.status = "canceled";
-                        cancelUpdateRequest.uploader = dp.mac;
-                        cancelUpdateWorker.RunWorkerAsync(cancelUpdateRequest);
-
-                        // Remove from pendingToDownload
-                        DownloadProgress temp = null;
-                        pendingToDownload.TryRemove(pr, out temp);
-
-                        return null;
+                        throw new DownloadCanceledException("Download canceled");
                     }
 
                     downloadedInCycle += bytesSize;
                     bytesDownloaded = bytesDownloaded + bytesSize;
+                    dp.bytesDownloaded = bytesDownloaded;
                     strLocal.Write(downBuffer, 0, bytesSize);
 
-                    // Report progress to UI
+                    if (pr.fileSize != 0)
+                        percentComplete = (int)(100 * bytesDownloaded / pr.fileSize);
+
+                    // Report progress to UI at intervals
                     double msElapsedSinceRefresh = (DateTime.Now - refresh).TotalMilliseconds;
-                    if (msElapsedSinceRefresh > 1000) // Determines how fast UI is updated
+                    if (msElapsedSinceRefresh > 1000)
                     {
                         tempTransferRate = (int)((downloadedInCycle / 1024.0) / (DateTime.Now - refresh).TotalSeconds);
-                        dp.completed = bytesDownloaded;
+
                         dp.status = "Downloading";
-                        
-                        // Compute download speed with smoothing factor
+
+                        // Initialize download speed
                         if (dp.averageTransferRate == 0)
                             dp.averageTransferRate = tempTransferRate;
-                        
+
+                        // Compute download speed with smoothing factor
                         dp.transferRate = tempTransferRate;
                         dp.averageTransferRate = (0.01) * tempTransferRate + (0.99) * dp.averageTransferRate;
-
-                        if(pr.fileSize != 0)
-                            percentComplete = (int) (100 * bytesDownloaded / pr.fileSize);
 
                         worker.ReportProgress(percentComplete, dp);
 
@@ -182,53 +192,91 @@ namespace BouncedClient
                     }
                 }
 
-                dp.completed = bytesDownloaded;
+                dp.bytesDownloaded = bytesDownloaded;
                 dp.transferRate = tempTransferRate;
-                dp.status = "Checking file..";
-                
                 worker.ReportProgress(100, dp);
-                strLocal.Close();
+
+                Utils.writeLog("download: Completed download of " + pr.fileName +
+                " (" + dp.fileSize + ") Type:" + dp.type);
+                dp.isComplete = true;
+                dp.status = "Checking file..";
             }
-            catch (Exception e)
+            catch (DownloadCanceledException dce) // Occurs when user cancels
+            {
+                Utils.writeLog("download: Canceled by user");
+                dp.status = "Canceled";
+                dp.isCanceled = true;
+            }
+            catch (Exception e) // Should only occur due to poor network/peer going offline
             {
                 Utils.writeLog("download: Error:" + e.ToString());
                 dp.status = "Failed";
                 dp.isFailed = true;
-                worker.ReportProgress(percentComplete, dp);
-                
-                try
-                {
-                    strLocal.Close();
-                    File.Delete(dp.downloadedFilePath);
-                }
-                catch (Exception e2)
-                {
-                    // Do nothing. We only want to try and delete the file.
-                }
-
-                return null;
             }
             finally
             {
+                worker.ReportProgress(percentComplete, dp);
+                strLocal.Close();
                 clientStream.Close();
             }
 
-            Utils.writeLog("download: Completed download of " + pr.fileName + 
-                " (" + dp.fileSize + ") Type:" + dp.type );
+            return postDownload(dp, pr, worker);
+        }
+
+        public static string postDownload(DownloadProgress dp, PendingResponse pr, BackgroundWorker worker)
+        {
+            int percentComplete = (int)(100 * dp.bytesDownloaded / pr.fileSize);
+
+            if (dp.isFailed)
+            {
+                dp.attempts = dp.attempts + 1;
+                if (dp.attempts > 10)
+                {
+                    dp.status = "Failed";
+                    dp.isFailed = true;
+                    worker.ReportProgress(percentComplete, dp);
+                    return null;
+                }
+
+                dp.status = "Retrying.. (" + dp.attempts + ")";
+                dp.isFailed = false;
+                worker.ReportProgress(percentComplete, dp);
+
+                System.Threading.Thread.Sleep(3000);
+
+                return "FAILED";
+            }
+
+            BackgroundWorker updateWorker = new BackgroundWorker();
+            updateWorker.DoWork += Downloads.updateWorker_DoWork;
+            updateWorker.RunWorkerCompleted += Downloads.updateWorker_RunWorkerCompleted;
+
+            // Set update parameters
+            UpdateRequest updateRequest = new UpdateRequest();
+            updateRequest.transferID = dp.transferID;
+            updateRequest.uploader = dp.mac;
+
+            if (dp.isCanceled)
+            {
+                try
+                { File.Delete(dp.downloadedFilePath); }
+                catch (Exception e2)
+                { } // Do nothing. We only want to try and delete the file.
+
+                // Remove from pendingToDownload
+                DownloadProgress temp = null;
+                pendingToDownload.TryRemove(pr, out temp);
+
+                updateRequest.newHash = dp.hash;
+                updateRequest.status = "canceled";
+
+                updateWorker.RunWorkerAsync(updateRequest);
+                return null;
+            }
+
+            // Download neither canceled nor failed
 
             String newHash = Indexer.GenerateHash(dp.downloadedFilePath);
-
-            // Tell the server we have downloaded the file
-            BackgroundWorker updateWorker = new BackgroundWorker();
-            updateWorker.DoWork += Transfers.updateWorker_DoWork;
-            updateWorker.RunWorkerCompleted += Transfers.updateWorker_RunWorkerCompleted;
-            
-            // Set update parameters
-            UpdateRequest ur = new UpdateRequest();
-            ur.newHash = newHash;
-            ur.transferID = dp.transferID;
-            ur.status = "done";
-            ur.uploader = dp.mac;
 
             if (dp.type == "secondleg" || dp.type == "direct")
             {
@@ -243,23 +291,25 @@ namespace BouncedClient
                 {
                     Utils.writeLog("download: Hash verification failed");
                     dp.status = "Failed integrity check";
-                    ur.status = "hash_mismatch"; // Modify the updaterequest
+                    dp.isHashMismatch = true;
                     dp.isFailed = true;
                     worker.ReportProgress(100, dp);
 
                     try
-                    {
-                        File.Delete(dp.downloadedFilePath);
-                    }
-                    catch (Exception e)
-                    {
-                        // Do nothing. We only want to try and delete the file.
-                    }
-
-                    newHash = null;
+                    { File.Delete(dp.downloadedFilePath); }
+                    catch (Exception e2)
+                    { } // Do nothing. We only want to try and delete the file.
                 }
+
+                updateRequest.newHash = newHash;
+                updateRequest.status = "done";
+
+                updateWorker.RunWorkerAsync(updateRequest);
+
+                return newHash;
             }
-            else
+
+            if (dp.type == "firstleg")
             {
                 // Rename the file to the new hash
 
@@ -280,7 +330,10 @@ namespace BouncedClient
                 worker.ReportProgress(100, dp);
             }
 
-            updateWorker.RunWorkerAsync(ur);
+            updateRequest.newHash = newHash;
+            updateRequest.status = "done";
+                        
+            updateWorker.RunWorkerAsync(updateRequest);
 
             return newHash;
         }

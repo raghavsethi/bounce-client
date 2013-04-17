@@ -130,19 +130,28 @@ namespace BouncedClient
         public string fileName;
         public string type;
         public long fileSize;
-        public long completed;
         public string uploaderIP;
         public string symKey;
-        public string status;
         public long transferID;
-        public bool visible; // True for files that I have requested, false otherwise
+        public string nick;
+        
+        // Download tracking variables
         public int transferRate;
         public string downloadedFilePath;
-        public string nick;
+        public string status;
         public double averageTransferRate;
-        
+        public long bytesDownloaded;
+
+        public bool visible; // True for files that I have requested, false otherwise
+
+        // Status flags
         public bool isComplete;
         public bool isFailed;
+        public bool isHashMismatch;
+        public bool isCanceled;
+
+        // Attempts
+        public int attempts;
 
         public DownloadProgress()
         { }
@@ -160,6 +169,8 @@ namespace BouncedClient
             averageTransferRate = 0;
             isComplete = false;
             isFailed = false;
+            isHashMismatch = false;
+            attempts = 0;
 
             if (pr.type == "secondleg" || pr.type == "direct")
             {
@@ -171,7 +182,7 @@ namespace BouncedClient
                 downloadedFilePath = Utils.getAppDataPath(@"\Bounces\" + pr.fileHash + ".bounce");
                 visible = false;
             }
-            completed = 0;
+            bytesDownloaded = 0;
             status = "Starting..";
         }
     }
@@ -184,4 +195,20 @@ namespace BouncedClient
         public String uploader;
     }
 
+    public class DownloadCanceledException : Exception
+    {
+        public DownloadCanceledException()
+        {
+        }
+
+        public DownloadCanceledException(string message)
+            : base(message)
+        {
+        }
+
+        public DownloadCanceledException(string message, Exception inner)
+            : base(message, inner)
+        {
+        }
+    }
 }

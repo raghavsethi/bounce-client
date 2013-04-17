@@ -39,19 +39,17 @@ namespace BouncedClient
 
             InitializeComponent();
 
-            Transfers.currentDownloadsCount = 0;
+            Downloads.currentDownloadsCount = 0;
             Server.currentUploadsCount = 0;
 
-            Transfers.currentDownloads = new List<DownloadProgress>();
-            Transfers.pendingToDownload = new ConcurrentDictionary<PendingResponse, DownloadProgress>(new PendingResponse.EqualityComparer());
+            Downloads.currentDownloads = new List<DownloadProgress>();
+            Downloads.pendingToDownload = new ConcurrentDictionary<PendingResponse, DownloadProgress>(new PendingResponse.EqualityComparer());
 
             // Create bounce folder in APPDATA and write the hasher executable to it
             if (!Directory.Exists(Utils.getAppDataPath("")))
             {
                 Directory.CreateDirectory(Utils.getAppDataPath(""));
-                FileStream md5write = File.OpenWrite(Utils.getAppDataPath("md5sums.exe"));
-                md5write.Write(Resources.md5sums, 0, Resources.md5sums.Length);
-                md5write.Close();
+                Utils.writeHasherToDisk();
             }
         }
 
@@ -199,8 +197,8 @@ namespace BouncedClient
 
                     // Tell the server we have deleted the file
                     BackgroundWorker updateWorker = new BackgroundWorker();
-                    updateWorker.DoWork += Transfers.updateWorker_DoWork;
-                    updateWorker.RunWorkerCompleted += Transfers.updateWorker_RunWorkerCompleted;
+                    updateWorker.DoWork += Downloads.updateWorker_DoWork;
+                    updateWorker.RunWorkerCompleted += Downloads.updateWorker_RunWorkerCompleted;
 
                     // Set update parameters and kick off update
                     UpdateRequest ur = new UpdateRequest();
@@ -215,9 +213,9 @@ namespace BouncedClient
                 bool performPending = false;
 
                 // Checking if the same file is already being downloaded by the client
-                if (!Transfers.pendingToDownload.ContainsKey(pr))
+                if (!Downloads.pendingToDownload.ContainsKey(pr))
                 {
-                    foreach(PendingResponse existingPending in Transfers.pendingToDownload.Keys)
+                    foreach(PendingResponse existingPending in Downloads.pendingToDownload.Keys)
                     {
                         if (existingPending.fileHash.Equals(pr.fileHash))
                             return;
@@ -229,7 +227,7 @@ namespace BouncedClient
                 {
                     Utils.writeLog("Added " + pr.fileName + " to download queue");
                     DownloadProgress dip = new DownloadProgress(pr);
-                    Transfers.pendingToDownload[pr] = dip;
+                    Downloads.pendingToDownload[pr] = dip;
 
                     BackgroundWorker downloadWorker = new BackgroundWorker();
                     downloadWorker.WorkerReportsProgress = true;
@@ -252,12 +250,17 @@ namespace BouncedClient
             BackgroundWorker currentWorker = sender as BackgroundWorker;
             Tuple<PendingResponse, DownloadProgress> downloadArgs = e.Argument as Tuple<PendingResponse, DownloadProgress>;
 
-            lock (Transfers.downloadCountLock)
+            lock (Downloads.downloadCountLock)
             {
-                Transfers.currentDownloadsCount++;
+                Downloads.currentDownloadsCount++;
             }
             
-            String fileHash = Transfers.download(currentWorker, downloadArgs.Item1, downloadArgs.Item2);
+            String fileHash = Downloads.download(currentWorker, downloadArgs.Item1, downloadArgs.Item2, 0);
+            while(fileHash!=null && fileHash.Equals("FAILED"))
+            {
+                fileHash = Downloads.download(currentWorker, downloadArgs.Item1, downloadArgs.Item2, 
+                    downloadArgs.Item2.bytesDownloaded);
+            }
 
             e.Result = new Tuple<string, long>(fileHash, downloadArgs.Item2.transferID);
         }
@@ -297,7 +300,8 @@ namespace BouncedClient
                 }
 
                 downloadGridView.Rows.Add(new object[] { zipIcon, dp.fileName, dp.status, e.ProgressPercentage + "%", 
-            0, "Unknown", Utils.getHumanSize(dp.fileSize), dp.uploaderIP, "Cancel", dp.mac, dp.hash, dp.fileSize, dp.downloadedFilePath });
+            0, "Unknown", Utils.getHumanSize(dp.fileSize), dp.uploaderIP, "Cancel", Resources.remove_file_locked, dp.mac, 
+            dp.hash, dp.fileSize, dp.downloadedFilePath, "false" });
 
                 // To kick off UI update instantly
                 uiUpdateTimer_Tick(sender, e);
@@ -321,7 +325,8 @@ namespace BouncedClient
             if (dp.isComplete)
             {
                 downloadGridView["ActionColumn", row].Value = "Open folder";
-
+                downloadGridView["RemoveColumn", row].Value = Resources.remove_file;
+                downloadGridView["RemovableColumn", row].Value = "true";
                 notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
                 notifyIcon.BalloonTipTitle = "Download complete   ";
                 notifyIcon.BalloonTipText = (String)downloadGridView["FileNameColumn", row].Value;
@@ -330,13 +335,15 @@ namespace BouncedClient
 
             if (dp.isFailed)
             {
+                downloadGridView["RemoveColumn", row].Value = Resources.remove_file;
+                downloadGridView["RemovableColumn", row].Value = "true";
                 notifyIcon.BalloonTipIcon = ToolTipIcon.Error;
                 notifyIcon.BalloonTipTitle = "Download failed   ";
                 notifyIcon.BalloonTipText = (String)downloadGridView["FileNameColumn", row].Value;
                 notifyIcon.ShowBalloonTip(5000);
             }
             
-            double secondsToComplete = ((dp.fileSize - dp.completed) / 1024.0) / dp.averageTransferRate;
+            double secondsToComplete = ((dp.fileSize - dp.bytesDownloaded) / 1024.0) / dp.averageTransferRate;
 
             if (secondsToComplete > 0)
                 downloadGridView["ETAColumn", row].Value = Utils.getHumanTime(secondsToComplete);
@@ -350,11 +357,11 @@ namespace BouncedClient
 
             Tuple<string, long> downloadResult = e.Result as Tuple<string, long>;
 
-            foreach (DownloadProgress dp in Transfers.currentDownloads)
+            foreach (DownloadProgress dp in Downloads.currentDownloads)
             {
                 if (dp.hash == downloadResult.Item1)
                 {
-                    Transfers.currentDownloads.Remove(dp);
+                    Downloads.currentDownloads.Remove(dp);
                     break;
                 }
             }
@@ -364,9 +371,9 @@ namespace BouncedClient
                 Utils.writeLog("downloadWorker_RunWorkerCompleted: Error : " + e.Error);
             }
 
-            lock (Transfers.downloadCountLock)
+            lock (Downloads.downloadCountLock)
             {
-                Transfers.currentDownloadsCount--;
+                Downloads.currentDownloadsCount--;
             }
         }
 
@@ -804,6 +811,20 @@ namespace BouncedClient
         private void downloadGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             DataGridView dgv = sender as DataGridView;
+
+            // For remove icon
+            if (dgv != null && e.ColumnIndex == 9 && e.RowIndex > -1)
+            {
+                DataGridViewImageCell removeCell = dgv.Rows[e.RowIndex].Cells["RemoveColumn"] as DataGridViewImageCell;
+                if (dgv.Rows[e.RowIndex].Cells["RemovableColumn"].Value.Equals("true"))
+                {
+                    dgv.Rows.RemoveAt(e.RowIndex);
+                    return;
+                }
+
+            }
+
+            // For the full buttons
             if (dgv != null && e.ColumnIndex==8 && e.RowIndex>-1)
             {
                 DataGridViewButtonCell buttonCell = dgv.Rows[e.RowIndex].Cells["ActionColumn"] as DataGridViewButtonCell;
@@ -812,12 +833,9 @@ namespace BouncedClient
 
                 if (action == "Clear")
                 {
+                    //TODO : Add this
                     dgv.Rows.RemoveAt(e.RowIndex);
                     return;
-                }
-                else if (action == "Retry")
-                {
-                    dgv.Rows.RemoveAt(e.RowIndex);
                 }
 
                 // Open explorer and highlight downloaded file
@@ -837,12 +855,14 @@ namespace BouncedClient
                 String canceledMac = (String)macCell.Value;
                 String canceledHash = (String)hashCell.Value;
 
-                foreach (PendingResponse pr in Transfers.pendingToDownload.Keys)
+                foreach (PendingResponse pr in Downloads.pendingToDownload.Keys)
                 {
                     if (pr.uploader == canceledMac && pr.fileHash == canceledHash)
                     {
-                        Transfers.pendingToDownload[pr] = null; // This effectively cancels the download
+                        Downloads.pendingToDownload[pr] = null; // This effectively cancels the download
                         buttonCell.Value = "Clear";
+                        downloadGridView["RemoveColumn", e.RowIndex].Value = Resources.remove_file;
+                        downloadGridView["RemovableColumn", e.RowIndex].Value = "true";
                         break;
                     }
                 }
@@ -996,7 +1016,7 @@ namespace BouncedClient
             else
                 downloadGridHelpTextLabel.Visible = false;
 
-            downloadStatusLabel.Text = "" + Transfers.currentDownloadsCount;
+            downloadStatusLabel.Text = "" + Downloads.currentDownloadsCount;
             uploadStatusLabel.Text = "" + Server.currentUploadsCount;
         }
 
@@ -1010,8 +1030,8 @@ namespace BouncedClient
 
                 // Tell the server to cancel bounce
                 BackgroundWorker updateWorker = new BackgroundWorker();
-                updateWorker.DoWork += Transfers.updateWorker_DoWork;
-                updateWorker.RunWorkerCompleted += Transfers.updateWorker_RunWorkerCompleted;
+                updateWorker.DoWork += Downloads.updateWorker_DoWork;
+                updateWorker.RunWorkerCompleted += Downloads.updateWorker_RunWorkerCompleted;
 
                 // Set update parameters and kick off update
                 UpdateRequest ur = new UpdateRequest();
@@ -1127,6 +1147,11 @@ namespace BouncedClient
         {
             //if (this.Visible == false)
                 this.Show();
+        }
+
+        private void searchGridHelpTextLabel_Click(object sender, EventArgs e)
+        {
+
         }
 
     }

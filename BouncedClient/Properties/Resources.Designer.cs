@@ -73,6 +73,16 @@ namespace BounceClient.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap connection_failed {
+            get {
+                object obj = ResourceManager.GetObject("connection_failed", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap connection_working {
             get {
                 object obj = ResourceManager.GetObject("connection_working", resourceCulture);
@@ -87,6 +97,26 @@ namespace BounceClient.Properties {
             get {
                 object obj = ResourceManager.GetObject("md5sums", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap remove_file {
+            get {
+                object obj = ResourceManager.GetObject("remove_file", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap remove_file_locked {
+            get {
+                object obj = ResourceManager.GetObject("remove_file_locked", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

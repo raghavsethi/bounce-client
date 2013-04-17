@@ -102,12 +102,14 @@ namespace BouncedClient
             String fileHash = temp[0];
             String transferId = temp[1];
             String transferType = temp[2]; //direct, firstleg, secondleg
-
-            upload(fileHash, clientStream, transferType);
+            long startByte = long.Parse(temp[3]); //starting position
+            
+            upload(fileHash, clientStream, transferType, startByte);
             clientStream.Close();
         }
 
-        public static bool upload(string fileHash, NetworkStream fileUploadStream, String transferType)
+        public static bool upload(string fileHash, NetworkStream fileUploadStream, String transferType, 
+            long startByte)
         {
             Utils.writeLog("upload: Started");
 
@@ -170,7 +172,10 @@ namespace BouncedClient
                 {
                     //Thread.Sleep(100);
                     bytesUploaded = bytesUploaded + bytesSize;
-                    fileUploadStream.Write(byteSend, 0, bytesSize);
+                    if (bytesUploaded > startByte)
+                    {
+                        fileUploadStream.Write(byteSend, 0, bytesSize);
+                    }
                 }
 
                 Utils.writeLog("upload : Sent file : " + fileName);
