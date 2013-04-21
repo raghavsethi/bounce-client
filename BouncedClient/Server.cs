@@ -107,24 +107,19 @@ namespace BouncedClient
             {
                 startByte = long.Parse(temp[3]); //starting position
             }
-            catch (Exception e)
+            catch (Exception e2)
             {
                 startByte = 0;
             }
-            
-            upload(fileHash, clientStream, transferType, startByte);
+
+            upload(fileHash, clientStream, transferType, startByte, transferId);
             clientStream.Close();
         }
 
-        public static bool upload(string fileHash, NetworkStream fileUploadStream, String transferType, 
-            long startByte)
+        public static bool upload(string fileHash, NetworkStream fileUploadStream, String transferType,
+            long startByte, String transferId)
         {
             Utils.writeLog("upload: Started");
-
-            lock (Server.uploadCountLock)
-            {
-                Server.currentUploadsCount++;
-            }
 
             bool successfulTransfer = false;
             byte[] byteSend = new byte[4096];
@@ -141,6 +136,7 @@ namespace BouncedClient
                 if (lf == null)
                 {
                     Utils.writeLog("upload: Upload failed. Got request for a file not present in index. Hash:" + fileHash);
+                    informServerOfMissingFile(fileHash, transferId);
                     return false;
                 }
 
@@ -161,6 +157,11 @@ namespace BouncedClient
             {
                 Utils.writeLog("upload: " + e.ToString());
                 return false;
+            }
+
+            lock (Server.uploadCountLock)
+            {
+                Server.currentUploadsCount++;
             }
 
             BinaryReader binaryFileReader = new BinaryReader(fileLocalStream);
@@ -205,6 +206,22 @@ namespace BouncedClient
             }
 
             return successfulTransfer;
+        }
+
+        public static void informServerOfMissingFile(String fileHash, String transferId)
+        {
+            // Tell the server to cancel bounce
+            BackgroundWorker updateWorker = new BackgroundWorker();
+            updateWorker.DoWork += Downloads.updateWorker_DoWork;
+            updateWorker.RunWorkerCompleted += Downloads.updateWorker_RunWorkerCompleted;
+
+            // Set update parameters and kick off update
+            UpdateRequest ur = new UpdateRequest();
+            ur.transferID = long.Parse(transferId);
+            ur.status = "missing";
+            ur.uploader = Utils.getMACAddress();
+            ur.newHash = fileHash;
+            updateWorker.RunWorkerAsync(ur);
         }
     }
 }

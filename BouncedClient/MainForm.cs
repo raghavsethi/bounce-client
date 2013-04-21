@@ -517,6 +517,7 @@ namespace BouncedClient
             mainToolTip.SetToolTip(syncStatusPictureBox, "Syncing the file list with server..");
         }
 
+
         private void usernameTextBox_Leave(object sender, EventArgs e)
         {
             Configuration.username = usernameTextBox.Text;
