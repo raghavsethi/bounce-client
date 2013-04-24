@@ -1155,5 +1155,16 @@ namespace BouncedClient
 
         }
 
+        private void searchGridView_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
+        {
+            if (e.Column.Name.Equals("FileSize"))
+            {
+                long value1 = long.Parse(searchGridView.Rows[e.RowIndex1].Cells["FileSizeBytes"].Value.ToString());
+                long value2 = long.Parse(searchGridView.Rows[e.RowIndex2].Cells["FileSizeBytes"].Value.ToString());
+                e.SortResult = value1.CompareTo(value2);
+                e.Handled = true;
+            }
+        }
+
     }
 }
