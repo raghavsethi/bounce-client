@@ -333,7 +333,7 @@ namespace BouncedClient
                 notifyIcon.ShowBalloonTip(5000);
             }
 
-            if (dp.isFailed)
+            if (dp.isFailedUnrecoverably)
             {
                 downloadGridView["RemoveColumn", row].Value = Resources.remove_file;
                 downloadGridView["RemovableColumn", row].Value = "true";

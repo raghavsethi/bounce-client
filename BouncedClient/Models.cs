@@ -149,6 +149,7 @@ namespace BouncedClient
         public bool isFailed;
         public bool isHashMismatch;
         public bool isCanceled;
+        public bool isFailedUnrecoverably;
 
         // Attempts
         public int attempts;

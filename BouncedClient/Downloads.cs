@@ -233,7 +233,7 @@ namespace BouncedClient
                 if (dp.attempts > 10)
                 {
                     dp.status = "Failed";
-                    dp.isFailed = true;
+                    dp.isFailedUnrecoverably = true;
                     worker.ReportProgress(percentComplete, dp);
                     return null;
                 }
@@ -293,6 +293,7 @@ namespace BouncedClient
                     dp.status = "Failed integrity check";
                     dp.isHashMismatch = true;
                     dp.isFailed = true;
+                    dp.isFailedUnrecoverably = true;
                     worker.ReportProgress(100, dp);
 
                     try
