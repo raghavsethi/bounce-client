@@ -286,7 +286,7 @@ namespace BouncedClient
             }
 
             // This download is not yet shown in the UI
-            if(row == -1)
+            if(row == -1 && downloadGridView.ColumnCount>0)
             {
                 String type = dp.fileName.Substring(dp.fileName.LastIndexOf('.') + 1);
                 Icon zipIcon = null;
@@ -1051,6 +1051,8 @@ namespace BouncedClient
             Configuration.username = usernameTextBox.Text;
             Configuration.server = serverTextBox.Text;
             Configuration.saveConfiguration();
+            
+            Settings.Default.Save();
 
             if (minimizingToTray)
             {

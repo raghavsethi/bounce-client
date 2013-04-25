@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Threading;
+using BounceClient.Properties;
 
 namespace BouncedClient
 {
@@ -62,6 +63,24 @@ namespace BouncedClient
 
         public static bool loadConfiguration()
         {
+            string[] separator = {"; "};
+            String[] partiallyDownloadedFiles = 
+                Settings.Default.partiallyDownloadedFiles.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach(String partiallyDownloadedFile in partiallyDownloadedFiles)
+            {
+                Utils.writeLog("loadConfiguration: Deleting partially downloaded file : " +
+                    partiallyDownloadedFile);
+                try
+                {
+                    File.Delete(partiallyDownloadedFile);
+                }
+                catch (Exception e)
+                { }
+            }
+
+            Settings.Default.partiallyDownloadedFiles = "";
+
             TextReader tr;
             try
             {

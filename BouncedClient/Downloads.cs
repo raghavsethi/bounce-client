@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using BounceClient.Properties;
 
 namespace BouncedClient
 {
@@ -128,7 +129,7 @@ namespace BouncedClient
             catch (Exception e)
             {
                 Utils.writeLog("download: Error creating file : " + e);
-                // Attempt to recover from error
+                // Attempt to recover from error that download folder doesn't exist.
                 String filePath = dp.downloadedFilePath;
                 String folderPath = filePath.Substring(0, filePath.LastIndexOf("\\"));
                 try
@@ -145,6 +146,9 @@ namespace BouncedClient
                     return null;
                 }
             }
+
+            Settings.Default.partiallyDownloadedFiles = dp.downloadedFilePath + "; " +
+                Settings.Default.partiallyDownloadedFiles;
 
             #endregion
 
@@ -198,7 +202,6 @@ namespace BouncedClient
 
                 Utils.writeLog("download: Completed download of " + pr.fileName +
                 " (" + dp.fileSize + ") Type:" + dp.type);
-                dp.isComplete = true;
                 dp.status = "Checking file..";
             }
             catch (DownloadCanceledException dce) // Occurs when user cancels
@@ -286,6 +289,9 @@ namespace BouncedClient
                     dp.isComplete = true;
                     dp.status = "Completed";
                     worker.ReportProgress(100, dp);
+
+                    // Removing from partially-downloaded-files list
+                    Settings.Default.partiallyDownloadedFiles.Replace(dp.downloadedFilePath + "; ", "");
                 }
                 else
                 {
@@ -313,9 +319,12 @@ namespace BouncedClient
             if (dp.type == "firstleg")
             {
                 // Rename the file to the new hash
-
+                
                 String newPath = dp.downloadedFilePath.Substring(0, dp.downloadedFilePath.LastIndexOf(@"\"));
                 newPath = newPath + "\\" + newHash + ".bounced";
+
+                // Removing from partially-downloaded-files list
+                Settings.Default.partiallyDownloadedFiles.Replace(dp.downloadedFilePath + "; ", "");
 
                 try
                 {

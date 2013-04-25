@@ -22,5 +22,29 @@ namespace BounceClient.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string partiallyDownloadedFiles {
+            get {
+                return ((string)(this["partiallyDownloadedFiles"]));
+            }
+            set {
+                this["partiallyDownloadedFiles"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int timesTrayMessageShown {
+            get {
+                return ((int)(this["timesTrayMessageShown"]));
+            }
+            set {
+                this["timesTrayMessageShown"] = value;
+            }
+        }
     }
 }
